@@ -1576,6 +1576,14 @@ a:hover {
         order: -1;
     }
 
+    .home-page .hero-copy {
+        text-align: center;
+    }
+
+    .home-page .hero-cta {
+        justify-content: center;
+    }
+
     .home-page h1 {
         font-size: 3.3rem;
     }
@@ -1594,11 +1602,25 @@ a:hover {
 
     .home-page .about-grid {
         grid-template-columns: 1fr;
-        text-align: left;
+        text-align: center;
     }
 
     .home-page .profile {
         padding: 0 24px;
+    }
+
+    .home-page .about-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-page .intro {
+        margin: 0 auto 10px;
+    }
+
+    .home-page .about-tags {
+        justify-content: center;
     }
 
     .home-page .contact-me {
@@ -1617,7 +1639,7 @@ a:hover {
 
     .home-page .hero-stats {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .home-page .floating-icon {
