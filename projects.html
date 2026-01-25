@@ -11,11 +11,11 @@
         <link rel="icon" href="images/picture.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Merriweather&family=Montserrat&family=Sacramento&display=swap"
+        <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
               rel="stylesheet">
     </head>
 
-    <body class="projects-page">
+    <body class="projects-page home-page">
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-brand">
@@ -37,13 +37,37 @@
     </nav>
 
     <div class="top-container" id="projects-home">
-        <div class="title-text">
-            <h1>Projects</h1>
-            <h2 id="data-title">Selected work across ML/AI, software engineering, and research</h2>
-            <p class="tagline">Expanded case summaries with tools, scope, and outcomes.</p>
-            <div class="hero-cta">
-                <a class="btn btn-outline" href="index.html#projects">Back to Featured</a>
-                <a class="btn" href="#projects">View Projects</a>
+        <div class="hero-grid">
+            <div class="hero-copy reveal">
+                <p class="hero-eyebrow">Project portfolio</p>
+                <h1>Projects</h1>
+                <h2 id="data-title">End-to-end ML systems, data platforms, and research tooling</h2>
+                <p class="tagline">Detailed breakdowns of delivery scope, architecture, and applied tooling.</p>
+                <div class="hero-cta">
+                    <a class="btn btn-outline" href="index.html#projects">Back to Featured</a>
+                    <a class="btn" href="#projects">View Projects</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-number">9</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Featured</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual reveal">
+                <div class="portrait-card">
+                    <img class="hero-portrait" src="images/solutions404.png" alt="Solutions 404 logo">
+                    <div class="portrait-caption">
+                        <span class="caption-title">Systems Delivered</span>
+                        <span class="caption-subtitle">LLMs, data pipelines, biomedical AI</span>
+                    </div>
+                </div>
+                <img class="floating-icon icon-code" src="images/computer.png" alt="ML engineering icon">
+                <img class="floating-icon icon-research" src="images/science.png" alt="Research icon">
             </div>
         </div>
     </div>
@@ -54,7 +78,7 @@
             <p class="section-subtitle">Full list with expanded context and outcomes</p>
 
             <div class="projects-grid">
-                <div class="project-card" id="project-summarizer">
+                <div class="project-card reveal" id="project-summarizer">
                     <div class="project-category">Generative AI</div>
                     <h3>AI-Powered Document Summarizer</h3>
                     <p>End-to-end document summarization pipeline leveraging RAG, Large Language Models (LLMs), and NLP techniques for unstructured corpora. Built to scale with tuned chunking, retrieval, and prompt templates.</p>
@@ -77,7 +101,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-copilot">
+                <div class="project-card reveal" id="project-copilot">
                     <div class="project-category">Generative AI</div>
                     <h3>AI-Code Copilot</h3>
                     <p>Enterprise AI copilot built for internal infrastructure and knowledge bases. Designed the RAG architecture, data pipelines, and model tuning to deliver accurate, context-aware assistance.</p>
@@ -104,7 +128,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-chatbot">
+                <div class="project-card reveal" id="project-chatbot">
                     <div class="project-category">ML/AI</div>
                     <h3>Document Chatbot</h3>
                     <p>Enterprise chatbot application with optimized data ingestion pipelines and document retrieval. Evaluated and fine-tuned LLMs to improve accuracy and answer consistency.</p>
@@ -127,7 +151,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-classification">
+                <div class="project-card reveal" id="project-classification">
                     <div class="project-category">Software Engineering</div>
                     <h3>Document Data Extractor Service</h3>
                     <p>Built data extraction and document classification services from scratch. Created deep learning algorithms for unstructured text and led a team of 6 engineers.</p>
@@ -150,7 +174,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-etl">
+                <div class="project-card reveal" id="project-etl">
                     <div class="project-category">Cloud / AWS</div>
                     <h3>Large-Scale ETL Pipeline</h3>
                     <p>Large-scale data ingestion and transformation pipelines on AWS with serverless orchestration. Designed for high-volume, resilient processing.</p>
@@ -172,7 +196,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-silicofcm">
+                <div class="project-card reveal" id="project-silicofcm">
                     <div class="project-category">Research</div>
                     <h3>SILICOFCM - EU Horizon 2020</h3>
                     <p>Computational platform for in silico clinical trials of familial cardiomyopathies (FCMs), funded under EU Horizon 2020 grant agreement No. 777204. The multi-modular system models how sarcomeric protein mutations affect heart function and drug responses, integrating patient-specific data across genetic, biological, pharmacologic, and clinical dimensions.</p>
@@ -196,7 +220,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-doc-classification">
+                <div class="project-card reveal" id="project-doc-classification">
                     <div class="project-category">Software Engineering</div>
                     <h3>Document Classification Service</h3>
                     <p>End-to-end document processing service designed to extract, classify, and store relevant data from unstructured documents. Built containerized microservices architecture on Azure for scalable document intake and automated categorization.</p>
@@ -216,7 +240,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-data-extraction">
+                <div class="project-card reveal" id="project-data-extraction">
                     <div class="project-category">Data Engineering</div>
                     <h3>Data Extraction Service</h3>
                     <p>Comprehensive data extraction and transformation platform built on Azure. The pipeline orchestrates ETL workflows from raw data ingestion through classification, embedding generation, and analytics-ready outputs for business intelligence.</p>
@@ -238,7 +262,7 @@
                     </div>
                 </div>
 
-                <div class="project-card" id="project-voice-chatbot">
+                <div class="project-card reveal" id="project-voice-chatbot">
                     <div class="project-category">Conversational AI</div>
                     <h3>Voice-Enabled Support Chatbot</h3>
                     <p>End-to-end conversational AI system for telephone support with speech-to-text and text-to-speech capabilities. Built to handle customer inquiries, policy questions, and claims status through natural voice interactions.</p>
@@ -261,7 +285,7 @@
         </div>
         <hr>
 
-        <div class="contact-me" id="contact">
+        <div class="contact-me reveal" id="contact">
             <h2>Get in Touch.</h2>
             <h3>Let's collaborate on something great</h3>
             <p class="contact-message">I'm always interested in discussing research collaborations, data science opportunities, and innovative projects at the intersection of AI and healthcare.</p>

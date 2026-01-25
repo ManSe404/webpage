@@ -11,11 +11,11 @@
         <link rel="icon" href="images/picture.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Merriweather&family=Montserrat&family=Sacramento&display=swap"
+        <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
               rel="stylesheet">
     </head>
 
-    <body>
+    <body class="home-page">
 
     <!-- Navigation Bar -->
     <nav class="navbar">
@@ -42,27 +42,65 @@
     </nav>
 
     <div class="top-container" id="home">
-        <img class="top-cloud" src="images/cloud.png" alt="cloud">
-        <div class="title-text">
-            <h1>I'm Stefan</h1>
-            <h2 id="data-title">an <span class="data-word">ML Engineer</span> & Data Scientist</h2>
-            <p class="tagline">Building AI solutions with LLMs, RAG, and Generative AI</p>
-            <div class="hero-cta">
-                <a class="btn" href="#projects">View Projects</a>
-                <a class="btn btn-outline" href="files/CV Seman Stefan.pdf" download>Download CV</a>
+        <div class="hero-grid">
+            <div class="hero-copy reveal">
+                <p class="hero-eyebrow">ML Engineer • Data Scientist • PhD Researcher</p>
+                <h1>Stefan Seman</h1>
+                <h2 id="data-title">Building AI systems for healthcare, research, and enterprise teams</h2>
+                <p class="tagline">Building AI solutions with LLMs, RAG, and Generative AI</p>
+                <div class="hero-cta">
+                    <a class="btn" href="#projects">View Projects</a>
+                    <a class="btn btn-outline" href="files/CV Seman Stefan.pdf" download>Download CV</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">Publications</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">Citations</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">6+</span>
+                        <span class="stat-label">Years in Data/ML</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual reveal">
+                <div class="portrait-card">
+                    <img class="hero-portrait" src="images/solutions404.png" alt="Solutions 404 logo">
+                    <div class="portrait-caption">
+                        <span class="caption-title">AI + Biomedicine</span>
+                        <span class="caption-subtitle">Research-driven engineering</span>
+                    </div>
+                </div>
+                <img class="floating-icon icon-code" src="images/computer.png" alt="ML engineering icon">
+                <img class="floating-icon icon-research" src="images/science.png" alt="Research icon">
             </div>
         </div>
-        <img class="bottom-cloud" src="images/cloud.png" alt="cloud">
-        <img src="images/mountain.png" alt="mountain">
     </div>
 
 
 
     <div class="middle-container">
         <div class="profile" id="about">
-            <img class="profile-pic" src="images/picture.png" alt="Stefan Seman profile picture">
-            <h2>Hello.</h2>
-            <p class="intro">I'm an ML Engineer, Data Scientist, and PhD Researcher with a strong background in higher education and published research. I specialize in machine learning, AI, generative AI, and software development, with unique expertise bridging data science and biomedicine. I'm an analytical thinker with a pragmatic problem-solving approach and excellent communication skills.</p>
+            <div class="about-grid reveal">
+                <div class="about-image">
+                    <img class="profile-pic" src="images/picture.png" alt="Stefan Seman profile picture">
+                    <div class="about-badge">PhD Researcher</div>
+                </div>
+                <div class="about-content">
+                    <h2>Hello.</h2>
+                    <p class="intro">I'm an ML Engineer, Data Scientist, and PhD Researcher with a strong background in higher education and published research. I specialize in machine learning, AI, generative AI, and software development, with unique expertise bridging data science and biomedicine. I'm an analytical thinker with a pragmatic problem-solving approach and excellent communication skills.</p>
+                    <div class="about-tags">
+                        <span>LLMs</span>
+                        <span>RAG Systems</span>
+                        <span>Software Development</span>
+                        <span>Document Intelligence</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr>
 
@@ -73,7 +111,7 @@
 
             <div class="projects-grid">
                 <!-- ML/AI Projects -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">Generative AI</div>
                     <h3>AI-Powered Document Summarizer</h3>
                     <p>Development of a robust document summarizer leveraging RAG, Large Language Models (LLMs), and NLP techniques. Delivered a scalable, high-accuracy solution for extracting insights from unstructured text data.</p>
@@ -88,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">Generative AI</div>
                     <h3>AI-Code Copilot</h3>
                     <p>Built from scratch for enterprise infrastructure integration. Designed architecture, implemented RAG techniques, and fine-tuned LLMs. Handled data collection, extraction, transformation, and analysis.</p>
@@ -103,7 +141,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">ML/AI</div>
                     <h3>Document Chatbot</h3>
                     <p>Enterprise chatbot application with optimized data ingestion pipelines and document retrieval. Evaluated and fine-tuned LLMs for improved performance and accuracy.</p>
@@ -119,7 +157,7 @@
                 </div>
 
                 <!-- Software Engineering Projects -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">Software Engineering</div>
                     <h3>Document Data Extractor Service</h3>
                     <p>Built data extraction and document classification services from scratch. Created deep learning algorithms to extract data from unstructured text. Led a team of 6 engineers.</p>
@@ -135,7 +173,7 @@
                 </div>
 
                 <!-- Cloud Projects -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">Cloud / AWS</div>
                     <h3>Large-Scale ETL Pipeline</h3>
                     <p>Built large-scale data ingestion and transformation pipelines using AWS services. Implemented serverless architecture for scalable data processing workflows.</p>
@@ -150,7 +188,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-category">Research</div>
                     <h3>SILICOFCM - EU Horizon 2020</h3>
                     <p>Development of computational platform for clinical trials. Conducted ECG and CPET analysis, statistical analysis, and published research in peer-reviewed journals.</p>
@@ -177,7 +215,7 @@
             <p class="section-subtitle">Core competencies and growth across roles</p>
 
             <div class="timeline">
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Oct 2024 - Present</div>
                     <div class="timeline-content">
                         <h3>Senior Machine Learning Engineer & Software Engineer</h3>
@@ -196,7 +234,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Oct 2023 - Sept 2024</div>
                     <div class="timeline-content">
                         <h3>Senior Data Scientist & Software Engineer in AI, R&D</h3>
@@ -215,7 +253,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">May 2022 - Oct 2023</div>
                     <div class="timeline-content">
                         <h3>Data Scientist & Developer → Senior Specialist</h3>
@@ -236,7 +274,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Oct 2021 - Apr 2022</div>
                     <div class="timeline-content">
                         <h3>Data Scientist</h3>
@@ -255,7 +293,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Mar 2020 - Mar 2022</div>
                     <div class="timeline-content">
                         <h3>Researcher</h3>
@@ -274,7 +312,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Oct 2018 - Mar 2022</div>
                     <div class="timeline-content">
                         <h3>PhD Researcher</h3>
@@ -292,7 +330,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal">
                     <div class="timeline-date">Oct 2014 - July 2018</div>
                     <div class="timeline-content">
                         <h3>Sports Scientist</h3>
@@ -319,7 +357,7 @@
             <p class="section-subtitle">Academic contributions and research work</p>
 
             <div class="publications-grid">
-                <div class="publication-card">
+                <div class="publication-card reveal">
                     <h3>A Machine Learning Approach to Gene Expression in Hypertrophic Cardiomyopathy</h3>
                     <p class="publication-authors">Pavic, J., Zivanovic, M.N., Seman, S., et al.</p>
                     <p class="publication-journal">Pharmaceuticals (MDPI), 2024</p>
@@ -329,7 +367,7 @@
                     </div>
                 </div>
 
-                <div class="publication-card">
+                <div class="publication-card reveal">
                     <h3>Ventilatory Efficiency Parameters Outperform Peak VO2 in Monitoring Therapy Effects in HCM</h3>
                     <p class="publication-authors">Seman, S., Tesic, M., Popovic, D., et al. (SILICOFCM Investigators)</p>
                     <p class="publication-journal">Progress in Cardiovascular Diseases, Vol. 87, 2024</p>
@@ -339,7 +377,7 @@
                     </div>
                 </div>
 
-                <div class="publication-card">
+                <div class="publication-card reveal">
                     <h3>Defining the Importance of Stress Reduction in Managing Cardiovascular Disease - The Role of Exercise</h3>
                     <p class="publication-authors">Popovic, D., Bjelobrk, M., Tesic, M., Seman, S., et al. (HL-PIVOT Collaborative)</p>
                     <p class="publication-journal">Progress in Cardiovascular Diseases, Vol. 70, pp. 84-93, 2022</p>
@@ -349,7 +387,7 @@
                     </div>
                 </div>
 
-                <div class="publication-card">
+                <div class="publication-card reveal">
                     <h3>Physical activity and exercise as an essential medical strategy for the COVID-19 pandemic and beyond</h3>
                     <p class="publication-authors">Seman, S., Srzentic Drazilov, S., et al. (HL-PIVOT Network)</p>
                     <p class="publication-journal">Experimental Biology and Medicine, Vol. 246, Issue 21, 2021</p>
@@ -383,7 +421,7 @@
             <p class="section-subtitle">Technologies and tools I work with</p>
 
             <div class="skills-grid">
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>Programming Languages</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">Python</span>
@@ -393,7 +431,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>AI & ML Frameworks</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">FastAPI</span>
@@ -406,7 +444,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>Cloud & DevOps</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">AWS</span>
@@ -418,7 +456,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>Data & Storage</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">DynamoDB</span>
@@ -430,7 +468,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>AI Specializations</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">Generative AI</span>
@@ -442,7 +480,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal">
                     <h3>Research Domains</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">Biomedicine</span>
@@ -461,7 +499,7 @@
             <h2>Education.</h2>
 
             <div class="education-grid">
-                <div class="education-card">
+                <div class="education-card reveal">
                     <div class="education-degree">Ph.D. Candidate</div>
                     <h3>Sport Science</h3>
                     <p class="education-institution">University of Belgrade</p>
@@ -469,14 +507,14 @@
                     <p class="education-description">Research focus on machine learning applications in exercise physiology and biomedical signal processing.</p>
                 </div>
 
-                <div class="education-card">
+                <div class="education-card reveal">
                     <div class="education-degree">Master's Degree</div>
                     <h3>Sports Medicine</h3>
                     <p class="education-institution">University of Novi Sad</p>
                     <p class="education-year">Completed</p>
                 </div>
 
-                <div class="education-card">
+                <div class="education-card reveal">
                     <div class="education-degree">Bachelor's Degree</div>
                     <h3>Sport Science</h3>
                     <p class="education-institution">University of Belgrade</p>
@@ -486,30 +524,30 @@
 
             <h3 class="certifications-header">Certifications</h3>
             <div class="certifications-grid">
-                <div class="certification-item">
+                <div class="certification-item reveal">
                     <span class="cert-badge">Microsoft</span>
                     <span class="cert-name">Azure AI Associate</span>
                 </div>
-                <div class="certification-item">
+                <div class="certification-item reveal">
                     <span class="cert-badge">Microsoft</span>
                     <span class="cert-name">Azure Data Fundamentals</span>
                 </div>
-                <div class="certification-item">
+                <div class="certification-item reveal">
                     <span class="cert-badge">Databricks</span>
                     <span class="cert-name">Lakehouse Fundamentals</span>
                 </div>
-                <div class="certification-item">
+                <div class="certification-item reveal">
                     <span class="cert-badge">Databricks</span>
                     <span class="cert-name">Generative AI Fundamentals</span>
                 </div>
-                <div class="certification-item">
+                <div class="certification-item reveal">
                     <span class="cert-badge">Coursera</span>
                     <span class="cert-name">COVID-19 Contact Tracing (Johns Hopkins)</span>
                 </div>
             </div>
         </div>
         <hr>
-        <div class="contact-me" id="contact">
+        <div class="contact-me reveal" id="contact">
             <h2>Get in Touch.</h2>
             <h3>Let's collaborate on something great</h3>
             <p class="contact-message">I'm always interested in discussing research collaborations, data science opportunities, and innovative projects at the intersection of AI and healthcare.</p>
