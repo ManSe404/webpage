@@ -57,10 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const animateCount = (el) => {
             const target = Number.parseInt(el.dataset.target, 10) || 0;
             const suffix = el.dataset.suffix || '';
-            const duration = Number.parseInt(el.dataset.duration, 10) || 2200;
+            const duration = Number.parseInt(el.dataset.duration, 10) || 1000;
+
+            el.dataset.counting = 'true';
+            el.dataset.counted = 'true';
 
             if (prefersReduced) {
                 el.textContent = `${target}${suffix}`;
+                el.dataset.counting = 'false';
                 return;
             }
 
@@ -73,25 +77,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.requestAnimationFrame(step);
                 } else {
                     el.textContent = `${target}${suffix}`;
+                    el.dataset.counting = 'false';
                 }
             };
 
             window.requestAnimationFrame(step);
         };
 
+        const resetCount = (el) => {
+            el.textContent = '0';
+            el.dataset.counted = 'false';
+            el.dataset.counting = 'false';
+        };
+
         if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries, obs) => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
+                    const el = entry.target;
                     if (entry.isIntersecting) {
-                        animateCount(entry.target);
-                        obs.unobserve(entry.target);
+                        if (el.dataset.counted !== 'true' && el.dataset.counting !== 'true') {
+                            animateCount(el);
+                        }
+                    } else if (el.dataset.counted === 'true') {
+                        resetCount(el);
                     }
                 });
             }, {
                 threshold: 0.6
             });
 
-            countUps.forEach(item => observer.observe(item));
+            countUps.forEach(item => {
+                resetCount(item);
+                observer.observe(item);
+            });
         } else {
             countUps.forEach(item => animateCount(item));
         }
