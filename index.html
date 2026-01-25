@@ -2,7 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Stefan Seman</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Stefan Seman - Data Scientist, ML Engineer, and PhD Researcher specializing in machine learning, AI, and biomedical applications.">
+        <meta name="keywords" content="Data Scientist, Machine Learning, AI, PhD Researcher, Python, PyTorch, Neural Networks">
+        <meta name="author" content="Stefan Seman">
+        <title>Stefan Seman | Data Scientist & ML Engineer</title>
         <link rel="stylesheet" href="css/styles.css">
         <link rel="icon" href="images/picture.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,11 +17,40 @@
 
     <body>
 
-    <div class="top-container">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="#home">Stefan Seman</a>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#publications">Research</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-social">
+            <a href="https://www.linkedin.com/in/sseman/" target="_blank" aria-label="LinkedIn">in</a>
+            <a href="https://github.com/ManSe404" target="_blank" aria-label="GitHub">gh</a>
+            <a href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en" target="_blank" aria-label="Google Scholar">gs</a>
+        </div>
+    </nav>
+
+    <div class="top-container" id="home">
         <img class="top-cloud" src="images/cloud.png" alt="cloud">
         <div class="title-text">
             <h1>I'm Stefan</h1>
-            <h2 id="data-title">a <span class="data-word">Data</span> Scientist</h2>
+            <h2 id="data-title">an <span class="data-word">ML Engineer</span> & Data Scientist</h2>
+            <p class="tagline">Building AI solutions with LLMs, RAG, and Generative AI</p>
+            <div class="hero-cta">
+                <a class="btn" href="#projects">View Projects</a>
+                <a class="btn btn-outline" href="files/CV Seman Stefan.pdf" download>Download CV</a>
+            </div>
         </div>
         <img class="bottom-cloud" src="images/cloud.png" alt="cloud">
         <img src="images/mountain.png" alt="mountain">
@@ -26,62 +59,498 @@
 
 
     <div class="middle-container">
-        <div class="profile">
-            <img class="profile-pic" src="images/picture.png" alt="profile_pic">
+        <div class="profile" id="about">
+            <img class="profile-pic" src="images/picture.png" alt="Stefan Seman profile picture">
             <h2>Hello.</h2>
-            <p class="intro">My name is Stefan. I am Data Scientist and Researcher.</p>
+            <p class="intro">I'm an ML Engineer, Data Scientist, and PhD Researcher with a strong background in higher education and published research. I specialize in machine learning, AI, generative AI, and software development, with unique expertise bridging data science and biomedicine. I'm an analytical thinker with a pragmatic problem-solving approach and excellent communication skills.</p>
         </div>
         <hr>
-        <div class="skills">
-            <h2>My Skills.</h2>
-            <div class="skill-row">
-                <img class="cpu-image" src="images/computer.png" alt="cpu">
 
-                <h3>Data Science and Development</h3>
+        <!-- Projects Section -->
+        <div class="projects-section" id="projects">
+            <h2>Featured Projects.</h2>
+            <p class="section-subtitle">Showcasing my work in ML/AI, Software Engineering, and Cloud</p>
 
-                <p>As a proficient data scientist, I have experience in Python, SQL and LabView, with hands-on experience in frameworks
-                    like Flask, FastAPI, PyTorch, PySpark, LangChain Scikit-Learn, Pandas, Matplotlib,... Additionally, I am skilled in using Docker, Azure,
-                    Linux, Bash enabling me to develop robust and scalable applications. I have worked in various
-                    projects from building Machine Learning models and AI applications, to being involved in Software Engineering,
-                    Data Extraction and Analysis from both initial phases and planning to optimizing performance of the application.</p>
+            <div class="projects-grid">
+                <!-- ML/AI Projects -->
+                <div class="project-card">
+                    <div class="project-category">Generative AI</div>
+                    <h3>AI-Powered Document Summarizer</h3>
+                    <p>Development of a robust document summarizer leveraging RAG, Large Language Models (LLMs), and NLP techniques. Delivered a scalable, high-accuracy solution for extracting insights from unstructured text data.</p>
+                    <div class="project-tags">
+                        <span class="tag">LangChain</span>
+                        <span class="tag">LlamaIndex</span>
+                        <span class="tag">RAG</span>
+                        <span class="tag">PyTorch</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-summarizer" class="project-link">View Details</a>
+                    </div>
+                </div>
 
+                <div class="project-card">
+                    <div class="project-category">Generative AI</div>
+                    <h3>AI-Code Copilot</h3>
+                    <p>Built from scratch for enterprise infrastructure integration. Designed architecture, implemented RAG techniques, and fine-tuned LLMs. Handled data collection, extraction, transformation, and analysis.</p>
+                    <div class="project-tags">
+                        <span class="tag">LangChain</span>
+                        <span class="tag">AI Agents</span>
+                        <span class="tag">Azure OpenAI</span>
+                        <span class="tag">Milvus</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-copilot" class="project-link">View Details</a>
+                    </div>
+                </div>
 
+                <div class="project-card">
+                    <div class="project-category">ML/AI</div>
+                    <h3>Document Chatbot</h3>
+                    <p>Enterprise chatbot application with optimized data ingestion pipelines and document retrieval. Evaluated and fine-tuned LLMs for improved performance and accuracy.</p>
+                    <div class="project-tags">
+                        <span class="tag">Transformers</span>
+                        <span class="tag">FastAPI</span>
+                        <span class="tag">Redis</span>
+                        <span class="tag">KubeFlow</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-chatbot" class="project-link">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Software Engineering Projects -->
+                <div class="project-card">
+                    <div class="project-category">Software Engineering</div>
+                    <h3>Document Data Extractor Service</h3>
+                    <p>Built data extraction and document classification services from scratch. Created deep learning algorithms to extract data from unstructured text. Led a team of 6 engineers.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Azure Data Factory</span>
+                        <span class="tag">Synapse</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-classification" class="project-link">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Cloud Projects -->
+                <div class="project-card">
+                    <div class="project-category">Cloud / AWS</div>
+                    <h3>Large-Scale ETL Pipeline</h3>
+                    <p>Built large-scale data ingestion and transformation pipelines using AWS services. Implemented serverless architecture for scalable data processing workflows.</p>
+                    <div class="project-tags">
+                        <span class="tag">AWS Lambda</span>
+                        <span class="tag">S3</span>
+                        <span class="tag">Step Functions</span>
+                        <span class="tag">DynamoDB</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-etl" class="project-link">View Details</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-category">Research</div>
+                    <h3>SILICOFCM - EU Horizon 2020</h3>
+                    <p>Development of computational platform for clinical trials. Conducted ECG and CPET analysis, statistical analysis, and published research in peer-reviewed journals.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Biostatistics</span>
+                        <span class="tag">ECG</span>
+                        <span class="tag">CPET</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projects.html#project-silicofcm" class="project-link">View Details</a>
+                    </div>
+                </div>
             </div>
-            <div class="skill-row">
-                <img class="science" src="images/science.png" alt="science">
-
-                <h3>Science and Research</h3>
-                <p>A substantial portion of my research background has been dedicated to the field of Cardiovascular
-                    Physiology and Sport Science. Currently, I am actively engaged in pursuing a Ph.D. thesis
-                    with a distinct focus on the application of neural networks in biomedicine, which involves
-                    research at the intersection of data science and medical studies. Over the years, I have
-                    contributed significantly to both local and international projects, assuming various
-                    responsibilities that have honed my expertise.</p>
-                <p>
-                    One notable aspect of my experience has been my involvement in clinical settings, where I have
-                    interfaced with a diverse set of tools and equipment such as ECG (Electrocardiogram) and CPET
-                    (Cardiopulmonary Exercise Testing) equipment. This hands-on experience in clinical environments
-                    has provided valuable insights into the practical application of my research and the translation
-                    of scientific findings into real-world healthcare settings.
-                </p>
-
+            <div class="hero-cta">
+                <a class="btn btn-outline" href="projects.html">View More Projects</a>
             </div>
         </div>
         <hr>
-        <div class="contact-me">
-            <h2>Get in touch.</h2>
-            <h3>If you love science and burgers as I do</h3>
-            <p class="contact-message">Love burgers? Let's talk about how awesome they are! We can code while we eat burgers!</p>
-            <a class="btn" href="mailto:stefan.seman404@gmail.com">CONTACT ME</a>
+
+        <!-- Work Experience Timeline -->
+        <div class="experience-section" id="experience">
+            <h2>Work Experience.</h2>
+            <p class="section-subtitle">My professional journey in ML/AI, Software Engineering, and Research</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Oct 2024 - Present</div>
+                    <div class="timeline-content">
+                        <h3>Senior Machine Learning Engineer & Software Engineer</h3>
+                        <p class="timeline-company">404 Solutions</p>
+                        <ul class="timeline-achievements">
+                            <li>Developed AI-powered document summarizer leveraging RAG, LLMs, and NLP techniques</li>
+                            <li>Built large-scale data ingestion, transformation pipelines, and ETL/ELT workflows</li>
+                            <li>Delivered scalable, high-accuracy solution for extracting insights from unstructured text</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">AWS</span>
+                            <span class="tag">PyTorch</span>
+                            <span class="tag">LangChain</span>
+                            <span class="tag">RAG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Oct 2023 - Sept 2024</div>
+                    <div class="timeline-content">
+                        <h3>Senior Data Scientist & Software Engineer in AI, R&D</h3>
+                        <p class="timeline-company">Publicis Sapient</p>
+                        <ul class="timeline-achievements">
+                            <li>Built Document Chatbot with optimized data ingestion pipelines and document retrieval</li>
+                            <li>Developed AI-Code Copilot from scratch with RAG techniques and fine-tuned LLMs</li>
+                            <li>Created PoCs for external client-based projects and propositions</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">FastAPI</span>
+                            <span class="tag">PySpark</span>
+                            <span class="tag">Azure</span>
+                            <span class="tag">KubeFlow</span>
+                            <span class="tag">AI Agents</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Jan 2023 - Oct 2023</div>
+                    <div class="timeline-content">
+                        <h3>Data Scientist & Developer - Senior Specialist</h3>
+                        <p class="timeline-company">Valcon Netherlands</p>
+                        <ul class="timeline-achievements">
+                            <li>Built data extraction and document classification services from scratch</li>
+                            <li>Created classification models and deep learning algorithms for unstructured text</li>
+                            <li>Led and mentored a team of 6 engineers</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">Azure DevOps</span>
+                            <span class="tag">Synapse</span>
+                            <span class="tag">Data Lake</span>
+                            <span class="tag">Docker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">May 2022 - Jan 2023</div>
+                    <div class="timeline-content">
+                        <h3>Data Scientist - Developer</h3>
+                        <p class="timeline-company">Valcon Netherlands</p>
+                        <ul class="timeline-achievements">
+                            <li>Developed chatbot summarization service proof of concept</li>
+                            <li>Extracted entities using Azure Cognitive Services and Azure LUIS</li>
+                            <li>Created front-end UI features and optimized codebase</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">NLP</span>
+                            <span class="tag">Azure Cognitive Services</span>
+                            <span class="tag">Vue.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Oct 2021 - Apr 2022</div>
+                    <div class="timeline-content">
+                        <h3>Data Scientist</h3>
+                        <p class="timeline-company">Optimal Systems GmbH</p>
+                        <ul class="timeline-achievements">
+                            <li>Worked on in-house document classification service</li>
+                            <li>Evaluated hyperparameters and model performance</li>
+                            <li>Conducted data analysis and testing for development</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Docker</span>
+                            <span class="tag">ML</span>
+                            <span class="tag">Azure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Mar 2020 - Mar 2022</div>
+                    <div class="timeline-content">
+                        <h3>Researcher</h3>
+                        <p class="timeline-company">BioIRC - Bioengineering R&D Center</p>
+                        <ul class="timeline-achievements">
+                            <li>SILICOFCM: EU Horizon 2020 project for computational clinical trials platform</li>
+                            <li>Conducted ECG, CPET, and body composition analysis</li>
+                            <li>Published scientific papers and presented findings at conferences</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">SPSS</span>
+                            <span class="tag">Biomedicine</span>
+                            <span class="tag">ECG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Oct 2018 - Mar 2022</div>
+                    <div class="timeline-content">
+                        <h3>PhD Researcher</h3>
+                        <p class="timeline-company">University of Belgrade</p>
+                        <ul class="timeline-achievements">
+                            <li>Created project work-plan methodology for doctoral research</li>
+                            <li>Conducted statistical analysis, hypothesis testing, and data collection</li>
+                            <li>Published research and presented at international conferences</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">PyTorch</span>
+                            <span class="tag">Machine Learning</span>
+                            <span class="tag">Biostatistics</span>
+                            <span class="tag">Research</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Oct 2014 - July 2018</div>
+                    <div class="timeline-content">
+                        <h3>Sports Scientist</h3>
+                        <p class="timeline-company">Sport and Recreation Center Obliqus</p>
+                        <ul class="timeline-achievements">
+                            <li>Conducted functional diagnostics with data and statistical analysis</li>
+                            <li>Worked with amateur and professional athletes on S&C preparation</li>
+                            <li>Evaluated effectiveness of exercise programs and wrote reports</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">LabVIEW</span>
+                            <span class="tag">SPSS</span>
+                            <span class="tag">Sport Science</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Publications Section -->
+        <div class="publications-section" id="publications">
+            <h2>Publications & Research.</h2>
+            <p class="section-subtitle">Academic contributions and research work</p>
+
+            <div class="publications-grid">
+                <div class="publication-card">
+                    <h3>A Machine Learning Approach to Gene Expression in Hypertrophic Cardiomyopathy</h3>
+                    <p class="publication-authors">Pavic, J., Zivanovic, M.N., Seman, S., et al.</p>
+                    <p class="publication-journal">Pharmaceuticals (MDPI), 2024</p>
+                    <p class="publication-abstract">Analysis of apoptosis-regulating gene expression in HCM patients using machine learning for feature importance and clustering analysis, identifying potential biomarkers for disease progression.</p>
+                    <div class="publication-links">
+                        <a href="https://www.mdpi.com/1424-8247/17/10/1364" target="_blank" class="publication-link">Read Paper</a>
+                    </div>
+                </div>
+
+                <div class="publication-card">
+                    <h3>Ventilatory Efficiency Parameters Outperform Peak VO2 in Monitoring Therapy Effects in HCM</h3>
+                    <p class="publication-authors">Seman, S., Tesic, M., Popovic, D., et al. (SILICOFCM Investigators)</p>
+                    <p class="publication-journal">Progress in Cardiovascular Diseases, Vol. 87, 2024</p>
+                    <p class="publication-abstract">Study identifying CPET parameters that most accurately reflect therapeutic efficacy in patients with hypertrophic cardiomyopathy over 16-week treatment and 36-month follow-up.</p>
+                    <div class="publication-links">
+                        <a href="https://academic.oup.com/eurheartj/article/45/Supplement_1/ehae666.2970/7837068" target="_blank" class="publication-link">Read Paper</a>
+                    </div>
+                </div>
+
+                <div class="publication-card">
+                    <h3>Defining the Importance of Stress Reduction in Managing Cardiovascular Disease - The Role of Exercise</h3>
+                    <p class="publication-authors">Popovic, D., Bjelobrk, M., Tesic, M., Seman, S., et al. (HL-PIVOT Collaborative)</p>
+                    <p class="publication-journal">Progress in Cardiovascular Diseases, Vol. 70, pp. 84-93, 2022</p>
+                    <p class="publication-abstract">Examines psychological and social factors influencing cardiovascular health, demonstrating that structured exercise programs enhance resilience to stress and reduce CVD risk. Cited 60+ times.</p>
+                    <div class="publication-links">
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/35131232/" target="_blank" class="publication-link">Read Paper</a>
+                    </div>
+                </div>
+
+                <div class="publication-card">
+                    <h3>Physical activity and exercise as an essential medical strategy for the COVID-19 pandemic and beyond</h3>
+                    <p class="publication-authors">Seman, S., Srzentic Drazilov, S., et al. (HL-PIVOT Network)</p>
+                    <p class="publication-journal">Experimental Biology and Medicine, Vol. 246, Issue 21, 2021</p>
+                    <p class="publication-abstract">Highlights how physical activity supports psychological, social, and physical health during the COVID-19 pandemic, and outlines exercise-driven strategies to strengthen immune response and preventive care.</p>
+                    <div class="publication-links">
+                        <a href="https://journals.sagepub.com/doi/abs/10.1177/15353702211028543" target="_blank" class="publication-link">Read Paper</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="publications-stats">
+                <div class="stat-item">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Publications</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100+</span>
+                    <span class="stat-label">Citations</span>
+                </div>
+            </div>
+
+            <div class="publications-more">
+                <p>View all publications on <a href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en" target="_blank">Google Scholar</a></p>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Skills Section (Restructured) -->
+        <div class="skills-section" id="skills">
+            <h2>Technical Skills.</h2>
+            <p class="section-subtitle">Technologies and tools I work with</p>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">LabVIEW</span>
+                        <span class="skill-tag">Bash</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>AI & ML Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">FastAPI</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">PyTorch</span>
+                        <span class="skill-tag">PySpark</span>
+                        <span class="skill-tag">LangChain</span>
+                        <span class="skill-tag">LlamaIndex</span>
+                        <span class="skill-tag">Transformers</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Cloud & DevOps</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Azure</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">KubeFlow</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Grafana</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Data & Storage</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">DynamoDB</span>
+                        <span class="skill-tag">Redis</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">PGVector</span>
+                        <span class="skill-tag">Pinecone</span>
+                        <span class="skill-tag">Milvus</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>AI Specializations</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Generative AI</span>
+                        <span class="skill-tag">RAG</span>
+                        <span class="skill-tag">LLMs</span>
+                        <span class="skill-tag">NLP</span>
+                        <span class="skill-tag">AI Agents</span>
+                        <span class="skill-tag">Fine-Tuning</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Research Domains</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Biomedicine</span>
+                        <span class="skill-tag">CPET</span>
+                        <span class="skill-tag">Sport Science</span>
+                        <span class="skill-tag">ECG</span>
+                        <span class="skill-tag">Cardiovascular Physiology</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Education Section -->
+        <div class="education-section" id="education">
+            <h2>Education.</h2>
+
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="education-degree">Ph.D. Candidate</div>
+                    <h3>Sport Science</h3>
+                    <p class="education-institution">University of Belgrade</p>
+                    <p class="education-year">2018 - Present</p>
+                    <p class="education-description">Research focus on machine learning applications in exercise physiology and biomedical signal processing.</p>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-degree">Master's Degree</div>
+                    <h3>Sports Medicine</h3>
+                    <p class="education-institution">University of Novi Sad</p>
+                    <p class="education-year">Completed</p>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-degree">Bachelor's Degree</div>
+                    <h3>Sport Science</h3>
+                    <p class="education-institution">University of Belgrade</p>
+                    <p class="education-year">Completed</p>
+                </div>
+            </div>
+
+            <h3 class="certifications-header">Certifications</h3>
+            <div class="certifications-grid">
+                <div class="certification-item">
+                    <span class="cert-badge">Microsoft</span>
+                    <span class="cert-name">Azure AI Associate</span>
+                </div>
+                <div class="certification-item">
+                    <span class="cert-badge">Microsoft</span>
+                    <span class="cert-name">Azure Data Fundamentals</span>
+                </div>
+                <div class="certification-item">
+                    <span class="cert-badge">Databricks</span>
+                    <span class="cert-name">Lakehouse Fundamentals</span>
+                </div>
+                <div class="certification-item">
+                    <span class="cert-badge">Databricks</span>
+                    <span class="cert-name">Generative AI Fundamentals</span>
+                </div>
+                <div class="certification-item">
+                    <span class="cert-badge">Coursera</span>
+                    <span class="cert-name">COVID-19 Contact Tracing (Johns Hopkins)</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="contact-me" id="contact">
+            <h2>Get in Touch.</h2>
+            <h3>Let's collaborate on something great</h3>
+            <p class="contact-message">I'm always interested in discussing research collaborations, data science opportunities, and innovative projects at the intersection of AI and healthcare.</p>
+            <div class="contact-buttons">
+                <a class="btn" href="mailto:sseman@outlook.com">CONTACT ME</a>
+                <a class="btn btn-outline" href="https://www.linkedin.com/in/sseman/" target="_blank">LinkedIn</a>
+            </div>
         </div>
     </div>
 
     <div class="bottom-container">
-        <a class="footerLink" href="https://www.linkedin.com/in/sseman/">LinkedIn</a>
-        <a class="footerLink" href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en">GoogleScholar</a>
-        <a class="footerLink" href="https://www.researchgate.net/profile/Stefan-Seman">ResearchGate</a>
-        <p class="copyright">© 2023 Stefan Seman</p>
+        <div class="footer-links">
+            <a class="footerLink" href="https://www.linkedin.com/in/sseman/" target="_blank">LinkedIn</a>
+            <a class="footerLink" href="https://github.com/ManSe404" target="_blank">GitHub</a>
+            <a class="footerLink" href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en" target="_blank">Google Scholar</a>
+            <a class="footerLink" href="https://www.researchgate.net/profile/Stefan-Seman" target="_blank">ResearchGate</a>
+        </div>
+        <p class="copyright">© 2026 Stefan Seman. All rights reserved.</p>
     </div>
+
+    <script src="js/main.js"></script>
     </body>
 
 </html>

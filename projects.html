@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Project portfolio for Stefan Seman - ML/AI, software engineering, and research initiatives with expanded details.">
+        <meta name="keywords" content="Projects, Machine Learning, AI, Software Engineering, Research, Portfolio">
+        <meta name="author" content="Stefan Seman">
+        <title>Projects | Stefan Seman</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="icon" href="images/picture.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Merriweather&family=Montserrat&family=Sacramento&display=swap"
+              rel="stylesheet">
+    </head>
+
+    <body class="projects-page">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">Stefan Seman</a>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-social">
+            <a href="https://www.linkedin.com/in/sseman/" target="_blank" aria-label="LinkedIn">in</a>
+            <a href="https://github.com/ManSe404" target="_blank" aria-label="GitHub">gh</a>
+            <a href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en" target="_blank" aria-label="Google Scholar">gs</a>
+        </div>
+    </nav>
+
+    <div class="top-container" id="projects-home">
+        <div class="title-text">
+            <h1>Projects</h1>
+            <h2 id="data-title">Selected work across ML/AI, software engineering, and research</h2>
+            <p class="tagline">Expanded case summaries with tools, scope, and outcomes.</p>
+            <div class="hero-cta">
+                <a class="btn btn-outline" href="index.html#projects">Back to Featured</a>
+                <a class="btn" href="#projects">View Projects</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="middle-container">
+        <div class="projects-section" id="projects">
+            <h2>Projects.</h2>
+            <p class="section-subtitle">Full list with expanded context and outcomes</p>
+
+            <div class="projects-grid">
+                <div class="project-card" id="project-summarizer">
+                    <div class="project-category">Generative AI</div>
+                    <h3>AI-Powered Document Summarizer</h3>
+                    <p>End-to-end document summarization pipeline leveraging RAG, Large Language Models (LLMs), and NLP techniques for unstructured corpora. Built to scale with tuned chunking, retrieval, and prompt templates.</p>
+                    <p>Highlights include traceable prompts, retrieval tuning, and evaluation loops to keep summaries concise and consistent across large document sets. Result: faster review cycles and clearer outputs for stakeholders.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: multi-source ingestion, semantic retrieval, and summarization pipeline.</li>
+                        <li>Quality: spot checks, prompt guardrails, and error analysis for drift.</li>
+                        <li>Impact: reduced manual synthesis and improved summary consistency.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AWS Bedrock</span>
+                        <span class="tag">S3</span>
+                        <span class="tag">Step Functions</span>
+                        <span class="tag">AWS SAM</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">LangChain</span>
+                        <span class="tag">LlamaIndex</span>
+                        <span class="tag">RAG</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-copilot">
+                    <div class="project-category">Generative AI</div>
+                    <h3>AI-Code Copilot</h3>
+                    <p>Enterprise AI copilot built for internal infrastructure and knowledge bases. Designed the RAG architecture, data pipelines, and model tuning to deliver accurate, context-aware assistance.</p>
+                    <p>Focused on secure retrieval over internal code/docs, access controls, and reliable preparation workflows. Result: reduced time spent searching documentation and improved developer throughput.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: code and docs retrieval with contextual grounding.</li>
+                        <li>Reliability: permission-aware access and response grounding.</li>
+                        <li>Impact: faster onboarding and issue triage for teams.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Redis</span>
+                        <span class="tag">LangChain</span>
+                        <span class="tag">AI Agents</span>
+                        <span class="tag">RAG</span>
+                        <span class="tag">Azure OpenAI</span>
+                        <span class="tag">Azure DevOps</span>
+                        <span class="tag">Grafana</span>
+                        <span class="tag">Fine-Tuning</span>
+                        <span class="tag">KubeFlow</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">Milvus</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-chatbot">
+                    <div class="project-category">ML/AI</div>
+                    <h3>Document Chatbot</h3>
+                    <p>Enterprise chatbot application with optimized data ingestion pipelines and document retrieval. Evaluated and fine-tuned LLMs to improve accuracy and answer consistency.</p>
+                    <p>Emphasis on reliable ingestion, high-quality retrieval, and consistent responses for business users. Result: quicker access to trusted answers and reduced support burden.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: ingestion, indexing, retrieval ranking, and response flow.</li>
+                        <li>Quality: curated QA set for evaluation and regressions.</li>
+                        <li>Impact: fewer repeated questions and faster response times.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">FastAPI</span>
+                        <span class="tag">Azure Search</span>
+                        <span class="tag">Azure Functions</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Azure OpenAI</span>
+                        <span class="tag">Azure Pipelines</span>
+                        <span class="tag">Data Lake</span>
+                        <span class="tag">RAG</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-classification">
+                    <div class="project-category">Software Engineering</div>
+                    <h3>Document Data Extractor Service</h3>
+                    <p>Built data extraction and document classification services from scratch. Created deep learning algorithms for unstructured text and led a team of 6 engineers.</p>
+                    <p>Delivered production-ready services that automated document workflows and improved classification reliability. Result: reduced manual tagging effort and faster document intake.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: extraction and classification services with clear APIs.</li>
+                        <li>Ops: containerized deployment and batch processing.</li>
+                        <li>Impact: higher consistency and lower manual workload.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Azure Data Factory</span>
+                        <span class="tag">Synapse</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">PyTorch</span>
+                        <span class="tag">Embeddings</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Data Lake</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-etl">
+                    <div class="project-category">Cloud / AWS</div>
+                    <h3>Large-Scale ETL Pipeline</h3>
+                    <p>Large-scale data ingestion and transformation pipelines on AWS with serverless orchestration. Designed for high-volume, resilient processing.</p>
+                    <p>Focused on reliable processing with cloud-native orchestration. Result: higher throughput, more stable runs, and lower operational overhead.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: event-driven ingestion and transformation workflows.</li>
+                        <li>Reliability: retries, monitoring, and failure isolation.</li>
+                        <li>Impact: reduced cost per run and faster delivery.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AWS Lambda</span>
+                        <span class="tag">S3</span>
+                        <span class="tag">Step Functions</span>
+                        <span class="tag">DynamoDB</span>
+                        <span class="tag">AWS SAM</span>
+                        <span class="tag">ECS</span>
+                        <span class="tag">EC2</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-silicofcm">
+                    <div class="project-category">Research</div>
+                    <h3>SILICOFCM - EU Horizon 2020</h3>
+                    <p>Computational platform for in silico clinical trials of familial cardiomyopathies (FCMs), funded under EU Horizon 2020 grant agreement No. 777204. The multi-modular system models how sarcomeric protein mutations affect heart function and drug responses, integrating patient-specific data across genetic, biological, pharmacologic, and clinical dimensions.</p>
+                    <p>Key contributions included ECG and CPET analysis, statistical modeling, and development of patient-specific 3D heart models. The platform aims to optimize treatment strategies while minimizing adverse effects and reducing reliance on animal and human clinical trials.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: ECG/CPET signal analysis, patient-specific cardiac modeling, disease progression tracking, and drug effectiveness assessment.</li>
+                        <li>Outputs: peer-reviewed publications, conference presentations, video tutorials, and clinical insights supporting personalized medicine.</li>
+                        <li>Impact: reproducible analysis pipelines enabling evidence-based treatment optimization for cardiomyopathy patients.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">PyTorch</span>
+                        <span class="tag">Data Analysis</span>
+                        <span class="tag">Biostatistics</span>
+                        <span class="tag">ECG</span>
+                        <span class="tag">CPET</span>
+                        <span class="tag">In Silico Trials</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://silicofcm.eu/" target="_blank" class="project-link">Project Website</a>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-doc-classification">
+                    <div class="project-category">Software Engineering</div>
+                    <h3>Document Classification Service</h3>
+                    <p>End-to-end document processing service designed to extract, classify, and store relevant data from unstructured documents. Built containerized microservices architecture on Azure for scalable document intake and automated categorization.</p>
+                    <p>The system ingests documents from multiple sources, applies ML-based classification models, and persists structured outputs to downstream storage. Result: streamlined document workflows with consistent labeling and reduced manual intervention.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: document ingestion, text extraction, ML classification, and structured storage.</li>
+                        <li>Architecture: containerized services with clear separation of extraction, classification, and persistence layers.</li>
+                        <li>Impact: automated document categorization reducing manual tagging and improving data consistency.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Azure</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">REST API</span>
+                        <span class="tag">ML Classification</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-data-extraction">
+                    <div class="project-category">Data Engineering</div>
+                    <h3>Data Extraction Service</h3>
+                    <p>Comprehensive data extraction and transformation platform built on Azure. The pipeline orchestrates ETL workflows from raw data ingestion through classification, embedding generation, and analytics-ready outputs for business intelligence.</p>
+                    <p>Designed to handle diverse data sources with automated pipelines that clean, classify, and enrich data before loading into Data Lake storage. Integrated with Power BI for real-time dashboards and reporting.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: ETL pipeline design, data classification, embedding generation, and BI integration.</li>
+                        <li>Architecture: Azure Data Factory orchestration with Data Lake storage and Power BI visualization layer.</li>
+                        <li>Impact: unified data platform enabling self-service analytics and faster insight delivery.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">FastAPI</span>
+                        <span class="tag">Azure Data Factory</span>
+                        <span class="tag">Synapse</span>
+                        <span class="tag">Data Lake</span>
+                        <span class="tag">Power BI</span>
+                        <span class="tag">ETL</span>
+                        <span class="tag">Embeddings</span>
+                    </div>
+                </div>
+
+                <div class="project-card" id="project-voice-chatbot">
+                    <div class="project-category">Conversational AI</div>
+                    <h3>Voice-Enabled Support Chatbot</h3>
+                    <p>End-to-end conversational AI system for telephone support with speech-to-text and text-to-speech capabilities. Built to handle customer inquiries, policy questions, and claims status through natural voice interactions.</p>
+                    <p>The system transcribes caller speech in real-time, processes intent and entities using Azure LUIS, generates contextual responses, and synthesizes natural-sounding voice replies. Designed for high availability and seamless integration with existing telephony infrastructure.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: speech recognition, intent classification, entity extraction, dialogue management, and speech synthesis.</li>
+                        <li>Architecture: containerized microservices with Azure Cognitive Services (Speech, LUIS, Bot Service) and telephony integration.</li>
+                        <li>Impact: reduced call center wait times, 24/7 availability, and improved customer satisfaction for routine inquiries.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Azure LUIS</span>
+                        <span class="tag">Azure Speech Services</span>
+                        <span class="tag">Azure Bot Service</span>
+                        <span class="tag">Telephony</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="contact-me" id="contact">
+            <h2>Get in Touch.</h2>
+            <h3>Let's collaborate on something great</h3>
+            <p class="contact-message">I'm always interested in discussing research collaborations, data science opportunities, and innovative projects at the intersection of AI and healthcare.</p>
+            <div class="contact-buttons">
+                <a class="btn" href="mailto:sseman@outlook.com">CONTACT ME</a>
+                <a class="btn btn-outline" href="https://www.linkedin.com/in/sseman/" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-container">
+        <div class="footer-links">
+            <a class="footerLink" href="https://www.linkedin.com/in/sseman/" target="_blank">LinkedIn</a>
+            <a class="footerLink" href="https://github.com/ManSe404" target="_blank">GitHub</a>
+            <a class="footerLink" href="https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en" target="_blank">Google Scholar</a>
+            <a class="footerLink" href="https://www.researchgate.net/profile/Stefan-Seman" target="_blank">ResearchGate</a>
+        </div>
+        <p class="copyright">© 2026 Stefan Seman. All rights reserved.</p>
+    </div>
+
+    <script src="js/main.js"></script>
+    </body>
+</html>
