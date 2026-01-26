@@ -52,7 +52,7 @@
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <span class="stat-number count-up" data-target="9">0</span>
+                        <span class="stat-number count-up" data-target="11">0</span>
                         <span class="stat-label">Projects</span>
                     </div>
                     <div class="hero-stat">
@@ -133,6 +133,28 @@
                     </div>
                 </div>
 
+                <div class="project-card reveal" id="project-riskfocus">
+                    <div class="project-category">Generative AI</div>
+                    <h3>RiskFocus (RiskSummariser Enhancement)</h3>
+                    <p>RiskFocus feature for the RiskSummariser application to strengthen risk assessment workflows, including multi-document data lineage and risk factor management across lines of business.</p>
+                    <p>Implemented a generalized prompt strategy backed by an admin-managed knowledge base and added Q&A functionality to improve decision-making and engagement.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: integrate RiskFocus with a multi-document data lineage UI.</li>
+                        <li>Admin: manage risk factors by line of business and knowledge base content.</li>
+                        <li>Experience: Q&A workflows for guided user decisions.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">LangChain</span>
+                        <span class="tag">AWS Lambda</span>
+                        <span class="tag">ECS</span>
+                        <span class="tag">S3</span>
+                        <span class="tag">AWS Bedrock</span>
+                        <span class="tag">Step Functions</span>
+                        <span class="tag">RAG</span>
+                    </div>
+                </div>
+
                 <div class="project-card reveal" id="project-chatbot">
                     <div class="project-category">ML/AI</div>
                     <h3>Document Chatbot</h3>
@@ -156,6 +178,49 @@
                     </div>
                 </div>
 
+                <div class="project-card reveal" id="project-auto-market">
+                    <div class="project-category">Data Engineering</div>
+                    <h3>Auto Market Data Platform</h3>
+                    <p>Built a multi-source ingestion pipeline for auto market analytics, pulling from production databases and web scraping sources into a centralized data lake.</p>
+                    <p>Processed and normalized data with Databricks and Python, then loaded curated datasets into analytics databases for downstream reporting.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: ingestion from databases and web scraping, staging in Data Lake, and curated loads for analytics.</li>
+                        <li>Architecture: Azure Data Factory orchestration with containerized Python/FastAPI services.</li>
+                        <li>Impact: analytics-ready datasets for market insights and performance tracking.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Azure</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Data Lake</span>
+                        <span class="tag">Databricks</span>
+                        <span class="tag">Azure Data Factory</span>
+                        <span class="tag">FastAPI</span>
+                    </div>
+                </div>
+
+                <div class="project-card reveal" id="project-etl">
+                    <div class="project-category">Cloud / AWS</div>
+                    <h3>Large-Scale Document ETL Pipelines</h3>
+                    <p>Large-scale document ingestion and transformation pipelines on AWS with serverless orchestration. Designed for high-volume, resilient processing.</p>
+                    <p>Focused on document load, parse, transform, and load to S3 workflows. Result: higher throughput, more stable runs, and lower operational overhead.</p>
+                    <ul class="project-bullets">
+                        <li>Scope: event-driven document ingestion, parsing, transformation, and S3 load workflows.</li>
+                        <li>Reliability: retries, monitoring, and failure isolation.</li>
+                        <li>Impact: reduced cost per run and faster delivery.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AWS Lambda</span>
+                        <span class="tag">S3</span>
+                        <span class="tag">Step Functions</span>
+                        <span class="tag">DynamoDB</span>
+                        <span class="tag">AWS SAM</span>
+                        <span class="tag">ECS</span>
+                        <span class="tag">EC2</span>
+                    </div>
+                </div>
+
                 <div class="project-card reveal" id="project-classification">
                     <div class="project-category">Software Engineering</div>
                     <h3>Document Data Extractor Service</h3>
@@ -176,28 +241,6 @@
                         <span class="tag">Embeddings</span>
                         <span class="tag">ETL</span>
                         <span class="tag">Data Lake</span>
-                    </div>
-                </div>
-
-                <div class="project-card reveal" id="project-etl">
-                    <div class="project-category">Cloud / AWS</div>
-                    <h3>Large-Scale ETL Pipeline</h3>
-                    <p>Large-scale data ingestion and transformation pipelines on AWS with serverless orchestration. Designed for high-volume, resilient processing.</p>
-                    <p>Focused on reliable processing with cloud-native orchestration. Result: higher throughput, more stable runs, and lower operational overhead.</p>
-                    <ul class="project-bullets">
-                        <li>Scope: event-driven ingestion and transformation workflows.</li>
-                        <li>Reliability: retries, monitoring, and failure isolation.</li>
-                        <li>Impact: reduced cost per run and faster delivery.</li>
-                    </ul>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">AWS Lambda</span>
-                        <span class="tag">S3</span>
-                        <span class="tag">Step Functions</span>
-                        <span class="tag">DynamoDB</span>
-                        <span class="tag">AWS SAM</span>
-                        <span class="tag">ECS</span>
-                        <span class="tag">EC2</span>
                     </div>
                 </div>
 
@@ -225,23 +268,23 @@
                     </div>
                 </div>
 
-                <div class="project-card reveal" id="project-doc-classification">
-                    <div class="project-category">Software Engineering</div>
-                    <h3>Document Classification Service</h3>
-                    <p>End-to-end document processing service designed to extract, classify, and store relevant data from unstructured documents. Built containerized microservices architecture on Azure for scalable document intake and automated categorization.</p>
-                    <p>The system ingests documents from multiple sources, applies ML-based classification models, and persists structured outputs to downstream storage. Result: streamlined document workflows with consistent labeling and reduced manual intervention.</p>
+                <div class="project-card reveal" id="project-voice-chatbot">
+                    <div class="project-category">Conversational AI</div>
+                    <h3>Voice-Enabled Support Chatbot</h3>
+                    <p>End-to-end conversational AI system for telephone support with speech-to-text and text-to-speech capabilities. Built to handle customer inquiries, policy questions, and claims status through natural voice interactions.</p>
+                    <p>The system transcribes caller speech in real-time, processes intent and entities using Azure LUIS, generates contextual responses, and synthesizes natural-sounding voice replies. Designed for high availability and seamless integration with existing telephony infrastructure.</p>
                     <ul class="project-bullets">
-                        <li>Scope: document ingestion, text extraction, ML classification, and structured storage.</li>
-                        <li>Architecture: containerized services with clear separation of extraction, classification, and persistence layers.</li>
-                        <li>Impact: automated document categorization reducing manual tagging and improving data consistency.</li>
+                        <li>Scope: speech recognition, intent classification, entity extraction, dialogue management, and speech synthesis.</li>
+                        <li>Architecture: containerized microservices with Azure Cognitive Services (Speech, LUIS, Bot Service) and telephony integration.</li>
+                        <li>Impact: reduced call center wait times, 24/7 availability, and improved customer satisfaction for routine inquiries.</li>
                     </ul>
                     <div class="project-tags">
                         <span class="tag">Python</span>
                         <span class="tag">Docker</span>
-                        <span class="tag">Azure</span>
-                        <span class="tag">Flask</span>
-                        <span class="tag">REST API</span>
-                        <span class="tag">ML Classification</span>
+                        <span class="tag">Azure LUIS</span>
+                        <span class="tag">Azure Speech Services</span>
+                        <span class="tag">Azure Bot Service</span>
+                        <span class="tag">Telephony</span>
                     </div>
                 </div>
 
@@ -267,23 +310,23 @@
                     </div>
                 </div>
 
-                <div class="project-card reveal" id="project-voice-chatbot">
-                    <div class="project-category">Conversational AI</div>
-                    <h3>Voice-Enabled Support Chatbot</h3>
-                    <p>End-to-end conversational AI system for telephone support with speech-to-text and text-to-speech capabilities. Built to handle customer inquiries, policy questions, and claims status through natural voice interactions.</p>
-                    <p>The system transcribes caller speech in real-time, processes intent and entities using Azure LUIS, generates contextual responses, and synthesizes natural-sounding voice replies. Designed for high availability and seamless integration with existing telephony infrastructure.</p>
+                <div class="project-card reveal" id="project-doc-classification">
+                    <div class="project-category">Software Engineering</div>
+                    <h3>Document Classification Service</h3>
+                    <p>End-to-end document processing service designed to extract, classify, and store relevant data from unstructured documents. Built containerized microservices architecture on Azure for scalable document intake and automated categorization.</p>
+                    <p>The system ingests documents from multiple sources, applies ML-based classification models, and persists structured outputs to downstream storage. Result: streamlined document workflows with consistent labeling and reduced manual intervention.</p>
                     <ul class="project-bullets">
-                        <li>Scope: speech recognition, intent classification, entity extraction, dialogue management, and speech synthesis.</li>
-                        <li>Architecture: containerized microservices with Azure Cognitive Services (Speech, LUIS, Bot Service) and telephony integration.</li>
-                        <li>Impact: reduced call center wait times, 24/7 availability, and improved customer satisfaction for routine inquiries.</li>
+                        <li>Scope: document ingestion, text extraction, ML classification, and structured storage.</li>
+                        <li>Architecture: containerized services with clear separation of extraction, classification, and persistence layers.</li>
+                        <li>Impact: automated document categorization reducing manual tagging and improving data consistency.</li>
                     </ul>
                     <div class="project-tags">
                         <span class="tag">Python</span>
                         <span class="tag">Docker</span>
-                        <span class="tag">Azure LUIS</span>
-                        <span class="tag">Azure Speech Services</span>
-                        <span class="tag">Azure Bot Service</span>
-                        <span class="tag">Telephony</span>
+                        <span class="tag">Azure</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">REST API</span>
+                        <span class="tag">ML Classification</span>
                     </div>
                 </div>
             </div>
