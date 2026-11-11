@@ -5,7 +5,7 @@ summary: A personal tool that collects used-car ads from a Serbian marketplace i
 order: 25
 org: Personal
 period: 2023 — 2026
-link: https://github.com/ManSe404/car_scraper
+link: https://github.com/ManSe404/car_watcher
 impact:
   - Price history and days listed per ad, market statistics per model, and ads flagged below their expected price
   - Nothing bypasses the site's protection — the extension reads the site's own page data in your browser session and stops for 12 hours when the site refuses
