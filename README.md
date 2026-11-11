@@ -85,6 +85,7 @@ I'm always open to discussing new opportunities, collaborations, and innovative 
 ```
 website/    Astro source for the live site — see website/README.md
 files/      CV (PDF + its HTML source in files/cv/) and reference material
+docs/       how the site is built and maintained — start at docs/README.md
 ```
 
 Content is data-driven: markdown case studies in `website/src/content/projects/`,
