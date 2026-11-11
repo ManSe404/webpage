@@ -70,14 +70,18 @@ column periodically and the numbers above it update themselves.
 
 ## Deployment
 
-`.github/workflows/deploy-website.yml` is the only workflow, and it runs when
-anything under `website/` or the workflow itself changes:
+`.github/workflows/deploy-website.yml` is the only workflow:
 
 | Event | What runs |
 | --- | --- |
-| Pull request | `npm ci`, `npm run check`, `npm run build` — a failing check blocks nothing yet, but shows on the PR |
-| Push to `main` | the same checks, then `website/dist` is deployed to GitHub Pages |
+| Every pull request | `npm ci`, `npm run check`, `npm run build` as the job `build` |
+| Push to `main` touching `website/` or the workflow | the same checks, then `website/dist` is deployed to GitHub Pages |
 | Manual dispatch | the same as a push to `main` — redeploys the current `main` |
+
+`main` takes changes only through a pull request, and `build` is a required
+check there, so a pull request whose build fails cannot be merged. The job
+name is what the rule matches: renaming `build` in the workflow means updating
+the rule on GitHub too.
 
 CI builds on Node 24 (set in the workflow); use Node 22 or newer locally.
 
