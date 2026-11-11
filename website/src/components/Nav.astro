@@ -2,14 +2,20 @@
 import profile from '../data/profile.json';
 import { withBase } from '../lib/url';
 
+// Pages and home-page sections, in the order the home page tells the story.
+// `page` marks a link that owns a route, so it can be highlighted while you
+// are on it (or below it, as on a case study under /projects).
 const links = [
-  { label: 'Work', href: withBase('/#work') },
-  { label: 'Collaborations', href: withBase('/#collaborations') },
-  { label: 'Journey', href: withBase('/#journey') },
-  { label: 'Research', href: withBase('/research') },
-  { label: 'Stack', href: withBase('/#stack') },
-  { label: 'Contact', href: withBase('/#contact') },
+  { label: 'Projects', href: withBase('/projects'), page: true },
+  { label: 'Collaborations', href: withBase('/#collaborations'), page: false },
+  { label: 'Career', href: withBase('/#journey'), page: false },
+  { label: 'Research', href: withBase('/research'), page: true },
+  { label: 'Contact', href: withBase('/#contact'), page: false },
 ];
+
+const here = Astro.url.pathname.replace(/\/$/, '');
+const isCurrent = (link: (typeof links)[number]) =>
+  link.page && (here === link.href || here.startsWith(`${link.href}/`));
 
 const social = [
   { label: 'in', title: 'LinkedIn', href: profile.links.linkedin },
@@ -33,9 +39,16 @@ const social = [
     <nav class="nav-menu" data-nav-menu>
       <ul class="nav-links">
         {links.map((link) => (
-          <li><a href={link.href}>{link.label}</a></li>
+          <li>
+            <a href={link.href} aria-current={isCurrent(link) ? 'page' : undefined}>
+              {link.label}
+            </a>
+          </li>
         ))}
       </ul>
+      <a class="nav-cv" href={withBase(profile.cv)} download>
+        CV <span aria-hidden="true">↓</span>
+      </a>
       <ul class="nav-social">
         {social.map((item) => (
           <li>
@@ -167,8 +180,33 @@ const social = [
     color: var(--text);
   }
 
-  .nav-links a:hover::after {
+  .nav-links a:hover::after,
+  .nav-links a[aria-current='page']::after {
     transform: scaleX(1);
+  }
+
+  .nav-links a[aria-current='page'] {
+    color: var(--text);
+  }
+
+  .nav-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(var(--bio-rgb), 0.55);
+    border-radius: var(--radius-sm);
+    background: rgba(var(--bio-rgb), 0.1);
+    color: var(--bio);
+    transition: background 0.28s var(--ease), box-shadow 0.28s var(--ease);
+  }
+
+  .nav-cv:hover {
+    background: rgba(var(--bio-rgb), 0.18);
+    box-shadow: 0 0 16px -4px var(--glow-bio);
   }
 
   .nav-social {
