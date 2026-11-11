@@ -1,11 +1,20 @@
-# Builds the Astro site in website/ and deploys it to GitHub Pages.
+# Checks the Astro site in website/ and publishes it to GitHub Pages.
+#
+# Pull request: type-check (astro check) and a full build, so a frontmatter
+# typo, a broken import or a type error fails on the PR instead of on main.
+# Push to main: the same checks, then the build is deployed to Pages.
 #
 # This is the only workflow that publishes the site. The previous root-level
 # static.yml (which uploaded the whole repo verbatim) was removed when the v1
 # site was archived — see the v1-legacy tag.
-name: Deploy website (Astro)
+name: Website (check + deploy)
 
 on:
+  pull_request:
+    paths:
+      - "website/**"
+      - ".github/workflows/deploy-website.yml"
+
   push:
     branches: ["main"]
     paths:
@@ -16,12 +25,12 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# A PR run is superseded by the next push to the same PR. Deploys queue in one
+# group and are never cancelled midway, so Pages is not left half-published.
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('check-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 defaults:
   run:
@@ -30,38 +39,46 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: website/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Type-check
+        run: npm run check
+
       - name: Build
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
         with:
           path: website/dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+      actions: read
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

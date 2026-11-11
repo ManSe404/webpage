@@ -70,14 +70,16 @@ column periodically and the numbers above it update themselves.
 
 ## Deployment
 
-`.github/workflows/deploy-website.yml` builds this directory and publishes
-`website/dist` to GitHub Pages. It is **manual-dispatch only** right now so the
-existing site (served by `static.yml` from the repo root) stays live.
+`.github/workflows/deploy-website.yml` is the only workflow, and it runs when
+anything under `website/` or the workflow itself changes:
 
-To switch over:
+| Event | What runs |
+| --- | --- |
+| Pull request | `npm ci`, `npm run check`, `npm run build` — a failing check blocks nothing yet, but shows on the PR |
+| Push to `main` | the same checks, then `website/dist` is deployed to GitHub Pages |
+| Manual dispatch | the same as a push to `main` — redeploys the current `main` |
 
-1. Delete `.github/workflows/static.yml`.
-2. Uncomment the `push` trigger in `deploy-website.yml`.
+CI builds on Node 24 (set in the workflow); use Node 22 or newer locally.
 
 `astro.config.mjs` sets `base: '/webpage'` to match the repository name. If the
 repo is renamed or moved to a custom domain, update `site` and `base` there.
