@@ -15,6 +15,12 @@ const { height = 130, class: className = '' } = Astro.props;
 <script>
   const HEIGHT_FALLBACK = 130;
 
+  // Colours come from the design tokens in global.css, so the trace follows
+  // the palette instead of carrying its own copy of it.
+  const tokens = getComputedStyle(document.documentElement);
+  const BIO = tokens.getPropertyValue('--bio-rgb').trim() || '255, 182, 39';
+  const HEAD = tokens.getPropertyValue('--bio-bright').trim() || '#ffd27a';
+
   document.querySelectorAll<HTMLElement>('.ecg').forEach((host) => {
     const canvas = host.querySelector<HTMLCanvasElement>('[data-ecg]');
     const ctx = canvas?.getContext('2d');
@@ -75,7 +81,7 @@ const { height = 130, class: className = '' } = Astro.props;
       ctx.clearRect(0, 0, width, height);
 
       // Baseline
-      ctx.strokeStyle = 'rgba(45, 212, 191, 0.14)';
+      ctx.strokeStyle = `rgba(${BIO}, 0.14)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, mid);
@@ -96,20 +102,20 @@ const { height = 130, class: className = '' } = Astro.props;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
 
-      ctx.strokeStyle = 'rgba(45, 212, 191, 0.30)';
+      ctx.strokeStyle = `rgba(${BIO}, 0.30)`;
       ctx.lineWidth = 5;
       ctx.filter = 'blur(6px)';
       drawTrace();
 
       ctx.filter = 'none';
-      ctx.strokeStyle = '#2dd4bf';
+      ctx.strokeStyle = `rgb(${BIO})`;
       ctx.lineWidth = 1.7;
       drawTrace();
 
       // Leading dot at the right edge, where new signal enters.
       const headY = mid - samples[width - 1] * amp;
-      ctx.fillStyle = '#5eead4';
-      ctx.shadowColor = '#2dd4bf';
+      ctx.fillStyle = HEAD;
+      ctx.shadowColor = `rgb(${BIO})`;
       ctx.shadowBlur = 14;
       ctx.beginPath();
       ctx.arc(width - 1, headY, 3, 0, Math.PI * 2);

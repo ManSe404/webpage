@@ -95,7 +95,8 @@ never drift from the list underneath them.
 The CV is generated rather than hand-edited: `files/cv/stefan-seman-cv.html`
 is the source, rendered to PDF with [WeasyPrint](https://weasyprint.org/).
 
-Pushing to `main` builds and deploys automatically via GitHub Actions.
+Pull requests are type-checked and built by GitHub Actions; pushing to `main`
+runs the same checks and deploys the site to GitHub Pages.
 
 The hand-written site this replaced is not in the working tree; it is preserved
 at the [`v1-legacy`](https://github.com/ManSe404/webpage/tree/v1-legacy) tag.

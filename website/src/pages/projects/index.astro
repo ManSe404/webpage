@@ -117,7 +117,7 @@ const rest = projects.slice(3);
   .page-title {
     font-size: clamp(2.4rem, 6vw, 4rem);
     margin-block: 0.75rem 1rem;
-    background: linear-gradient(120deg, #ffffff 25%, var(--bio) 85%);
+    background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -156,8 +156,8 @@ const rest = projects.slice(3);
 
   .filter.is-active {
     color: var(--bio);
-    border-color: rgba(45, 212, 191, 0.5);
-    background: rgba(45, 212, 191, 0.09);
+    border-color: rgba(var(--bio-rgb), 0.5);
+    background: rgba(var(--bio-rgb), 0.09);
     box-shadow: 0 0 20px -8px var(--glow-bio);
   }
 

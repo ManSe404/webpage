@@ -75,7 +75,7 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
     background: linear-gradient(
       180deg,
       var(--bio) 0%,
-      rgba(45, 212, 191, 0.28) 45%,
+      rgba(var(--bio-rgb), 0.28) 45%,
       transparent 100%
     );
   }
@@ -97,7 +97,7 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
 
   .timeline-node.is-current {
     background: var(--bio);
-    box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.14), 0 0 16px var(--glow-bio);
+    box-shadow: 0 0 0 4px rgba(var(--bio-rgb), 0.14), 0 0 16px var(--glow-bio);
   }
 
   /* Pulse ring on the current role only. */
@@ -135,8 +135,8 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
     font-size: 0.63rem;
     letter-spacing: 0.12em;
     color: var(--bio);
-    border: 1px solid rgba(45, 212, 191, 0.35);
-    background: rgba(45, 212, 191, 0.09);
+    border: 1px solid rgba(var(--bio-rgb), 0.35);
+    background: rgba(var(--bio-rgb), 0.09);
     border-radius: 999px;
     padding: 0.1rem 0.5rem;
   }
