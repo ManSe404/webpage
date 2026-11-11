@@ -1,32 +1,45 @@
 /* ==========================================================================
    Stefan Seman — design tokens
-   Dark lab aesthetic: near-black substrate, teal biosignal accent, violet AI
-   accent, mono type for anything that reads as data.
+   Hive aesthetic: honey on warm dark wood, a faint honeycomb, mono type for
+   anything that reads as data. Same palette as the GitHub profile header and
+   Mission Control, so the three read as one brand.
+
+   Every accent also has an `-rgb` channel triplet so components and canvases
+   can build translucent variants (`rgba(var(--bio-rgb), 0.2)`) without
+   repeating a raw colour. Change a colour here and nowhere else.
    ========================================================================== */
 
 :root {
   /* Substrate */
-  --bg: #05070b;
-  --bg-raised: #0a0e15;
-  --surface: rgba(255, 255, 255, 0.028);
-  --surface-hover: rgba(255, 255, 255, 0.055);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  --bg: #13100a;
+  --bg-rgb: 19, 16, 10;
+  --bg-raised: #1d1810;
+  --surface: rgba(255, 228, 176, 0.03);
+  --surface-hover: rgba(255, 228, 176, 0.06);
+  --border: rgba(205, 185, 143, 0.14);
+  --border-strong: rgba(205, 185, 143, 0.28);
 
   /* Ink */
-  --text: #e8edf4;
-  --text-dim: #97a3b6;
-  --text-faint: #5f6b7d;
+  --text: #f7edd9;
+  --text-dim: #cdb98f;
+  --text-faint: #8f7d5b;
+  --on-accent: #2a1c00;   /* ink on a filled honey surface */
 
   /* Accents */
-  --bio: #2dd4bf;         /* biosignal teal — ECG, data, "science" */
-  --bio-dim: #14b8a6;
-  --ai: #a78bfa;          /* neural violet — AI, models, "machine" */
-  --ai-dim: #8b5cf6;
-  --warn: #fbbf24;
+  --bio: #ffb627;         /* honey — ECG, data, "science" */
+  --bio-rgb: 255, 182, 39;
+  --bio-dim: #f59e0b;
+  --bio-bright: #ffd27a;  /* leading dot of the ECG trace */
+  --ai: #ff9c80;          /* ember — AI, models, "machine" */
+  --ai-rgb: 255, 156, 128;
+  --ai-dim: #f0785a;
+  --warn: #ff9a57;
 
-  --glow-bio: rgba(45, 212, 191, 0.5);
-  --glow-ai: rgba(167, 139, 250, 0.45);
+  --glow-bio: rgba(var(--bio-rgb), 0.45);
+  --glow-ai: rgba(var(--ai-rgb), 0.4);
+
+  /* One cell of the comb, pointy-top, drawn as a repeating tile. */
+  --comb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='72' viewBox='0 0 28 48'%3E%3Cpath d='M14 0L28 8V24L14 32L0 24V8ZM14 32V48' fill='none' stroke='%23f7edd9' stroke-opacity='0.045' stroke-width='0.8'/%3E%3C/svg%3E");
 
   /* Type */
   --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
@@ -108,11 +121,11 @@ ol {
 
 ::selection {
   background: var(--bio);
-  color: #04121a;
+  color: var(--on-accent);
 }
 
 /* --------------------------------------------------------------------------
-   The page substrate — faint engineering grid + two slow aurora blooms.
+   The page substrate — faint honeycomb + two slow warm blooms.
    Fixed and non-interactive so it reads as a backdrop, not content.
    -------------------------------------------------------------------------- */
 
@@ -127,10 +140,8 @@ ol {
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
-  background-size: 58px 58px;
+  background-image: var(--comb);
+  background-size: 42px 72px;
   mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 20%, transparent 78%);
   -webkit-mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 20%, transparent 78%);
 }
@@ -140,8 +151,8 @@ ol {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(50rem 32rem at 12% -8%, rgba(45, 212, 191, 0.11), transparent 62%),
-    radial-gradient(46rem 30rem at 88% 8%, rgba(167, 139, 250, 0.10), transparent 60%);
+    radial-gradient(50rem 32rem at 12% -8%, rgba(var(--bio-rgb), 0.10), transparent 62%),
+    radial-gradient(46rem 30rem at 88% 8%, rgba(var(--ai-rgb), 0.07), transparent 60%);
   animation: drift 26s var(--ease) infinite alternate;
 }
 
@@ -268,7 +279,7 @@ p {
 /* Cards that link somewhere lift slightly and light their top edge. */
 .card-link:hover {
   transform: translateY(-4px);
-  border-color: rgba(45, 212, 191, 0.42);
+  border-color: rgba(var(--bio-rgb), 0.42);
 }
 
 .card-link::after {
@@ -301,7 +312,7 @@ p {
   font-size: 0.71rem;
   letter-spacing: 0.04em;
   color: var(--text-dim);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 228, 176, 0.04);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.22rem 0.65rem;
@@ -310,14 +321,14 @@ p {
 
 .chip-bio {
   color: var(--bio);
-  border-color: rgba(45, 212, 191, 0.28);
-  background: rgba(45, 212, 191, 0.07);
+  border-color: rgba(var(--bio-rgb), 0.28);
+  background: rgba(var(--bio-rgb), 0.07);
 }
 
 .chip-ai {
   color: var(--ai);
-  border-color: rgba(167, 139, 250, 0.28);
-  background: rgba(167, 139, 250, 0.07);
+  border-color: rgba(var(--ai-rgb), 0.28);
+  background: rgba(var(--ai-rgb), 0.07);
 }
 
 /* --------------------------------------------------------------------------
@@ -334,14 +345,14 @@ p {
   padding: 0.72rem 1.35rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--bio);
-  background: rgba(45, 212, 191, 0.1);
+  background: rgba(var(--bio-rgb), 0.1);
   color: var(--bio);
   transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease),
     transform 0.3s var(--ease);
 }
 
 .btn:hover {
-  background: rgba(45, 212, 191, 0.19);
+  background: rgba(var(--bio-rgb), 0.19);
   box-shadow: 0 0 26px -6px var(--glow-bio);
   transform: translateY(-2px);
 }
@@ -443,7 +454,7 @@ p {
 
 .prose a {
   color: var(--bio);
-  border-bottom: 1px solid rgba(45, 212, 191, 0.35);
+  border-bottom: 1px solid rgba(var(--bio-rgb), 0.35);
   transition: border-color 0.25s var(--ease);
 }
 
@@ -477,7 +488,7 @@ p {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.87em;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 228, 176, 0.06);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.1em 0.4em;

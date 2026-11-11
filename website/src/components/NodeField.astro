@@ -16,6 +16,11 @@
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const LINK_DISTANCE = 132;
 
+    // Colours come from the design tokens in global.css.
+    const tokens = getComputedStyle(document.documentElement);
+    const BIO = tokens.getPropertyValue('--bio-rgb').trim() || '255, 182, 39';
+    const AI = tokens.getPropertyValue('--ai-rgb').trim() || '255, 156, 128';
+
     type Node = { x: number; y: number; vx: number; vy: number; r: number; hue: 'bio' | 'ai' };
 
     let nodes: Node[] = [];
@@ -61,7 +66,7 @@
           if (dist > LINK_DISTANCE) continue;
 
           const strength = (1 - dist / LINK_DISTANCE) * 0.3;
-          ctx.strokeStyle = `rgba(45, 212, 191, ${strength})`;
+          ctx.strokeStyle = `rgba(${BIO}, ${strength})`;
           ctx.lineWidth = 0.6;
           ctx.beginPath();
           ctx.moveTo(nodes[i].x, nodes[i].y);
@@ -74,9 +79,9 @@
         // Nodes near the cursor brighten, so the field feels responsive.
         const near = Math.hypot(node.x - pointer.x, node.y - pointer.y);
         const boost = near < 140 ? (1 - near / 140) * 0.55 : 0;
-        const base = node.hue === 'ai' ? [167, 139, 250] : [45, 212, 191];
+        const base = node.hue === 'ai' ? AI : BIO;
 
-        ctx.fillStyle = `rgba(${base[0]}, ${base[1]}, ${base[2]}, ${0.42 + boost})`;
+        ctx.fillStyle = `rgba(${base}, ${0.42 + boost})`;
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.r + boost * 1.6, 0, Math.PI * 2);
         ctx.fill();
