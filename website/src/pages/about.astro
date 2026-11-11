@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import Timeline from '../components/Timeline.astro';
+import SkillGrid from '../components/SkillGrid.astro';
+import Contact from '../components/Contact.astro';
+import profile from '../data/profile.json';
+import education from '../data/education.json';
+---
+
+<Base
+  title={`About — ${profile.name}`}
+  description="Career from biomedical signal processing to leading an AI practice, the delivery partners behind 404 Solutions, and the stack, education and certifications behind the work."
+>
+  <section class="page-head section">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1 class="page-title">About</h1>
+      <p class="page-lede">{profile.summary}</p>
+    </div>
+  </section>
+
+  <Section
+    id="career"
+    eyebrow="Career"
+    title="Ten years, one throughline."
+    lede="From biomedical signal processing to leading an AI practice — the domain and the scope changed, the discipline of turning messy data into something dependable did not. Open a role for what it involved."
+  >
+    <Timeline />
+  </Section>
+
+  <Section
+    id="toolkit"
+    eyebrow="Toolkit"
+    title="What I build with."
+    lede="The stack behind the systems — weighted toward Python, cloud-native services, and the retrieval infrastructure that generative AI actually runs on."
+  >
+    <SkillGrid />
+
+    <div class="edu-grid">
+      <div class="card" data-reveal>
+        <h3 class="edu-heading">Education</h3>
+        <ul class="edu-list">
+          {education.degrees.map((degree) => (
+            <li>
+              <span class="edu-degree">{degree.degree}</span>
+              <span class="edu-inst mono">
+                {degree.institution}{degree.period && ` · ${degree.period}`}
+              </span>
+              {degree.note && <span class="edu-note">{degree.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="card" data-reveal style="--reveal-delay:80ms">
+        <h3 class="edu-heading">Certifications</h3>
+        <ul class="edu-list">
+          {education.certifications.map((cert) => (
+            <li>
+              <span class="edu-degree">{cert.name}</span>
+              <span class="edu-inst mono">{cert.issuer}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Contact />
+</Base>
+
+<style>
+  .page-head {
+    padding-bottom: 0;
+  }
+
+  .page-title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin-block: 0.75rem 1rem;
+    background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .page-lede {
+    color: var(--text-dim);
+    max-width: 64ch;
+    font-size: 1.03rem;
+  }
+
+  /* --- Education / certifications --------------------------------------- */
+
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.15rem;
+    margin-top: 1.15rem;
+  }
+
+  .edu-heading {
+    font-size: 0.98rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.05rem;
+  }
+
+  .edu-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .edu-degree {
+    font-size: 0.94rem;
+    font-weight: 500;
+  }
+
+  .edu-inst {
+    font-size: 0.76rem;
+    color: var(--bio);
+  }
+
+  .edu-note {
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    margin-top: 0.2rem;
+  }
+</style>

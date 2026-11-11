@@ -25,6 +25,7 @@
     "start": "2024-10",
     "end": null,
     "current": true,
+    "collaborations": true,
     "summary": "My B2B consultancy — I deliver AI and software work for delivery partners in Europe and the US, serving their enterprise clients.",
     "highlights": [
       "Run an independent practice delivering AI systems for partner organisations across several countries.",

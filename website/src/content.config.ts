@@ -39,6 +39,9 @@ const experience = defineCollection({
     summary: z.string(),
     highlights: z.array(z.string()).default([]),
     stack: z.array(z.string()).default([]),
+    // The role the collaborations were delivered under. Timeline.astro lists
+    // the partners from collaborations.json under this entry.
+    collaborations: z.boolean().default(false),
   }),
 });
 

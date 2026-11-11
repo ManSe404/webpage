@@ -19,15 +19,20 @@ npm run check   # type-check .astro and .ts files
 Everything editable is under `src/` — you should not need to touch a component to
 change what the site says.
 
+The site has four pages: the home page (hero, featured case studies, a one-line
+career strip, recent publications, contact), `/projects` (every case study, with
+category filters), `/research` (the publication record) and `/about` (career
+timeline, delivery partners, toolkit, education).
+
 | What | Where | Notes |
 | --- | --- | --- |
 | Name, bio, links, hero stats | `src/data/profile.json` | Drives hero, footer, contact, JSON-LD |
-| Career timeline | `src/data/experience.json` | Sorted newest-first automatically |
-| Collaborations | `src/data/collaborations.json` | `needsReview: true` marks unconfirmed copy |
-| Skills | `src/data/skills.json` | Grouped chips in the Stack section |
+| Career timeline | `src/data/experience.json` | Sorted newest-first automatically; the home strip and `/about` both read it |
+| Collaborations | `src/data/collaborations.json` | Listed under the role marked `"collaborations": true` in `experience.json`; `needsReview: true` marks unconfirmed copy |
+| Skills | `src/data/skills.json` | Grouped chips in the Toolkit section of `/about` |
 | Education, certs, memberships | `src/data/education.json` | |
 | Publications | `src/data/publications.csv` | Also generates the "output by year" bars |
-| Project case studies | `src/content/projects/*.md` | Frontmatter + markdown body |
+| Project case studies | `src/content/projects/*.md` | Frontmatter + markdown body; `featured: true` puts one on the home page |
 
 ### Adding a project
 
@@ -38,7 +43,7 @@ Drop a new `.md` file into `src/content/projects/`:
 title: Thing I Built
 category: Generative AI      # becomes a filter on /projects
 summary: One sentence for the card.
-featured: false              # true -> larger card on the home page
+featured: false              # true -> shown on the home page
 order: 12                    # controls sort position
 impact:
   - What changed as a result

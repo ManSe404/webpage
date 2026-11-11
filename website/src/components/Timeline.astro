@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 const entries = await getCollection('experience');
+const partners = (await getCollection('collaborations')).map((entry) => entry.data);
 
 const formatMonth = (value: string | null, current: boolean) => {
   if (current || !value) return 'Present';
@@ -25,32 +26,73 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
 }
 ---
 
+<!--
+  One compact row per role; the bullets, partners and stack open on click.
+  Native <details>, so it works without JavaScript and is keyboard-operable.
+  The newest role starts open so the reader sees what a row holds.
+-->
 <ol class="timeline">
   {roles.map((role, index) => (
-    <li class="timeline-item" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+    <li class="timeline-item" data-reveal style={`--reveal-delay:${index * 60}ms`}>
       <span class={`timeline-node ${role.current ? 'is-current' : ''}`} aria-hidden="true"></span>
 
-      <div class="timeline-body card">
-        <p class="timeline-period mono">
-          {formatMonth(role.start, false)} — {formatMonth(role.end, role.current)}
-          {role.current && <span class="badge">Current</span>}
-        </p>
+      <details class="timeline-body card" open={index === 0}>
+        <summary class="timeline-summary">
+          <span class="timeline-period mono">
+            {formatMonth(role.start, false)} — {formatMonth(role.end, role.current)}
+            {role.current && <span class="badge">Current</span>}
+          </span>
 
-        <h3 class="timeline-role">{role.role}</h3>
-        <p class="timeline-company">{role.company}</p>
+          <h3 class="timeline-role">
+            {role.role}
+            <span class="timeline-company">{role.company}</span>
+          </h3>
 
-        <ul class="timeline-points">
-          {role.highlights.map((point) => (
-            <li>{point}</li>
-          ))}
-        </ul>
+          <span class="timeline-line">{role.summary}</span>
 
-        <div class="chips">
-          {role.stack.map((tech) => (
-            <span class="chip">{tech}</span>
-          ))}
+          {role.collaborations && partners.length > 0 && (
+            <span class="timeline-partners mono">
+              for {partners.map((partner) => partner.name).join(' · ')}
+            </span>
+          )}
+
+          <span class="timeline-toggle" aria-hidden="true"></span>
+        </summary>
+
+        <div class="timeline-details">
+          {role.highlights.length > 0 && (
+            <ul class="timeline-points">
+              {role.highlights.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          )}
+
+          {role.collaborations && partners.length > 0 && (
+            <ul class="partner-list">
+              {partners.map((partner) => (
+                <li class="partner">
+                  <p class="partner-head">
+                    <span class="partner-name">{partner.name}</span>
+                    <span class="partner-meta mono">
+                      {[partner.location, partner.kind].filter(Boolean).join(' · ')}
+                    </span>
+                  </p>
+                  <p class="partner-desc">{partner.description}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {role.stack.length > 0 && (
+            <div class="chips">
+              {role.stack.map((tech) => (
+                <span class="chip">{tech}</span>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      </details>
     </li>
   ))}
 </ol>
@@ -60,7 +102,7 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.85rem;
     padding-left: 2.25rem;
   }
 
@@ -116,16 +158,30 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
   }
 
   .timeline-body {
+    padding-block: 1.1rem;
+  }
+
+  /* --- The always-visible row ------------------------------------------- */
+
+  .timeline-summary {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.35rem;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .timeline-summary::-webkit-details-marker {
+    display: none;
   }
 
   .timeline-period {
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     letter-spacing: 0.09em;
     color: var(--text-faint);
     text-transform: uppercase;
@@ -142,13 +198,76 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
   }
 
   .timeline-role {
-    font-size: clamp(1.05rem, 1.9vw, 1.28rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.65rem;
+    font-size: clamp(1.02rem, 1.8vw, 1.2rem);
   }
 
   .timeline-company {
     color: var(--bio);
     font-size: 0.92rem;
     font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .timeline-company::before {
+    content: '·';
+    margin-right: 0.65rem;
+    color: var(--text-faint);
+  }
+
+  .timeline-line {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  .timeline-partners {
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--ai);
+  }
+
+  /* Plus/minus in a small square, top right of the row. */
+  .timeline-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+
+  .timeline-toggle::before {
+    content: '+';
+  }
+
+  details[open] .timeline-toggle::before {
+    content: '−';
+  }
+
+  .timeline-summary:hover .timeline-toggle {
+    color: var(--bio);
+    border-color: var(--bio);
+  }
+
+  /* --- The part that opens ---------------------------------------------- */
+
+  .timeline-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
   }
 
   .timeline-points {
@@ -156,7 +275,6 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
     flex-direction: column;
     gap: 0.45rem;
     padding-left: 1.1rem;
-    margin-top: 0.2rem;
   }
 
   .timeline-points li {
@@ -174,6 +292,45 @@ for (const role of roles.filter((r) => r.dateUnconfirmed)) {
     height: 4px;
     border-radius: 50%;
     background: var(--text-faint);
+  }
+
+  .partner-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .partner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--ai);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+  }
+
+  .partner-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .partner-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .partner-meta {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+  }
+
+  .partner-desc {
+    font-size: 0.86rem;
+    color: var(--text-dim);
   }
 
   @media (max-width: 620px) {

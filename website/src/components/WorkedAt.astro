@@ -1,0 +1,82 @@
+---
+/**
+ * The home page's one-glance career strip: every organisation once, newest
+ * first, with years and the role held. The full timeline lives on /about.
+ */
+import { getCollection } from 'astro:content';
+
+const roles = (await getCollection('experience'))
+  .map((entry) => entry.data)
+  .sort((a, b) => b.start.localeCompare(a.start));
+
+const year = (value: string | null) => (value ? value.slice(0, 4) : '');
+
+const places = roles.map((role) => {
+  const from = year(role.start);
+  const to = role.current ? 'now' : year(role.end);
+  return {
+    company: role.company,
+    role: role.role,
+    current: role.current,
+    years: from === to ? from : `${from} – ${to}`,
+  };
+});
+---
+
+<ul class="worked">
+  {places.map((place, index) => (
+    <li class="worked-item" data-reveal style={`--reveal-delay:${index * 50}ms`}>
+      <span class="worked-years mono">
+        {place.current && <span class="worked-dot" aria-hidden="true"></span>}
+        {place.years}
+      </span>
+      <span class="worked-company">{place.company}</span>
+      <span class="worked-role">{place.role}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .worked {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0 1.5rem;
+  }
+
+  .worked-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .worked-years {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  .worked-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bio);
+    box-shadow: 0 0 8px var(--glow-bio);
+  }
+
+  .worked-company {
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--text);
+  }
+
+  .worked-role {
+    font-size: 0.86rem;
+    color: var(--text-dim);
+  }
+</style>

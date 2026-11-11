@@ -4,19 +4,16 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import Collaborations from '../components/Collaborations.astro';
-import Timeline from '../components/Timeline.astro';
-import SkillGrid from '../components/SkillGrid.astro';
+import WorkedAt from '../components/WorkedAt.astro';
 import Contact from '../components/Contact.astro';
-import education from '../data/education.json';
 import { withBase } from '../lib/url';
 
 const projects = await getCollection('projects');
 const byOrder = (a: typeof projects[number], b: typeof projects[number]) =>
   a.data.order - b.data.order;
 
+// The home page shows the featured case studies only; /projects has all of them.
 const featured = projects.filter((p) => p.data.featured).sort(byOrder);
-const rest = projects.filter((p) => !p.data.featured).sort(byOrder);
 
 const publications = await getCollection('publications');
 const recent = publications
@@ -40,12 +37,6 @@ const recent = publications
       ))}
     </div>
 
-    <div class="more-grid">
-      {rest.slice(0, 4).map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-
     <div class="section-cta" data-reveal>
       <a class="btn btn-ghost" href={withBase('/projects')}>
         All {projects.length} projects
@@ -55,21 +46,19 @@ const recent = publications
   </Section>
 
   <Section
-    id="collaborations"
-    eyebrow="Collaborations"
-    title="Who I build with."
-    lede="Delivery partners I build for through 404 Solutions, my B2B consultancy — agencies and product firms in Croatia, Bulgaria, and the US who bring me in for their enterprise clients."
-  >
-    <Collaborations />
-  </Section>
-
-  <Section
-    id="journey"
+    id="career"
     eyebrow="Career"
-    title="Ten years, one throughline."
+    title="Where I've worked."
     lede="From biomedical signal processing to leading an AI practice — the domain and the scope changed, the discipline of turning messy data into something dependable did not."
   >
-    <Timeline />
+    <WorkedAt />
+
+    <div class="section-cta" data-reveal>
+      <a class="btn btn-ghost" href={withBase('/about')}>
+        Career, partners and toolkit
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </Section>
 
   <Section
@@ -99,44 +88,6 @@ const recent = publications
     </div>
   </Section>
 
-  <Section
-    id="stack"
-    eyebrow="Toolkit"
-    title="What I build with."
-    lede="The stack behind the systems above — weighted toward Python, cloud-native services, and the retrieval infrastructure that generative AI actually runs on."
-  >
-    <SkillGrid />
-
-    <div class="edu-grid">
-      <div class="card" data-reveal>
-        <h3 class="edu-heading">Education</h3>
-        <ul class="edu-list">
-          {education.degrees.map((degree) => (
-            <li>
-              <span class="edu-degree">{degree.degree}</span>
-              <span class="edu-inst mono">
-                {degree.institution}{degree.period && ` · ${degree.period}`}
-              </span>
-              {degree.note && <span class="edu-note">{degree.note}</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="card" data-reveal style="--reveal-delay:80ms">
-        <h3 class="edu-heading">Certifications</h3>
-        <ul class="edu-list">
-          {education.certifications.map((cert) => (
-            <li>
-              <span class="edu-degree">{cert.name}</span>
-              <span class="edu-inst mono">{cert.issuer}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </Section>
-
   <Contact />
 </Base>
 
@@ -147,13 +98,6 @@ const recent = publications
        a 2x2 block gives each one room without leaving an orphan on row two. */
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 1.15rem;
-  }
-
-  .more-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.15rem;
-    margin-top: 1.15rem;
   }
 
   .section-cta {
@@ -191,50 +135,6 @@ const recent = publications
   .pub-venue {
     font-size: 0.85rem;
     color: var(--text-dim);
-    margin-top: 0.2rem;
-  }
-
-  /* --- Education / certifications --------------------------------------- */
-
-  .edu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 1.15rem;
-    margin-top: 1.15rem;
-  }
-
-  .edu-heading {
-    font-size: 0.98rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .edu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.05rem;
-  }
-
-  .edu-list li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .edu-degree {
-    font-size: 0.94rem;
-    font-weight: 500;
-  }
-
-  .edu-inst {
-    font-size: 0.76rem;
-    color: var(--bio);
-  }
-
-  .edu-note {
-    font-size: 0.85rem;
-    color: var(--text-faint);
     margin-top: 0.2rem;
   }
 
