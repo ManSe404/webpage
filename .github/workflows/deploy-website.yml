@@ -10,10 +10,9 @@
 name: Website (check + deploy)
 
 on:
+  # Every pull request runs the checks, whatever it touches: `build` is a
+  # required check on main, so a PR that skipped it could never be merged.
   pull_request:
-    paths:
-      - "website/**"
-      - ".github/workflows/deploy-website.yml"
 
   push:
     branches: ["main"]
