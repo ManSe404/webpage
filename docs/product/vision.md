@@ -24,5 +24,5 @@ They read it in a browser, often on a phone, often once.
 ## What it is not
 
 - Not an application: no server, no database, no forms, no tracking scripts in the code.
-- Not a blog or a CMS: content is edited as files in the repository and published by pushing to `main`.
+- Not a blog or a CMS: content is edited as files in the repository and published by merging a pull request into `main`.
 - Not a template for others: the repository holds one person's site and nothing else.
