@@ -21,8 +21,3 @@ Read in this order:
 **Layout.** `product/` says why and what, `roadmap.md` what comes next, `architecture/` how it is built,
 `diagrams/` holds the Mermaid diagram, `reference/` what exists and can be checked against the code, `guides/`
 how to do things. A change updates the documents it makes wrong in the same commit.
-
-## Open
-
-- `website/README.md` says a failing pull-request check "blocks nothing yet"; the workflow now calls `build` a
-  required check on `main` (see [the architecture overview](architecture/overview.md#runtime)).
