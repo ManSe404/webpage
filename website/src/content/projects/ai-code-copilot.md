@@ -12,18 +12,13 @@ impact:
   - Secure retrieval that respects existing access boundaries
 stack:
   - Python
-  - Redis
-  - RAG
-  - AI Agents
-  - LangChain
   - Azure OpenAI
-  - Azure DevOps
-  - Grafana
-  - Fine-Tuning
-  - KubeFlow
-  - Docker
-  - PostgreSQL
+  - LangChain
   - Milvus
+  - Redis
+  - PostgreSQL
+  - KubeFlow
+  - Grafana
 metrics:
   - label: Scope
     value: Internal code + docs

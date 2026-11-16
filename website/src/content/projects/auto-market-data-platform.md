@@ -11,12 +11,13 @@ impact:
   - Analytics-ready data downstream teams could query without preprocessing it first
 stack:
   - Python
-  - Azure
-  - Data Lake
   - Databricks
   - Azure Data Factory
+  - Azure Data Lake
+  - Playwright
+  - Selenium
+  - BeautifulSoup
   - FastAPI
-  - Docker
 metrics:
   - label: Sources
     value: Production DBs · web scraping

@@ -12,11 +12,11 @@ impact:
   - Finished content pushed out to connected platforms instead of copy-pasted at the end
 stack:
   - Python
+  - LangGraph
+  - OpenAI API
+  - Tavily
   - FastAPI
   - PostgreSQL
-  - AI Agents
-  - LLMs
-  - Search APIs
   - Docker
 metrics:
   - label: Scope

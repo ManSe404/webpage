@@ -11,12 +11,12 @@ impact:
   - Repetitive internal support load reduced rather than redirected
 stack:
   - Python
-  - FastAPI
+  - Azure OpenAI
   - Azure AI Search
   - Azure Functions
-  - Azure OpenAI
-  - Azure Pipelines
+  - FastAPI
   - Data Lake
+  - Azure Pipelines
   - Docker
 metrics:
   - label: Scope

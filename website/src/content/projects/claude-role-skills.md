@@ -15,11 +15,12 @@ impact:
 stack:
   - Claude Code
   - Python
-  - Markdown
-  - HTML
   - pytest
   - ruff
   - mypy
+  - uv
+  - GitHub Actions
+  - HTML
 metrics:
   - label: Scope
     value: 10 packs · 50 skills

@@ -14,16 +14,12 @@ impact:
 stack:
   - Python
   - FastAPI
-  - SQLAlchemy
-  - Svelte
+  - SvelteKit
   - pdf.js
   - Qdrant
   - Pinecone
   - Supabase
-  - Claude
-  - OpenAI
   - Langfuse
-  - Docker
 metrics:
   - label: Stage
     value: Demo, frozen 2026-11-10

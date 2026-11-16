@@ -13,11 +13,12 @@ impact:
 stack:
   - Python
   - FastAPI
-  - SQLite
-  - Svelte
+  - SvelteKit
   - TypeScript
-  - Git
+  - SQLite
   - Claude Code
+  - Codex CLI
+  - Git
 metrics:
   - label: Stage
     value: Works locally, not published

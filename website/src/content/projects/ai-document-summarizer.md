@@ -14,13 +14,13 @@ impact:
   - Context held across chunk boundaries instead of lost to fixed-window splitting
 stack:
   - Python
-  - AWS
-  - Docker
-  - S3
+  - AWS Bedrock
   - Step Functions
+  - S3
   - AWS SAM
   - LangChain
   - LlamaIndex
+  - Docker
 metrics:
   - label: Architecture
     value: Agentic Graph RAG

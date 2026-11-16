@@ -14,16 +14,12 @@ impact:
 stack:
   - Python
   - FastAPI
-  - RabbitMQ
-  - PostgreSQL
+  - Mosaic
   - Qdrant
-  - MinIO
+  - PostgreSQL
+  - RabbitMQ
   - React
-  - TypeScript
-  - Claude
-  - OpenAI
   - Ollama
-  - Docker
 metrics:
   - label: Stage
     value: Working prototype + demo

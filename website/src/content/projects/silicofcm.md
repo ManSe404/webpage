@@ -14,11 +14,10 @@ impact:
 stack:
   - Python
   - PyTorch
-  - Biostatistics
-  - Data Analysis
-  - ECG
-  - CPET
-  - In Silico Trials
+  - pandas
+  - SciPy
+  - R
+  - SPSS
 metrics:
   - label: Programme
     value: EU Horizon 2020

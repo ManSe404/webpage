@@ -13,12 +13,12 @@ impact:
   - Architected for a full event site from the outset, not a single venue
 stack:
   - Python
+  - PyTorch
+  - Azure Machine Learning
   - Azure IoT Hub
   - Azure Event Hubs
   - Microsoft Fabric
   - Azure Data Lake
-  - Computer Vision
-  - Time Series Forecasting
   - Docker
 metrics:
   - label: Role

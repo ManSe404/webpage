@@ -13,13 +13,12 @@ impact:
   - Serbian treated as the normal case — the eval has Serbian lookup, structure and catalog questions
 stack:
   - Python
-  - pydantic
-  - BM25
-  - SQLite
-  - pypdf
+  - Pydantic
   - Qdrant
-  - RabbitMQ
+  - SQLite
   - FastAPI
+  - RabbitMQ
+  - pypdf
   - Microsoft Graph
 metrics:
   - label: Stage

@@ -16,7 +16,7 @@ impact:                                      # 3–4 results a reader can check,
   - First outcome, a fact a reader can check         # ≤ 120 each
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps
-stack:                                       # 4–8, most telling first; the home page card shows five
+stack:                                       # 4–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the home page card shows five
   - Python
   - FastAPI
   - Docker

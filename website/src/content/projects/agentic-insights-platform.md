@@ -15,12 +15,12 @@ impact:
 stack:
   - Python
   - LangGraph
+  - Qwen & Gemma
   - FastAPI
   - Qdrant
   - RabbitMQ
-  - Langfuse
-  - Speech-to-Text
-  - Text-to-Speech
+  - PostgreSQL
+  - Redis
 metrics:
   - label: Architecture
     value: Graph-orchestrated agents

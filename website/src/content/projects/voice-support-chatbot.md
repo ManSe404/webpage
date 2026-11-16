@@ -14,7 +14,7 @@ stack:
   - Azure Speech Services
   - Azure LUIS
   - Azure Bot Service
-  - Telephony
+  - Azure Cognitive Services
   - Docker
 metrics:
   - label: Channel

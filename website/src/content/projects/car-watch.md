@@ -14,9 +14,8 @@ impact:
 stack:
   - Python
   - scikit-learn
-  - SQLite
   - FastAPI
-  - Jinja
+  - SQLite
   - TypeScript
   - WXT
   - Zod

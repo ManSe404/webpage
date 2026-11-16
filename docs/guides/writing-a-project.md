@@ -84,6 +84,9 @@ gone, people using it. What was built and with which tools come after, as the wa
   project means renumbering the ones after it.
 - **`org`** is the employer the work was delivered under. **`client`** is the partner or end customer, and only
   where it can be named publicly.
+- **`stack`** names tools, libraries and platforms a reader could look up: XGBoost, Azure Data Factory,
+  LangGraph. Concepts such as RAG, AI agents, time series or telephony are not a stack; they belong in the
+  text. The most telling item goes first, because a big card shows eight and the home page card five.
 - **`category`** becomes a filter on `/projects/`; reuse one from the filter row unless the project needs a
   new one.
 - **The first `metrics` value** is the tag on a big card, so make it the one fact a reader should see first:

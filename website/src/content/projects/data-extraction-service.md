@@ -11,8 +11,10 @@ impact:
   - Classification models evaluated and tuned before they were trusted with real invoices
 stack:
   - Python
-  - Machine Learning
-  - Text Classification
+  - scikit-learn
+  - PyTorch
+  - spaCy
+  - Tesseract OCR
   - Docker
   - Azure
 metrics:

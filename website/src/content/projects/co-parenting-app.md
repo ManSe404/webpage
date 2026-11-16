@@ -19,7 +19,7 @@ stack:
   - PostgreSQL
   - pgTAP
   - Vitest
-  - Cloudflare Pages
+  - GitHub Pages
 metrics:
   - label: Stage
     value: Prototype + public demo

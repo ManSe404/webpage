@@ -12,12 +12,12 @@ impact:
   - Risk factors managed per line of business
 stack:
   - Python
+  - AWS Bedrock
   - LangChain
+  - Step Functions
   - AWS Lambda
   - ECS
   - S3
-  - AWS Bedrock
-  - Step Functions
 metrics:
   - label: Domain
     value: Risk assessment

@@ -13,8 +13,10 @@ impact:
 stack:
   - Python
   - XGBoost
-  - Time Series
+  - pandas
+  - scikit-learn
   - Microsoft Fabric
+  - MLflow
   - Azure DevOps
 metrics:
   - label: Role

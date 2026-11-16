@@ -16,7 +16,7 @@ impact:                                      # 3–4 results a reader can check,
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps
   - An optional fourth, shown on the case study page only   # ≤ 120
-stack:                                       # 6–8 where true, most telling first; the card shows eight, then +N
+stack:                                       # 6–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the card shows eight
   - Python
   - FastAPI
   - PostgreSQL
