@@ -15,7 +15,7 @@ pixels at desktop width.
 ## Decision
 
 A project is its frontmatter only. It shows as a cell in a honeycomb (the home page's Chosen work and the
-groups on `/projects/`), and choosing a cell opens a short popup below the honeycomb with five lines: the
+one big honeycomb on `/projects/`), and choosing a cell opens a short popup below the honeycomb with five lines: the
 summary, the result (the `Result` metric, else the first `impact` line), the `Role` metric, the stack, and
 the employer with partner and period, plus the project's outside `link` when it has one. There are no
 `/projects/<id>/` pages; the Markdown bodies were removed and stay in git history. A popup has its own

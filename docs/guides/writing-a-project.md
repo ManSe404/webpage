@@ -28,7 +28,7 @@ folder.
 | Place | Which projects | What it shows |
 |---|---|---|
 | Home page, Chosen work | the first five by `order` with category Generative AI, Agentic AI, Conversational AI or Computer Vision and the first three with Data Engineering or Machine Learning, together by `order` | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
-| `/projects/` | every project, by `order`, in three honeycombs: AI, Data & analytics, and Software & research for every other category | the same cell and popup; the type-of-work filter (from `org`) hides cells |
+| `/projects/` | every project in one honeycomb, clustered by field (AI, Data & analytics, then Software & research for every other category) and by `order` inside each | the same cell and popup; the field filter (from `category`) and the type-of-work filter (from `org`) hide cells |
 | The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client · period"); "Visit project ↗" when `link` is set |
 | Home dashboard, Projects panel | every `featured: true` project, by `order` | a numbered row with the title and "org · with client · category"; opened: the result as in the popup, the summary, the first four `stack` items then +N, and "Visit project ↗" when `link` is set |
 | Home dashboard, Roadmap panel | projects whose `period` runs to the present and that have a `Stage` metric | the title and the `Stage` value, under Building |

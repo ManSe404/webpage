@@ -27,7 +27,7 @@ website/                      the Astro project
     layouts/Base.astro        HTML shell: meta tags, JSON-LD, fonts, navigation, footer, scroll reveal
     pages/
       index.astro             home page: dashboard, the Chosen work honeycomb, contact
-      projects/index.astro    every project as honeycombs grouped by field, with a type-of-work filter
+      projects/index.astro    every project in one big honeycomb, with field and type-of-work filters
       research.astro          publications and the numbers derived from them
     components/
       hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace

@@ -107,8 +107,8 @@ Rework how projects look on the home page and on `/projects`. The project Markdo
 `files/cv/stefan-seman-cv.html` mirrors the site data, so it takes the same structure and wording.
 
 - **Done:** projects are honeycombs whose cells open a short popup (description, result, role, stack, company
-  and client, and the outside link): one on the home page, Chosen work (five AI and three data projects), and one per field on
-  `/projects/` with a type-of-work filter (`components/hive/ProjectHive.astro`, `pages/projects/index.astro`).
+  and client, and the outside link): one on the home page, Chosen work (five AI and three data projects), and one big honeycomb
+  on `/projects/` with field and type-of-work filters (`components/hive/ProjectHive.astro`, `pages/projects/index.astro`).
   The popup is a project's whole description: the case-study pages and the Markdown body of every project file
   are removed, and so are the list, the big card and the Selected work section. Career and education are one
   board in the dashboard's Years panel (`components/hive/JourneyBoard.astro`).

@@ -13,9 +13,11 @@ import { cols, place, tracks } from '../../lib/honeycomb';
 interface Props {
   id: string;
   projects: CollectionEntry<'projects'>[];
+  /** Six cells per row on wide screens (one big honeycomb), instead of four. */
+  wide?: boolean;
 }
 
-const { id, projects } = Astro.props;
+const { id, projects, wide = false } = Astro.props;
 
 // "Mosaic — Document AI Bricks" -> "Mosaic"; titles without a dash stay whole.
 const shortTitle = (title: string) => title.split(' — ')[0];
@@ -33,17 +35,18 @@ const items = projects.map((p) => ({
   stack: p.data.stack.join(', '),
   company: [attribution(p), p.data.period].filter(Boolean).join(' · '),
   link: p.data.link,
-  tone: /AI|Vision/.test(p.data.category) ? 'ai' : 'bio',
+  tone: /AI|Vision/.test(p.data.category) ? 'ai' : /Data|Machine/.test(p.data.category) ? 'bio' : 'sw',
 }));
 ---
 
-<div class="phive" data-phive style={`--tracks-d:${tracks(items.length, 4)};--tracks-p:${tracks(items.length, 2)};--cols-d:${cols(items.length, 4)};--cols-p:${cols(items.length, 2)}`}>
+<div class={`phive ${wide ? 'is-wide' : ''}`} data-phive style={`--tracks-w:${tracks(items.length, 6)};--tracks-d:${tracks(items.length, 4)};--tracks-p:${tracks(items.length, 2)};--cols-w:${cols(items.length, 6)};--cols-d:${cols(items.length, 4)};--cols-p:${cols(items.length, 2)}`}>
   <ul class="phive-grid" aria-label="Projects">
     {items.map((item, i) => {
+      const w = place(i, 6);
       const d = place(i, 4);
       const m = place(i, 2);
       return (
-        <li class={`pcell tone-${item.tone}`} data-type={item.type} style={`--rd:${d.row};--cd:${d.col};--rp:${m.row};--cp:${m.col}`}>
+        <li class={`pcell tone-${item.tone}`} data-type={item.type} data-field={{ ai: 'ai', bio: 'data', sw: 'software' }[item.tone]} style={`--rw:${w.row};--cw:${w.col};--rd:${d.row};--cd:${d.col};--rp:${m.row};--cp:${m.col}`}>
           <a class="phex" href={`#${item.key}`} data-pcell={item.key}>
             <span class="phex-title">{item.short}</span>
             <span class="phex-field mono">{item.field}</span>
@@ -90,6 +93,11 @@ const items = projects.map((p) => ({
       }
       for (const it of items) it.hidden = it.id !== open;
       if (pop) pop.classList.toggle('is-open', open !== null);
+      // In a tall honeycomb the popup can sit below the screen: bring it into view.
+      if (open && pop) {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        pop.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      }
     };
 
     // From here on the popups open one at a time instead of showing as a list.
@@ -129,13 +137,18 @@ const items = projects.map((p) => ({
     hive.addEventListener('phive:relayout', () => {
       const visible = cells.map((c) => c.parentElement as HTMLElement).filter((li) => !li.hidden);
       visible.forEach((li, i) => {
+        const w = place(i, 6);
         const d = place(i, 4);
         const m = place(i, 2);
+        li.style.setProperty('--rw', String(w.row));
+        li.style.setProperty('--cw', String(w.col));
         li.style.setProperty('--rd', String(d.row));
         li.style.setProperty('--cd', String(d.col));
         li.style.setProperty('--rp', String(m.row));
         li.style.setProperty('--cp', String(m.col));
       });
+      hive.style.setProperty('--tracks-w', tracks(visible.length, 6));
+      hive.style.setProperty('--cols-w', String(cols(visible.length, 6)));
       hive.style.setProperty('--tracks-d', tracks(visible.length, 4));
       hive.style.setProperty('--tracks-p', tracks(visible.length, 2));
       hive.style.setProperty('--cols-d', String(cols(visible.length, 4)));
@@ -178,6 +191,7 @@ const items = projects.map((p) => ({
   .tone-bio .phex { background: rgba(var(--bio-rgb), 0.45); }
   .tone-ai .phex::before { background: linear-gradient(rgba(var(--ai-rgb), 0.07), rgba(var(--ai-rgb), 0.07)), var(--bg-raised); }
   .tone-bio .phex::before { background: linear-gradient(rgba(var(--bio-rgb), 0.06), rgba(var(--bio-rgb), 0.06)), var(--bg-raised); }
+  .tone-sw .phex-field { color: var(--text-dim); }
   .pcell .phex:hover, .pcell .phex:focus-visible, .pcell .phex.is-active { background: var(--bio); transform: scale(1); }
   .tone-ai .phex:hover, .tone-ai .phex:focus-visible, .tone-ai .phex.is-active { background: var(--ai); }
   .phex.is-active::before { background: #2b2214; }
@@ -215,6 +229,12 @@ const items = projects.map((p) => ({
     }
     .pcell { grid-column: var(--cp) / span 2; grid-row: var(--rp); }
     .phex-title { font-size: 0.85rem; }
+  }
+
+  /* One big honeycomb: six cells per row where the page is wide enough. */
+  @media (min-width: 1100px) {
+    .phive.is-wide .phive-grid { grid-template-columns: repeat(var(--cols-w), calc(var(--w) / 2)); grid-template-rows: var(--tracks-w); }
+    .phive.is-wide .pcell { grid-column: var(--cw) / span 2; grid-row: var(--rw); }
   }
 
   @media (prefers-reduced-motion: reduce) { .phex { transition: none; } }

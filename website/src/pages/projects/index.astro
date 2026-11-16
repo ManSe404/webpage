@@ -7,19 +7,18 @@ import { workType } from '../../lib/dashboard';
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const total = projects.length;
 
-// One honeycomb per field. A category not listed here falls into the last
-// group, so a new category never makes a project disappear.
-const GROUPS = [
-  { id: 'ai', label: 'AI', topics: ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'] },
-  { id: 'data', label: 'Data & analytics', topics: ['Data Engineering', 'Machine Learning'] },
-  { id: 'software', label: 'Software & research', topics: [] as string[] },
+// One big honeycomb, the projects of one field next to each other so the
+// colours cluster: AI first, then data and analytics, then the rest; by order
+// inside each field.
+const FIELDS = [
+  ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'],
+  ['Data Engineering', 'Machine Learning'],
 ];
-const known = new Set(GROUPS.flatMap((g) => g.topics));
-const groups = GROUPS.map((g, i) => ({
-  ...g,
-  projects: projects.filter((p) =>
-    i === GROUPS.length - 1 ? !known.has(p.data.category) : g.topics.includes(p.data.category)),
-})).filter((g) => g.projects.length);
+const fieldRank = (category: string) => {
+  const i = FIELDS.findIndex((f) => f.includes(category));
+  return i === -1 ? FIELDS.length : i;
+};
+const ordered = [...projects].sort((a, b) => fieldRank(a.data.category) - fieldRank(b.data.category) || a.data.order - b.data.order);
 
 // Type of work follows who the work was for: own projects, the research
 // institute, and everything delivered for an employer or a client.
@@ -29,6 +28,15 @@ const TYPES = [
   { id: 'research', label: 'Research' },
   { id: 'personal', label: 'Personal & open source' },
 ].map((t) => ({ ...t, count: t.id === 'all' ? total : projects.filter((p) => workType(p.data.org) === t.id).length }));
+
+// Field follows the category, in the same three groups as the honeycomb's colours.
+const fieldOf = (category: string) => ['ai', 'data'][fieldRank(category)] ?? 'software';
+const FIELD_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'ai', label: 'AI systems' },
+  { id: 'data', label: 'Data & analytics' },
+  { id: 'software', label: 'Software & research' },
+].map((f) => ({ ...f, count: f.id === 'all' ? total : projects.filter((p) => fieldOf(p.data.category) === f.id).length }));
 ---
 
 <Base
@@ -49,56 +57,73 @@ const TYPES = [
 
   <section class="section projects-section" aria-label="Projects by field" data-projects>
     <div class="wrap">
-      <div class="types" role="group" aria-label="Filter by type of work" data-types hidden>
-        {TYPES.map((t, i) => (
-          <button class="type mono" type="button" data-type={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>
-            {t.label} <span class="type-count">{t.count}</span>
-          </button>
-        ))}
+      <div class="filters" data-filters hidden>
+        <div class="types" role="group" aria-label="Filter by field">
+          <span class="filter-label mono">Field</span>
+          {FIELD_FILTERS.map((f, i) => (
+            <button class="type mono" type="button" data-filter="field" data-value={f.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {f.label} <span class="type-count" data-count>{f.count}</span>
+            </button>
+          ))}
+        </div>
+        <div class="types" role="group" aria-label="Filter by type of work">
+          <span class="filter-label mono">Type of work</span>
+          {TYPES.map((t, i) => (
+            <button class="type mono" type="button" data-filter="type" data-value={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {t.label} <span class="type-count" data-count>{t.count}</span>
+            </button>
+          ))}
+        </div>
       </div>
       <p class="status mono" aria-live="polite" data-status></p>
 
-      {groups.map((g) => (
-        <section class="group" data-group aria-labelledby={`group-${g.id}`}>
-          <h2 class="group-title" id={`group-${g.id}`}>{g.label} <span class="group-count mono" data-group-count>{g.projects.length}</span></h2>
-          <ProjectHive id={g.id} projects={g.projects} />
-        </section>
-      ))}
+      <p class="legend mono"><span class="dot dot-ai"></span>AI systems <span class="dot dot-data"></span>Data &amp; analytics <span class="dot dot-sw"></span>Software &amp; research</p>
+      <ProjectHive id="p" projects={ordered} wide />
     </div>
   </section>
 </Base>
 
 <script>
+  // Two filters that combine: field and type of work. Each button shows how many
+  // projects it would leave with the other filter as it is.
   const root = document.querySelector<HTMLElement>('[data-projects]');
-  const bar = root?.querySelector<HTMLElement>('[data-types]');
-  if (root && bar) {
-    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-type]')];
+  const panel = root?.querySelector<HTMLElement>('[data-filters]');
+  if (root && panel) {
+    const buttons = [...panel.querySelectorAll<HTMLButtonElement>('[data-filter]')];
     const status = root.querySelector<HTMLElement>('[data-status]');
-    const groups = [...root.querySelectorAll<HTMLElement>('[data-group]')];
-    const total = root.querySelectorAll('[data-pcell]').length;
-    bar.hidden = false;
+    const hive = root.querySelector<HTMLElement>('[data-phive]');
+    const cells = [...root.querySelectorAll<HTMLElement>('li[data-type]')];
+    const state: Record<string, string> = { field: 'all', type: 'all' };
+    const fits = (li: HTMLElement, field: string, type: string) =>
+      (field === 'all' || li.dataset.field === field) && (type === 'all' || li.dataset.type === type);
+    panel.hidden = false;
 
-    const apply = (type: string) => {
+    const apply = () => {
       let shown = 0;
-      for (const g of groups) {
-        const cells = [...g.querySelectorAll<HTMLElement>('li[data-type]')];
-        let inGroup = 0;
-        for (const li of cells) {
-          li.hidden = type !== 'all' && li.dataset.type !== type;
-          if (!li.hidden) inGroup++;
-        }
-        g.hidden = inGroup === 0;
-        const count = g.querySelector('[data-group-count]');
-        if (count) count.textContent = String(inGroup);
-        g.querySelector('[data-phive]')?.dispatchEvent(new Event('phive:relayout'));
-        shown += inGroup;
+      for (const li of cells) {
+        li.hidden = !fits(li, state.field, state.type);
+        if (!li.hidden) shown++;
       }
-      for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.type === type));
-      if (status) status.textContent = type === 'all' ? `Showing all ${total} projects` : `Showing ${shown} of ${total} projects`;
+      hive?.dispatchEvent(new Event('phive:relayout'));
+      for (const b of buttons) {
+        const kind = b.dataset.filter === 'field' ? 'field' : 'type';
+        const value = b.dataset.value ?? 'all';
+        b.setAttribute('aria-pressed', String(state[kind] === value));
+        const n = cells.filter((li) => fits(li, kind === 'field' ? value : state.field, kind === 'type' ? value : state.type)).length;
+        const count = b.querySelector('[data-count]');
+        if (count) count.textContent = String(n);
+        b.classList.toggle('is-empty', n === 0);
+      }
+      if (status) {
+        status.textContent = shown === cells.length ? `Showing all ${cells.length} projects`
+          : shown === 0 ? 'No project matches both filters' : `Showing ${shown} of ${cells.length} projects`;
+      }
     };
 
-    for (const b of buttons) b.addEventListener('click', () => apply(b.dataset.type ?? 'all'));
-    apply('all');
+    for (const b of buttons) {
+      b.addEventListener('click', () => { state[b.dataset.filter === 'field' ? 'field' : 'type'] = b.dataset.value ?? 'all'; apply(); });
+    }
+    apply();
   }
 </script>
 
@@ -118,8 +143,11 @@ const TYPES = [
 
   .projects-section { padding-top: clamp(1.5rem, 4vh, 2.75rem); }
 
-  .types { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .types[hidden] { display: none; }
+  .filters { display: grid; gap: 0.7rem; }
+  .filters[hidden] { display: none; }
+  .types { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+  .filter-label { min-width: 7.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .type.is-empty:not([aria-pressed='true']) { opacity: 0.45; }
   .type {
     min-height: 36px; padding: 0 0.9rem; font-size: 0.8rem; color: var(--text-dim);
     background: var(--surface); border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
@@ -129,10 +157,11 @@ const TYPES = [
   @media (hover: hover) { .type:hover { border-color: var(--bio); color: var(--text); } .type[aria-pressed='true']:hover { color: var(--on-accent); } }
   .status { margin: 0.8rem 0 0; font-size: 0.75rem; color: var(--text-faint); }
 
-  .group { margin-top: clamp(2rem, 5vh, 3rem); }
-  .group[hidden] { display: none; }
-  .group-title { margin: 0 0 1.2rem; font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
-  .group-count { margin-left: 0.4rem; font-size: 0.8rem; color: var(--bio); vertical-align: middle; }
+  .legend { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin: 1.6rem 0 1.2rem; font-size: 0.75rem; color: var(--text-dim); }
+  .dot { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; border-radius: 50%; vertical-align: middle; }
+  .dot-ai { background: var(--ai); }
+  .dot-data { background: var(--bio); }
+  .dot-sw { background: var(--border-strong); border: 1px solid var(--text-dim); }
 
   @media (min-width: 720px) {
     .page-head { padding-top: clamp(3.5rem, 9vh, 6.5rem); }

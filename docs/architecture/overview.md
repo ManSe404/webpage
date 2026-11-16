@@ -57,7 +57,7 @@ the pages and components that need them.
 | Route | File | What it renders |
 |---|---|---|
 | `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), the Chosen work honeycomb (the first five AI projects and the first three data projects by `order`, a popup per project), the lab (a synthetic signal demo and two architecture diagrams), contact |
-| `/projects/` | `projects/index.astro` | Every project by `order` as honeycombs grouped by field (AI, Data & analytics, Software & research), each cell opening a popup, with a type-of-work filter that runs in the browser |
+| `/projects/` | `projects/index.astro` | Every project in one big honeycomb (six cells per row on wide screens), clustered by field (AI, Data & analytics, Software & research) and coloured by it, each cell opening a popup, with field and type-of-work filters that combine and run in the browser |
 | `/research/` | `research.astro` | The publication list, works per year, research areas, and headline numbers computed from the list: works, total citations, h-index, first-author count |
 
 ### Layout and components
@@ -76,7 +76,7 @@ the pages and components that need them.
 
 The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the dashboard's
 cells, panels, deep links and count-up numbers, the project honeycombs' popups and their re-packing after a
-filter (the `phive:relayout` event), the navigation toggle and sticky state, and the type-of-work filter on
+filter (the `phive:relayout` event), the navigation toggle and sticky state, and the field and type-of-work filters on
 `/projects/`. The rows inside the panels and the cards of the career board open with native `<details>`, without
 a script. Without JavaScript the dashboard's numbers are still in the HTML and each cell links to a page; the
 panels stay hidden; every project popup shows as a list under its honeycomb, and each project cell links to its
