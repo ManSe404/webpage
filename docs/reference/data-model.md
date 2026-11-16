@@ -7,7 +7,7 @@ Everything the site says comes from files under `website/src/`. The collections 
 
 | What | Where | Read by |
 |---|---|---|
-| Name, headline, summary, contact, links, hero stats, CV path | `src/data/profile.json` | `Base.astro`, `Hero`, `Nav`, `Footer`, `Contact`, `index.astro`, `research.astro` |
+| Name, headline, summary, contact, links, hero stats, CV path | `src/data/profile.json` | `Base.astro`, `Hero`, `Nav`, `Footer`, `Contact`, `research.astro` |
 | Career timeline | `src/data/experience.json` (collection `experience`) | `Timeline`, newest first |
 | Collaborations | `src/data/collaborations.json` (collection `collaborations`) | `Collaborations` |
 | Skills | `src/data/skills.json` | `SkillGrid` |
@@ -16,6 +16,12 @@ Everything the site says comes from files under `website/src/`. The collections 
 | Project case studies | `src/content/projects/*.md` (collection `projects`) | `index.astro`, `projects/index.astro`, `projects/[...slug].astro` |
 | Portrait | `src/assets/portrait.jpg` | `Hero`, optimised by `astro:assets` |
 | CV PDF, favicon, social image | `public/files/`, `public/images/` | copied as is into the build |
+
+`profile.json`, `skills.json` and `education.json` have no schema; they are imported as JSON and TypeScript
+infers their shape. The hero stats in `profile.json` (`stats`: label, value, suffix) are typed in, so the
+works and citations there do not follow `publications.csv`
+([roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list)). `phone` and `languages` in
+`profile.json` are not read by any page or component.
 
 ## Collections
 
@@ -47,7 +53,8 @@ while set), `summary`, `highlights`, `stack`.
 ### `collaborations`
 
 `name`, `via` (omitted when the engagement was direct), `location`, `kind`, `description`, `tags`,
-`needsReview` (marks copy that still needs sign-off).
+`needsReview` (meant to mark copy that still needs sign-off; no component reads it yet, so a flagged card is
+published as usual, see [roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).
 
 ### `publications`
 
