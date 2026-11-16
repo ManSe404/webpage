@@ -1,6 +1,6 @@
 ---
 title: Slingshot — Enterprise AI Assistant
-category: Generative AI
+category: Agentic AI
 summary: Answers on code, the roadmap and hard tasks were spread across repositories, Jira and Confluence — one enterprise assistant reaches them all, in daily use and speeding onboarding.
 order: 13
 featured: 3
