@@ -32,9 +32,9 @@ website/                      the Astro project
       contact.astro           the contact page: email card (send, copy, CV), profiles, what to write about
       lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
-      hive/HiveDashboard.astro home dashboard: portrait, name, tagline and actions; the honeycomb wrapped in the vitals monitor's overlay; seven honeycomb cells with count-up numbers, deep links that open a panel
+      hive/HiveDashboard.astro home dashboard: portrait, name, tagline and actions, the honeycomb, the panels, and the vitals monitor as a full-width line at the bottom; seven honeycomb cells with count-up numbers, deep links that open a panel
       hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (four figures, the most cited as ranked cards), skills, in progress, contact
-      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a strip, or (`overlay`, used on the dashboard) a trace in a channel between two rows of the honeycomb that lights the cells by each beat, readout below
+      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a small `strip` or a full-width `line` (the dashboard); with `pulse`, each beat lights one or two random on-screen cells marked `data-beat` (dashboard and Chosen work)
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too
@@ -47,7 +47,7 @@ website/                      the Astro project
       NodeField.astro         animated node-and-edge field behind the top of the dashboard: at most one screen high, 1x resolution, 30 frames a second
     lib/
       honeycomb.ts            honeycomb placement (cell position, row tracks, columns), shared by the dashboard and the project honeycombs, server and browser
-      vitals.ts               the monitor's synthetic heart: R-peak times, signal value, heart rate and HRV, the first window and the SVG path
+      vitals.ts               the monitor's synthetic heart: R-peak times, signal value, heart rate and HRV, the sweep sizes (strip, line), the first window and the SVG path
       lab.ts                  the lab's demos in tab order (address, label, panel, diagram), read by the lab tabs and the menu
       signal.ts               pure functions behind the signal lab: generation, filtering, peak detection, scoring, plot paths
       url.ts                  withBase(): prefixes paths with the configured base

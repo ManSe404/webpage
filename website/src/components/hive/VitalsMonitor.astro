@@ -1,52 +1,44 @@
 ---
 // A sweeping synthetic ECG with the heart rate and HRV it implies, ticking on
-// every beat, linking to the lab's signal demo. Two modes:
-// - strip (default): a small patient-monitor box, e.g. under the actions;
-// - `overlay`: wraps what is put inside it (the dashboard's honeycomb), runs
-//   the trace through the middle of it, lights the cell under the sweep on
-//   each beat (`.cell` gets `is-pulse`), and shows the readout in a bar below,
-//   next to the `hint` slot.
-// Switching between them is moving one tag. The first picture and numbers are
-// rendered on the server, so it reads the same without JavaScript or under
-// reduced motion; with motion the sweep runs at 30 frames a second and stops
-// while off screen or in a hidden tab. Signal: lib/vitals.ts.
-import { COLUMNS, START_SECONDS, firstWindow, rPeaks, toY, tracePath, vitalsAt } from '../../lib/vitals';
+// every beat, linking to the lab's signal demo. Two looks:
+// - `strip` (default): a small patient-monitor box, e.g. under the actions;
+// - `line`: a full-width trace with the readout at its right end, e.g. along
+//   the bottom of the dashboard.
+// With `pulse`, each beat also lights one or two random honeycomb cells that
+// are on screen (any element with `data-beat`; the component that renders the
+// cell styles its `is-pulse` class), so the page breathes with the signal.
+// The first picture and numbers are rendered on the server, so it reads the
+// same without JavaScript or under reduced motion; with motion the sweep runs
+// at 30 frames a second and stops while off screen or in a hidden tab.
+// Signal: lib/vitals.ts.
+import { LINE, START_SECONDS, STRIP, columns, firstWindow, rPeaks, toY, tracePath, vitalsAt } from '../../lib/vitals';
 import { withBase } from '../../lib/url';
 
 interface Props {
-  overlay?: boolean;
+  variant?: 'strip' | 'line';
+  pulse?: boolean;
 }
 
-const { overlay = false } = Astro.props;
-const H = overlay ? 64 : 56;
+const { variant = 'strip', pulse = false } = Astro.props;
+const sweep = variant === 'line' ? LINE : STRIP;
+const H = variant === 'line' ? 72 : 56;
+const cols = columns(sweep);
 const peaks = rPeaks();
-const d = tracePath(firstWindow(peaks), H);
+const d = tracePath(firstWindow(peaks, sweep), H);
 const first = vitalsAt(peaks, START_SECONDS);
 ---
 
-{overlay ? (
-  <div class="vitals-hive" data-vitals data-overlay data-h={H}>
-    <div class="vitals-stage">
-      <svg class="vitals-trace vitals-trace-overlay" viewBox={`0 0 ${COLUMNS} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-        <line class="vitals-base" x1="0" x2={COLUMNS} y1={toY(0) * H} y2={toY(0) * H} />
-        <path class="vitals-glow" d={d} data-glow />
-        <path class="vitals-line" d={d} data-line />
-      </svg>
-      <slot />
-    </div>
-    <div class="vitals-bar">
-      <slot name="hint" />
-      <a class="vitals-bar-read mono" href={withBase('/lab/#signal')}>
-        <span class="vitals-heart" data-heart aria-hidden="true">♥</span>
-        <b data-bpm>{Math.round(first?.bpm ?? 72)}</b> bpm · HRV <b data-hrv>{Math.round(first?.rmssd ?? 38)}</b> ms
-        <span class="vitals-bar-note">· synthetic · Lab <span aria-hidden="true">→</span></span>
-      </a>
-    </div>
-  </div>
-) : (
-<a class="vitals" href={withBase('/lab/#signal')} data-vitals data-h={H}>
-  <svg class="vitals-trace" viewBox={`0 0 ${COLUMNS} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-    <line class="vitals-base" x1="0" x2={COLUMNS} y1={toY(0) * H} y2={toY(0) * H} />
+<a
+  class={`vitals is-${variant}`}
+  href={withBase('/lab/#signal')}
+  data-vitals
+  data-h={H}
+  data-seconds={sweep.seconds}
+  data-per-second={sweep.perSecond}
+  data-pulse={pulse ? '' : undefined}
+>
+  <svg class="vitals-trace" viewBox={`0 0 ${cols} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+    <line class="vitals-base" x1="0" x2={cols} y1={toY(0) * H} y2={toY(0) * H} />
     <path class="vitals-glow" d={d} data-glow />
     <path class="vitals-line" d={d} data-line />
   </svg>
@@ -56,10 +48,9 @@ const first = vitalsAt(peaks, START_SECONDS);
   </span>
   <span class="vitals-note mono">synthetic signal · try it in the Lab <span aria-hidden="true">→</span></span>
 </a>
-)}
 
 <script>
-  import { COLUMNS, COLUMNS_PER_SECOND, START_SECONDS, firstWindow, rPeaks, toY, tracePath, valueAt, vitalsAt } from '../../lib/vitals';
+  import { START_SECONDS, firstWindow, rPeaks, toY, tracePath, valueAt, vitalsAt } from '../../lib/vitals';
 
   document.querySelectorAll<HTMLElement>('[data-vitals]').forEach((host) => {
     const line = host.querySelector<SVGPathElement>('[data-line]');
@@ -68,17 +59,31 @@ const first = vitalsAt(peaks, START_SECONDS);
     const hrv = host.querySelector<HTMLElement>('[data-hrv]');
     const heart = host.querySelector<HTMLElement>('[data-heart]');
     if (!line || !glow || !bpm || !hrv || !heart) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reduced.matches) return; // the server's picture stays
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // the server's picture stays
 
     const H = Number(host.dataset.h) || 56;
-    const svg = host.querySelector<SVGSVGElement>('svg');
-    // In overlay mode the cell under the sweep lights up on each beat.
-    const cells = host.hasAttribute('data-overlay') ? [...host.querySelectorAll<HTMLElement>('.cell')] : [];
-    const GAP = 10; // columns the sweep erases ahead of itself
+    const sweep = { seconds: Number(host.dataset.seconds) || 4, perSecond: Number(host.dataset.perSecond) || 60 };
+    const COLS = sweep.seconds * sweep.perSecond;
+    const GAP = Math.round(sweep.perSecond / 6); // the sweep erases about 1/6 s ahead of itself
     const peaks = rPeaks();
     const loop = peaks[peaks.length - 1] - 1;
-    const ys = Float32Array.from(firstWindow(peaks));
+    const ys = Float32Array.from(firstWindow(peaks, sweep));
+
+    // Cells that light up with the beat: one or two at random among those on
+    // screen, never the same one twice in a row.
+    const beatCells = host.hasAttribute('data-pulse') ? [...document.querySelectorAll<HTMLElement>('[data-beat]')] : [];
+    const onScreen = new Set<HTMLElement>();
+    let lastLit: HTMLElement | null = null;
+    const pulseCells = () => {
+      const seen = [...onScreen].filter((c) => c !== lastLit && !c.hidden);
+      const count = Math.random() < 0.35 ? 2 : 1;
+      for (let i = 0; i < count && seen.length; i++) {
+        const c = seen.splice(Math.floor(Math.random() * seen.length), 1)[0];
+        c.classList.add('is-pulse');
+        setTimeout(() => c.classList.remove('is-pulse'), 420);
+        lastLit = c;
+      }
+    };
 
     let t = START_SECONDS; // signal time; the server drew the window before it
     let lastCol = -1;
@@ -93,16 +98,7 @@ const first = vitalsAt(peaks, START_SECONDS);
       heart.classList.remove('is-beat');
       void heart.offsetWidth; // restart the animation
       heart.classList.add('is-beat');
-      if (svg && cells.length) {
-        const box = svg.getBoundingClientRect();
-        const x = box.left + ((Math.floor(t * COLUMNS_PER_SECOND) % COLUMNS) / COLUMNS) * box.width;
-        for (const c of cells) {
-          const r = c.getBoundingClientRect();
-          if (x < r.left + r.width * 0.15 || x > r.right - r.width * 0.15) continue;
-          c.classList.add('is-pulse');
-          setTimeout(() => c.classList.remove('is-pulse'), 450);
-        }
-      }
+      if (beatCells.length) pulseCells();
     };
 
     const frame = (now: number) => {
@@ -114,11 +110,11 @@ const first = vitalsAt(peaks, START_SECONDS);
       t += dt;
       if (t > loop) { t = START_SECONDS; nextPeak = peaks.findIndex((p) => p >= t); }
       // Write every column the sweep passed since the last frame.
-      const col = Math.floor(t * COLUMNS_PER_SECOND) % COLUMNS;
-      for (let s = Math.floor(from * COLUMNS_PER_SECOND) + 1; s <= Math.floor(t * COLUMNS_PER_SECOND); s++) {
-        ys[s % COLUMNS] = toY(valueAt(peaks, s / COLUMNS_PER_SECOND));
+      const col = Math.floor(t * sweep.perSecond) % COLS;
+      for (let s = Math.floor(from * sweep.perSecond) + 1; s <= Math.floor(t * sweep.perSecond); s++) {
+        ys[s % COLS] = toY(valueAt(peaks, s / sweep.perSecond));
       }
-      if (col !== lastCol) {
+      if (col !== lastCol && hostVisible) {
         const d = tracePath(ys, H, { from: col + 1, to: col + GAP });
         line.setAttribute('d', d);
         glow.setAttribute('d', d);
@@ -127,15 +123,32 @@ const first = vitalsAt(peaks, START_SECONDS);
       while (nextPeak < peaks.length && peaks[nextPeak] <= t) { nextPeak++; onBeat(); }
     };
 
-    const start = () => { cancelAnimationFrame(raf); prev = 0; raf = requestAnimationFrame(frame); };
-    const stop = () => cancelAnimationFrame(raf);
-    let visible = true;
-    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : visible && start()));
+    // The clock runs while the trace or any beat cell is on screen; the trace is
+    // redrawn only while it can be seen.
+    let hostVisible = true;
+    let running = false;
+    const update = () => {
+      const want = !document.hidden && (hostVisible || onScreen.size > 0);
+      if (want && !running) { prev = 0; raf = requestAnimationFrame(frame); }
+      if (!want && running) cancelAnimationFrame(raf);
+      running = want;
+    };
+    document.addEventListener('visibilitychange', update);
     if ('IntersectionObserver' in window) {
       new IntersectionObserver((entries) => {
-        for (const e of entries) { visible = e.isIntersecting; visible ? start() : stop(); }
+        for (const e of entries) {
+          if (e.target === host) hostVisible = e.isIntersecting;
+          else if (e.isIntersecting) onScreen.add(e.target as HTMLElement);
+          else onScreen.delete(e.target as HTMLElement);
+        }
+        update();
       }).observe(host);
-    } else start();
+      const cellObserver = new IntersectionObserver((entries) => {
+        for (const e of entries) e.isIntersecting ? onScreen.add(e.target as HTMLElement) : onScreen.delete(e.target as HTMLElement);
+        update();
+      });
+      beatCells.forEach((c) => cellObserver.observe(c));
+    } else update();
   });
 </script>
 
@@ -145,6 +158,11 @@ const first = vitalsAt(peaks, START_SECONDS);
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.4rem 1.1rem;
+    text-decoration: none;
+  }
+
+  /* The strip: a small monitor box with a faint grid. */
+  .is-strip {
     max-width: 27rem;
     margin-top: 1.6rem;
     padding: 0.75rem 1rem 0.65rem;
@@ -154,10 +172,23 @@ const first = vitalsAt(peaks, START_SECONDS);
       linear-gradient(rgba(var(--bio-rgb), 0.05) 1px, transparent 1px) 0 0 / 100% 14px,
       linear-gradient(90deg, rgba(var(--bio-rgb), 0.05) 1px, transparent 1px) 0 0 / 14px 100%,
       rgba(var(--bg-rgb), 0.55);
-    text-decoration: none;
     transition: border-color 0.25s var(--ease);
   }
-  .vitals:hover, .vitals:focus-visible { border-color: rgba(var(--bio-rgb), 0.6); }
+  .is-strip:hover, .is-strip:focus-visible { border-color: rgba(var(--bio-rgb), 0.6); }
+  .is-strip .vitals-note { grid-column: 1 / -1; }
+
+  /* The line: the trace across the full width, fading in from the left, with
+     the readout and the note stacked at its right end. */
+  .is-line { grid-template-areas: 'trace read' 'trace note'; row-gap: 0.25rem; }
+  .is-line .vitals-trace {
+    grid-area: trace; height: 72px;
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 100%);
+  }
+  .is-line .vitals-read { grid-area: read; align-self: end; }
+  .is-line .vitals-note { grid-area: note; align-self: start; text-align: right; }
+  .is-line .vitals-line { stroke-width: 2; }
+  .is-line .vitals-glow { stroke: rgba(var(--bio-rgb), 0.28); stroke-width: 6; }
 
   .vitals-trace { display: block; width: 100%; height: 56px; overflow: visible; }
   .vitals-base { stroke: rgba(var(--bio-rgb), 0.14); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -172,29 +203,13 @@ const first = vitalsAt(peaks, START_SECONDS);
   .vitals-heart.is-beat { animation: thump 0.35s var(--ease); }
   .vitals-hrv { font-size: 0.75rem; color: var(--text-dim); }
   .vitals-hrv b { font-weight: 500; color: var(--text); }
-  .vitals-note { grid-column: 1 / -1; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
+  .vitals-note { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
   .vitals:hover .vitals-note { color: var(--bio); }
 
-  /* Overlay: the trace runs in a channel between two rows of the honeycomb;
-     the readout sits in a bar below. */
-  .vitals-hive { width: 100%; }
-  .vitals-stage { position: relative; }
-  .vitals-stage > :global(:not(svg)) { position: relative; z-index: 1; }
-  .vitals-trace-overlay {
-    /* In the channel the host opens between two rows (--pulse-top, --pulse-gap). */
-    position: absolute; z-index: 0; left: -4%; width: 108%; top: var(--pulse-top, calc(50% - 32px)); height: var(--pulse-gap, 64px);
-    pointer-events: none;
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  @media (max-width: 640px) {
+    .is-line { grid-template-areas: 'trace trace' 'note read'; }
+    .is-line .vitals-note { text-align: left; align-self: center; }
   }
-  .vitals-trace-overlay .vitals-line { stroke-width: 2.2; }
-  .vitals-trace-overlay .vitals-glow { stroke: rgba(var(--bio-rgb), 0.3); stroke-width: 7; }
-  .vitals-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.4rem 1.2rem; margin-top: 0.7rem; }
-  .vitals-bar-read { display: inline-flex; align-items: baseline; gap: 0.35rem; font-size: 0.8rem; color: var(--text-dim); text-decoration: none; white-space: nowrap; }
-  .vitals-bar-read b { font-weight: 500; font-size: 1.05rem; color: var(--bio); }
-  .vitals-bar-note { color: var(--text-faint); }
-  .vitals-bar-read:hover .vitals-bar-note { color: var(--bio); }
-  @media (max-width: 640px) { .vitals-bar { justify-content: center; } }
 
   @keyframes thump { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 100% { transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) { .vitals-heart.is-beat { animation: none; } }

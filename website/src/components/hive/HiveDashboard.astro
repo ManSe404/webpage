@@ -82,13 +82,12 @@ const panelData = {
     </div>
 
     <div class="hive-wrap">
-      <VitalsMonitor overlay>
       <ul class="hive" aria-label="Explore by area">
         {cells.map((cell, i) => {
           const d = place(i, 4);
           const p = place(i, 2);
           return (
-            <li class={`cell tone-${cell.tone}`} style={`--rd:${d.row};--cd:${d.col};--rp:${p.row};--cp:${p.col}`}>
+            <li class={`cell tone-${cell.tone}`} data-beat style={`--rd:${d.row};--cd:${d.col};--rp:${p.row};--cp:${p.col}`}>
               <a class="hex" href={withBase(cell.href)} data-cell={cell.id} data-jump={cell.jump ? '' : undefined}>
                 <span class="hex-value mono">
                   {cell.visual === 'bubbles' ? (
@@ -104,13 +103,16 @@ const panelData = {
           );
         })}
       </ul>
-      <p class="hive-hint mono" data-hive-hint hidden slot="hint">Pick a cell to explore</p>
-      </VitalsMonitor>
+      <p class="hive-hint mono" data-hive-hint hidden>Pick a cell to explore</p>
     </div>
   </div>
 
   <div class="wrap">
     <HivePanels data={panelData} />
+  </div>
+
+  <div class="dash-ecg wrap">
+    <VitalsMonitor variant="line" pulse />
   </div>
 </section>
 
@@ -206,6 +208,8 @@ const panelData = {
 </script>
 
 <style>
+  .dash-ecg { margin-top: 1.5rem; }
+
   .dash {
     position: relative;
     padding-top: clamp(2.5rem, 7vh, 5rem);
@@ -236,14 +240,12 @@ const panelData = {
   .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 
   /* Honeycomb: cells span two half-columns, rows overlap by a quarter hex. */
-  /* --pulse-gap opens a channel between two rows of cells for the heartbeat
-     (VitalsMonitor overlay); --pulse-top is where that channel starts. */
-  .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); --pulse-gap: 64px; --pulse-top: var(--h); }
+  .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); }
   .hive {
     list-style: none; margin: 0; padding: 0;
     display: grid;
     grid-template-columns: repeat(9, calc(var(--w) / 2));
-    grid-template-rows: calc(var(--h) + var(--pulse-gap)) var(--h);
+    grid-template-rows: calc(var(--h) * 0.75) var(--h);
   }
   .cell { grid-column: var(--cd) / span 2; grid-row: var(--rd); height: var(--h); }
 
@@ -276,12 +278,12 @@ const panelData = {
   .hex.is-active::before { background: #2b2214; }
   .hex:focus-visible { outline: none; }
   .cell:has(.hex:hover), .cell:has(.hex.is-active), .cell:has(.hex:focus-visible) { filter: drop-shadow(0 0 12px var(--glow-bio)); }
-  /* A beat passing under a cell lights its edge for a moment (VitalsMonitor). */
+  /* A heartbeat lights a random cell for a moment (VitalsMonitor with pulse). */
   .cell { transition: filter 0.45s var(--ease); }
   .cell.is-pulse { filter: drop-shadow(0 0 10px var(--glow-bio)); }
   .cell.is-pulse .hex { background: rgba(var(--bio-rgb), 0.75); }
 
-  .hive-hint { margin: 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
+  .hive-hint { margin: 0.6rem 0 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
 
 
   @media (max-width: 1080px) {
@@ -290,11 +292,10 @@ const panelData = {
   }
 
   @media (max-width: 640px) {
-    .hive-wrap { --w: min(150px, calc((100vw - 2 * var(--gutter)) / 2.5)); --pulse-top: calc(var(--h) * 1.75); }
+    .hive-wrap { --w: min(150px, calc((100vw - 2 * var(--gutter)) / 2.5)); }
     .hive {
       grid-template-columns: repeat(5, calc(var(--w) / 2));
-      /* Rows 1-2 and 3-4 interlock; the heartbeat runs between rows 2 and 3. */
-      grid-template-rows: calc(var(--h) * 0.75) calc(var(--h) + var(--pulse-gap)) calc(var(--h) * 0.75) var(--h);
+      grid-template-rows: repeat(3, calc(var(--h) * 0.75)) var(--h);
     }
     .cell { grid-column: var(--cp) / span 2; grid-row: var(--rp); }
     .hex-value { font-size: 1.6rem; }

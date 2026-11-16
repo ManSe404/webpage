@@ -43,7 +43,7 @@ const items = projects.map((p) => ({
       const d = place(i, 4);
       const m = place(i, 2);
       return (
-        <li class={`pcell tone-${item.tone}`} data-type={item.type} data-field={{ ai: 'ai', bio: 'data', sw: 'software' }[item.tone]} style={`--rw:${w.row};--cw:${w.col};--rd:${d.row};--cd:${d.col};--rp:${m.row};--cp:${m.col}`}>
+        <li class={`pcell tone-${item.tone}`} data-beat data-type={item.type} data-field={{ ai: 'ai', bio: 'data', sw: 'software' }[item.tone]} style={`--rw:${w.row};--cw:${w.col};--rd:${d.row};--cd:${d.col};--rp:${m.row};--cp:${m.col}`}>
           <a class="phex" href={`#${item.key}`} data-pcell={item.key}>
             <span class="phex-title">{item.short}</span>
             <span class="phex-field mono">{item.field}</span>
@@ -188,6 +188,10 @@ const items = projects.map((p) => ({
   .phex.is-active::before { background: #2b2214; }
   .phex:focus-visible { outline: none; }
   .pcell:has(.phex:hover), .pcell:has(.phex.is-active), .pcell:has(.phex:focus-visible) { filter: drop-shadow(0 0 12px var(--glow-bio)); }
+  /* On the home page a heartbeat lights a random cell for a moment (VitalsMonitor with pulse). */
+  .pcell { transition: filter 0.45s var(--ease); }
+  .pcell.is-pulse { filter: drop-shadow(0 0 10px var(--glow-bio)); }
+  .pcell.is-pulse .phex { background: var(--bio); }
 
   /* Without JavaScript: every popup shows, as a list under the honeycomb. */
   .pop { display: grid; gap: 1rem; margin-top: 1.4rem; }

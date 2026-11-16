@@ -8,16 +8,21 @@
 import { beat, rhythm, rng } from './signal';
 
 export const VITALS_SEED = 7;
-/** Seconds of signal across the monitor, and drawn columns per second. */
-export const WINDOW_SECONDS = 4;
-export const COLUMNS_PER_SECOND = 60;
-export const COLUMNS = WINDOW_SECONDS * COLUMNS_PER_SECOND;
+/** How much signal the monitor shows and how finely: seconds across, columns drawn per second. */
+export interface Sweep {
+  seconds: number;
+  perSecond: number;
+}
+/** The small box (about 300 px wide) and the full-width line (up to about 1200 px). */
+export const STRIP: Sweep = { seconds: 4, perSecond: 60 };
+export const LINE: Sweep = { seconds: 6, perSecond: 120 };
+export const columns = (s: Sweep): number => s.seconds * s.perSecond;
 /** Where the monitor starts in the signal: late enough that the first numbers average eight beats. */
 export const START_SECONDS = 12;
 
-/** The window the monitor shows first: column c holds the signal at START - WINDOW + c / columns-per-second. */
-export function firstWindow(peaks: number[]): number[] {
-  return Array.from({ length: COLUMNS }, (_, c) => toY(valueAt(peaks, START_SECONDS - WINDOW_SECONDS + c / COLUMNS_PER_SECOND)));
+/** The window the monitor shows first: column c holds the signal at START - seconds + c / perSecond. */
+export function firstWindow(peaks: number[], sweep: Sweep): number[] {
+  return Array.from({ length: columns(sweep) }, (_, c) => toY(valueAt(peaks, START_SECONDS - sweep.seconds + c / sweep.perSecond)));
 }
 
 /** R-peak times in seconds: about 0.83 s apart (72 bpm), swaying with the breath. */
