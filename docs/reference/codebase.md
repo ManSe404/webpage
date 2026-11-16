@@ -34,6 +34,7 @@ website/                      the Astro project
       hive/HivePanels.astro   the panel each cell opens: featured projects, the career board, research, education, tools and skills, in progress, 404 Solutions services and partners, contact
       hive/JourneyBoard.astro career and education board (three tracks across three eras) in the Years panel; warns about unconfirmed dates
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
+      hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the home page lab: two tabs, Signal processing and Architecture
       lab/SignalLab.astro     synthetic ECG-like signal, filter and peak detection with sliders, live numbers, donut
       lab/ArchitectureLab.astro data platform and AI system diagrams with a switch; draws each with lab/ArchDiagram.astro

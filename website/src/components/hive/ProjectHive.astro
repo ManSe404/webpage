@@ -7,7 +7,8 @@
 // each cell links to its entry. A page can hide cells (li[hidden]) and send
 // the `phive:relayout` event; the honeycomb then closes its gaps.
 import type { CollectionEntry } from 'astro:content';
-import { attribution, projectResult, workType } from '../../lib/dashboard';
+import { workType } from '../../lib/dashboard';
+import ProjectDetails from './ProjectDetails.astro';
 import { cols, place, tracks } from '../../lib/honeycomb';
 
 interface Props {
@@ -27,16 +28,10 @@ const shortTitle = (title: string) => title.split(' — ')[0];
 // Four cells per row on wide screens, two on phones (lib/honeycomb.ts).
 const items = projects.map((p) => ({
   key: `${id}-${p.id}`,
-  title: p.data.title,
+  project: p,
   short: shortTitle(p.data.title),
   field: p.data.category,
   type: workType(p.data.org),
-  description: p.data.summary,
-  result: projectResult(p),
-  role: p.data.metrics.find((m) => m.label === 'Role')?.value,
-  stack: p.data.stack.join(', '),
-  company: [attribution(p), p.data.period].filter(Boolean).join(' · '),
-  link: p.data.link,
   tone: /AI|Vision/.test(p.data.category) ? 'ai' : /Data|Machine/.test(p.data.category) ? 'bio' : 'sw',
 }));
 ---
@@ -62,15 +57,7 @@ const items = projects.map((p) => ({
     <button class="pop-close mono" type="button" data-pop-close hidden aria-label="Close project">Close ✕</button>
     {items.map((item) => (
       <article class="pop-item" id={item.key} data-pop-item>
-        <h3 class="pop-title"><span class="pop-field">{item.field}:</span> {item.title}</h3>
-        <ul class="pop-lines">
-          <li><strong>Project description:</strong> {item.description}</li>
-          {item.result && <li><strong>Achieved result:</strong> {item.result}</li>}
-          {item.role && <li><strong>Role &amp; responsibilities:</strong> {item.role}</li>}
-          <li><strong>Tech stack:</strong> {item.stack}</li>
-          <li><strong>Company / client:</strong> {item.company}</li>
-        </ul>
-        {item.link && <a class="pop-link mono" href={item.link} target="_blank" rel="noopener">Visit project ↗</a>}
+        <ProjectDetails project={item.project} />
       </article>
     ))}
   </div>
@@ -216,14 +203,6 @@ const items = projects.map((p) => ({
     border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
   }
   .pop-close:hover { color: var(--text); border-color: var(--border-strong); }
-  .pop-title { margin: 0 0 1rem; padding-right: 5.5rem; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.25; }
-  .pop-field { color: var(--bio); }
-  .pop-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 62rem; }
-  .pop-lines li { position: relative; padding-left: 1.5rem; color: var(--text-dim); line-height: 1.55; }
-  .pop-lines li::before { content: '→'; position: absolute; left: 0; color: var(--bio); }
-  .pop-lines strong { color: var(--text); font-weight: 600; }
-  .pop-link { display: inline-block; margin-top: 1.1rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
-  .pop-link:hover { text-decoration: underline; }
 
   @media (max-width: 640px) {
     .phive { --w: min(160px, calc((100vw - 2 * var(--gutter)) / 2.5)); }

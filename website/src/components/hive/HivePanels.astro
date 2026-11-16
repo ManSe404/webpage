@@ -8,7 +8,8 @@ import consultancy from '../../data/consultancy.json';
 import skills from '../../data/skills.json';
 import type { NowItem } from '../../lib/dashboard';
 import JourneyBoard from './JourneyBoard.astro';
-import ProjectHive from './ProjectHive.astro';
+import ProjectDetails from './ProjectDetails.astro';
+import { attribution } from '../../lib/dashboard';
 
 interface Props {
   data: {
@@ -45,7 +46,19 @@ const partners = data.consultancy.partners.map((p) => ({
 
   <section class="panel" id="hive-projects" data-panel="projects" aria-label="Featured projects">
     <p class="panel-title">Featured projects</p>
-    <ProjectHive id="top" projects={featured} linkable={false} />
+    <ol class="items">
+      {featured.map((p, i) => (
+        <li>
+          <details class="item" name="hive-projects">
+            <summary>
+              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="item-head"><span class="item-title">{p.data.title}</span><span class="item-meta">{attribution(p)} · {p.data.category}</span></span>
+            </summary>
+            <div class="item-body"><ProjectDetails project={p} showTitle={false} /></div>
+          </details>
+        </li>
+      ))}
+    </ol>
     <a class="panel-more mono" href={withBase('/projects/')}>All {data.projectCount} projects →</a>
   </section>
 
