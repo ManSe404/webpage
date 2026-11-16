@@ -34,7 +34,7 @@ website/                      the Astro project
     components/
       hive/HiveDashboard.astro home dashboard: portrait, name, tagline and actions, the honeycomb, the panels, and the vitals monitor as a full-width line at the bottom; seven honeycomb cells with count-up numbers, deep links that open a panel
       hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (four figures, the most cited as ranked cards), skills, in progress, contact
-      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a small `strip` or a full-width `line` (the dashboard); with `pulse`, each beat lights one or two random on-screen cells marked `data-beat` (dashboard and Chosen work)
+      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a small `strip` or a full-width `line` under a one-line header (the dashboard); with `pulse`, each beat lights one or two random on-screen cells marked `data-beat` (dashboard and Chosen work)
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too

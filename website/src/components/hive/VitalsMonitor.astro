@@ -2,8 +2,8 @@
 // A sweeping synthetic ECG with the heart rate and HRV it implies, ticking on
 // every beat, linking to the lab's signal demo. Two looks:
 // - `strip` (default): a small patient-monitor box, e.g. under the actions;
-// - `line`: a full-width trace with the readout at its right end, e.g. along
-//   the bottom of the dashboard.
+// - `line`: a full-width trace under a one-line header (the live numbers on
+//   the left, the note on the right), e.g. along the bottom of the dashboard.
 // With `pulse`, each beat also lights one or two random honeycomb cells that
 // are on screen (any element with `data-beat`; the component that renders the
 // cell styles its `is-pulse` class), so the page breathes with the signal.
@@ -37,16 +37,31 @@ const first = vitalsAt(peaks, START_SECONDS);
   data-per-second={sweep.perSecond}
   data-pulse={pulse ? '' : undefined}
 >
+  {variant === 'line' && (
+    <span class="vitals-head mono">
+      <span class="vitals-live">
+        <span class="vitals-heart" data-heart aria-hidden="true">♥</span>
+        <b data-bpm>{Math.round(first?.bpm ?? 72)}</b> bpm
+        <span class="vitals-sep" aria-hidden="true">·</span>
+        HRV <b data-hrv>{Math.round(first?.rmssd ?? 38)}</b> ms
+      </span>
+      <span class="vitals-note">synthetic signal<span class="vitals-wide"> · try it in the Lab</span> <span aria-hidden="true">→</span></span>
+    </span>
+  )}
   <svg class="vitals-trace" viewBox={`0 0 ${cols} ${H}`} preserveAspectRatio="none" aria-hidden="true">
     <line class="vitals-base" x1="0" x2={cols} y1={toY(0) * H} y2={toY(0) * H} />
     <path class="vitals-glow" d={d} data-glow />
     <path class="vitals-line" d={d} data-line />
   </svg>
-  <span class="vitals-read">
-    <span class="vitals-hr"><span class="vitals-heart" data-heart aria-hidden="true">♥</span><b class="mono" data-bpm>{Math.round(first?.bpm ?? 72)}</b><span class="vitals-unit">bpm</span></span>
-    <span class="vitals-hrv mono">HRV <b data-hrv>{Math.round(first?.rmssd ?? 38)}</b> ms</span>
-  </span>
-  <span class="vitals-note mono">synthetic signal · try it in the Lab <span aria-hidden="true">→</span></span>
+  {variant === 'strip' && (
+    <>
+      <span class="vitals-read">
+        <span class="vitals-hr"><span class="vitals-heart" data-heart aria-hidden="true">♥</span><b class="mono" data-bpm>{Math.round(first?.bpm ?? 72)}</b><span class="vitals-unit">bpm</span></span>
+        <span class="vitals-hrv mono">HRV <b data-hrv>{Math.round(first?.rmssd ?? 38)}</b> ms</span>
+      </span>
+      <span class="vitals-note mono">synthetic signal · try it in the Lab <span aria-hidden="true">→</span></span>
+    </>
+  )}
 </a>
 
 <script>
@@ -153,16 +168,14 @@ const first = vitalsAt(peaks, START_SECONDS);
 </script>
 
 <style>
-  .vitals {
+  .vitals { text-decoration: none; }
+
+  /* The strip: a small monitor box with a faint grid. */
+  .is-strip {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.4rem 1.1rem;
-    text-decoration: none;
-  }
-
-  /* The strip: a small monitor box with a faint grid. */
-  .is-strip {
     max-width: 27rem;
     margin-top: 1.6rem;
     padding: 0.75rem 1rem 0.65rem;
@@ -177,16 +190,22 @@ const first = vitalsAt(peaks, START_SECONDS);
   .is-strip:hover, .is-strip:focus-visible { border-color: rgba(var(--bio-rgb), 0.6); }
   .is-strip .vitals-note { grid-column: 1 / -1; }
 
-  /* The line: the trace across the full width, fading in from the left, with
-     the readout and the note stacked at its right end. */
-  .is-line { grid-template-areas: 'trace read' 'trace note'; row-gap: 0.25rem; }
-  .is-line .vitals-trace {
-    grid-area: trace; height: 72px;
-    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 100%);
+  /* The line: a quiet one-line header like a monitor's labels, then the trace
+     across the full width, fading in and out at both ends. */
+  .is-line { display: block; }
+  .vitals-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.5rem;
+    padding-bottom: 0.35rem; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint);
   }
-  .is-line .vitals-read { grid-area: read; align-self: end; }
-  .is-line .vitals-note { grid-area: note; align-self: start; text-align: right; }
+  .vitals-live { display: inline-flex; align-items: baseline; gap: 0.4rem; color: var(--text-dim); }
+  .vitals-live b { font-weight: 500; font-size: 0.95rem; color: var(--bio); }
+  .vitals-sep { color: var(--text-faint); margin: 0 0.15rem; }
+  .is-line .vitals-heart { font-size: 0.8rem; }
+  .is-line .vitals-trace {
+    height: 72px;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
   .is-line .vitals-line { stroke-width: 2; }
   .is-line .vitals-glow { stroke: rgba(var(--bio-rgb), 0.28); stroke-width: 6; }
 
@@ -206,10 +225,7 @@ const first = vitalsAt(peaks, START_SECONDS);
   .vitals-note { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
   .vitals:hover .vitals-note { color: var(--bio); }
 
-  @media (max-width: 640px) {
-    .is-line { grid-template-areas: 'trace trace' 'note read'; }
-    .is-line .vitals-note { text-align: left; align-self: center; }
-  }
+  @media (max-width: 640px) { .vitals-wide { display: none; } }
 
   @keyframes thump { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 100% { transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) { .vitals-heart.is-beat { animation: none; } }
