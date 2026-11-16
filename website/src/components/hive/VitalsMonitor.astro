@@ -1,0 +1,136 @@
+---
+// A small patient-monitor strip under the dashboard's actions: a sweeping
+// synthetic ECG with the heart rate and HRV it implies, ticking on every beat,
+// linking to the lab's signal demo. The first picture and numbers are
+// rendered on the server, so it reads the same without JavaScript or under
+// reduced motion; with motion the sweep runs at 30 frames a second and stops
+// while off screen or in a hidden tab. Signal: lib/vitals.ts.
+import { COLUMNS, START_SECONDS, firstWindow, rPeaks, toY, tracePath, vitalsAt } from '../../lib/vitals';
+import { withBase } from '../../lib/url';
+
+const H = 56;
+const peaks = rPeaks();
+const d = tracePath(firstWindow(peaks), H);
+const first = vitalsAt(peaks, START_SECONDS);
+---
+
+<a class="vitals" href={withBase('/lab/#signal')} data-vitals>
+  <svg class="vitals-trace" viewBox={`0 0 ${COLUMNS} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+    <line class="vitals-base" x1="0" x2={COLUMNS} y1={toY(0) * H} y2={toY(0) * H} />
+    <path class="vitals-glow" d={d} data-glow />
+    <path class="vitals-line" d={d} data-line />
+  </svg>
+  <span class="vitals-read">
+    <span class="vitals-hr"><span class="vitals-heart" data-heart aria-hidden="true">♥</span><b class="mono" data-bpm>{Math.round(first?.bpm ?? 72)}</b><span class="vitals-unit">bpm</span></span>
+    <span class="vitals-hrv mono">HRV <b data-hrv>{Math.round(first?.rmssd ?? 38)}</b> ms</span>
+  </span>
+  <span class="vitals-note mono">synthetic signal · try it in the Lab <span aria-hidden="true">→</span></span>
+</a>
+
+<script>
+  import { COLUMNS, COLUMNS_PER_SECOND, START_SECONDS, firstWindow, rPeaks, toY, tracePath, valueAt, vitalsAt } from '../../lib/vitals';
+
+  document.querySelectorAll<HTMLElement>('[data-vitals]').forEach((host) => {
+    const line = host.querySelector<SVGPathElement>('[data-line]');
+    const glow = host.querySelector<SVGPathElement>('[data-glow]');
+    const bpm = host.querySelector<HTMLElement>('[data-bpm]');
+    const hrv = host.querySelector<HTMLElement>('[data-hrv]');
+    const heart = host.querySelector<HTMLElement>('[data-heart]');
+    if (!line || !glow || !bpm || !hrv || !heart) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduced.matches) return; // the server's picture stays
+
+    const H = 56;
+    const GAP = 10; // columns the sweep erases ahead of itself
+    const peaks = rPeaks();
+    const loop = peaks[peaks.length - 1] - 1;
+    const ys = Float32Array.from(firstWindow(peaks));
+
+    let t = START_SECONDS; // signal time; the server drew the window before it
+    let lastCol = -1;
+    let nextPeak = peaks.findIndex((p) => p >= t);
+    let raf = 0;
+    let prev = 0;
+    let last = 0;
+
+    const onBeat = () => {
+      const v = vitalsAt(peaks, t);
+      if (v) { bpm.textContent = String(Math.round(v.bpm)); hrv.textContent = String(Math.round(v.rmssd)); }
+      heart.classList.remove('is-beat');
+      void heart.offsetWidth; // restart the animation
+      heart.classList.add('is-beat');
+    };
+
+    const frame = (now: number) => {
+      raf = requestAnimationFrame(frame);
+      if (now - last < 32) return; // 30 frames a second is plenty for a sweep
+      const dt = Math.min(0.1, (now - (prev || now)) / 1000);
+      prev = now; last = now;
+      const from = t;
+      t += dt;
+      if (t > loop) { t = START_SECONDS; nextPeak = peaks.findIndex((p) => p >= t); }
+      // Write every column the sweep passed since the last frame.
+      const col = Math.floor(t * COLUMNS_PER_SECOND) % COLUMNS;
+      for (let s = Math.floor(from * COLUMNS_PER_SECOND) + 1; s <= Math.floor(t * COLUMNS_PER_SECOND); s++) {
+        ys[s % COLUMNS] = toY(valueAt(peaks, s / COLUMNS_PER_SECOND));
+      }
+      if (col !== lastCol) {
+        const d = tracePath(ys, H, { from: col + 1, to: col + GAP });
+        line.setAttribute('d', d);
+        glow.setAttribute('d', d);
+        lastCol = col;
+      }
+      while (nextPeak < peaks.length && peaks[nextPeak] <= t) { nextPeak++; onBeat(); }
+    };
+
+    const start = () => { cancelAnimationFrame(raf); prev = 0; raf = requestAnimationFrame(frame); };
+    const stop = () => cancelAnimationFrame(raf);
+    let visible = true;
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : visible && start()));
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        for (const e of entries) { visible = e.isIntersecting; visible ? start() : stop(); }
+      }).observe(host);
+    } else start();
+  });
+</script>
+
+<style>
+  .vitals {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem 1.1rem;
+    max-width: 27rem;
+    margin-top: 1.6rem;
+    padding: 0.75rem 1rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(rgba(var(--bio-rgb), 0.05) 1px, transparent 1px) 0 0 / 100% 14px,
+      linear-gradient(90deg, rgba(var(--bio-rgb), 0.05) 1px, transparent 1px) 0 0 / 14px 100%,
+      rgba(var(--bg-rgb), 0.55);
+    text-decoration: none;
+    transition: border-color 0.25s var(--ease);
+  }
+  .vitals:hover, .vitals:focus-visible { border-color: rgba(var(--bio-rgb), 0.6); }
+
+  .vitals-trace { display: block; width: 100%; height: 56px; overflow: visible; }
+  .vitals-base { stroke: rgba(var(--bio-rgb), 0.14); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .vitals-glow { fill: none; stroke: rgba(var(--bio-rgb), 0.22); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .vitals-line { fill: none; stroke: var(--bio); stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+  .vitals-read { display: grid; justify-items: end; gap: 0.15rem; }
+  .vitals-hr { display: flex; align-items: baseline; gap: 0.35rem; color: var(--text); }
+  .vitals-hr b { font-size: 1.7rem; font-weight: 500; line-height: 1; color: var(--bio); min-width: 2.2ch; text-align: right; }
+  .vitals-unit { font-size: 0.75rem; color: var(--text-dim); }
+  .vitals-heart { display: inline-block; color: var(--ai); font-size: 0.95rem; }
+  .vitals-heart.is-beat { animation: thump 0.35s var(--ease); }
+  .vitals-hrv { font-size: 0.75rem; color: var(--text-dim); }
+  .vitals-hrv b { font-weight: 500; color: var(--text); }
+  .vitals-note { grid-column: 1 / -1; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
+  .vitals:hover .vitals-note { color: var(--bio); }
+
+  @keyframes thump { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .vitals-heart.is-beat { animation: none; } }
+</style>

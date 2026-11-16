@@ -55,7 +55,7 @@ the pages and components that need them.
 
 | Route | File | What it renders |
 |---|---|---|
-| `/` | `index.astro` | The dashboard (an ECG trace across the top, then seven honeycomb cells, each opening a panel, except Lab and Contact, which open their pages), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project) |
+| `/` | `index.astro` | The dashboard (portrait, name, tagline, actions and a vitals monitor beside seven honeycomb cells, each opening a panel, except Lab and Contact, which open their pages), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project) |
 | `/projects/` | `projects/index.astro` | Every project in one big honeycomb (six cells per row on wide screens), clustered by field (AI, Data & analytics, Software & research) and coloured by it, each cell opening a popup, with field and type-of-work filters that combine and run in the browser |
 | `/lab/` | `lab.astro` | Three demos behind tabs: a synthetic signal, a data platform and an AI system; the address picks the tab (`#signal`, `#data-platform`, `#ai-system`), which is where the menu's Lab dropdown links |
 | `/contact/` | `contact.astro` | Where to write: the email with send, copy and CV, the four profiles, and what to write about; every value from `profile.json` |
@@ -67,7 +67,8 @@ the pages and components that need them.
   page passes its own), canonical URL, Open Graph and Twitter card tags, a schema.org `Person` in JSON-LD, the
   fonts, navigation, footer and the scroll-reveal script.
 - `src/components/hive/`: `HiveDashboard` (the dashboard and its cells), `HivePanels` (the panel each cell
-  opens, the career timeline among them), `ProjectDetails` (one project's five-line description) and `ProjectHive` (a honeycomb of projects with
+  opens, the career timeline among them), `ProjectDetails` (one project's five-line description), `VitalsMonitor` (the sweeping synthetic ECG with
+  heart rate and HRV under the dashboard's actions, from `src/lib/vitals.ts`) and `ProjectHive` (a honeycomb of projects with
   a popup per project, used by the home page and `/projects/`).
 - `src/components/`: `Section`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
   `NodeField`. See the [codebase map](../reference/codebase.md).
@@ -75,7 +76,7 @@ the pages and components that need them.
 
 ### Scripts in the browser
 
-The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the dashboard's
+The only JavaScript is small inline scripts: the vitals monitor's sweep, the ECG canvas on the contact page and the node field, scroll reveals, the dashboard's
 cells, panels, deep links and count-up numbers, the project honeycombs' popups and their re-packing after a
 filter (the `phive:relayout` event), the navigation toggle and sticky state, and the field and type-of-work filters on
 `/projects/`. The rows inside the panels open with native `<details>`, without

@@ -14,9 +14,9 @@ import {
   hIndex, inProgress, isOwnWork, rolesNewestFirst, topCited,
 } from '../../lib/dashboard';
 import { place } from '../../lib/honeycomb';
-import EcgTrace from '../EcgTrace.astro';
 import NodeField from '../NodeField.astro';
 import HivePanels from './HivePanels.astro';
+import VitalsMonitor from './VitalsMonitor.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const roles = rolesNewestFirst(await getCollection('experience'));
@@ -65,10 +65,6 @@ const panelData = {
 <section class="dash" id="home" data-hive>
   <NodeField />
 
-  <div class="dash-ecg wrap">
-    <EcgTrace height={80} />
-  </div>
-
   <div class="dash-inner wrap">
     <div class="dash-copy">
       <div class="dash-id">
@@ -83,6 +79,7 @@ const panelData = {
         <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
       </div>
+      <VitalsMonitor />
     </div>
 
     <div class="hive-wrap">
@@ -169,8 +166,8 @@ const panelData = {
       // A real section with that id (such as #work) wins: the browser scrolls to it.
       if (!ids.has(id) || document.getElementById(id)) return false;
       show(id);
-      // The dashboard opens the page: go to the top, so the ECG above the portrait
-      // is not left under the sticky menu.
+      // The dashboard opens the page: go to the top, so its first row is not
+      // left under the sticky menu.
       window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
       return true;
     };
@@ -210,7 +207,7 @@ const panelData = {
 <style>
   .dash {
     position: relative;
-    padding-top: clamp(0.75rem, 2vh, 1.5rem);
+    padding-top: clamp(2.5rem, 7vh, 5rem);
     padding-bottom: 2.5rem;
     overflow: hidden;
   }
@@ -279,8 +276,6 @@ const panelData = {
 
   .hive-hint { margin: 0.6rem 0 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
 
-  /* The ECG runs across the top of the page, above the portrait. */
-  .dash-ecg { position: relative; margin-bottom: clamp(1rem, 3vh, 2rem); }
 
   @media (max-width: 1080px) {
     .dash-inner { grid-template-columns: 1fr; }
