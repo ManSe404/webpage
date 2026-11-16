@@ -7,7 +7,7 @@ Everything the site says comes from files under `website/src/`. The collections 
 
 | What | Where | Read by |
 |---|---|---|
-| Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `research.astro` |
+| Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `research.astro`, `contact.astro` (not `phone`) |
 | Career | `src/data/experience.json` (collection `experience`) | `hive/HivePanels` (the career timeline in the Career panel, newest first); `hive/HiveDashboard` (the role count on the Career cell, current roles under In progress, the summary of the 404 Solutions role in its panel) |
 | Architecture diagrams | `src/data/architectures.json` (no schema): the two lab diagrams, their steps, side boxes, details, tools and synthetic sample rows | `lab/ArchitectureLab`, `lab/ArchDiagram` |
 | Skills | `src/data/skills.json` | `hive/HivePanels`: the skill groups in the Tools panel |

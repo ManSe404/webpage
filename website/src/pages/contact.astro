@@ -1,0 +1,214 @@
+---
+// The contact page: who to write to and where else to find the work. Every
+// value comes from profile.json; the two "write about" tiles reuse the site's
+// own copy (the old contact card and the research page). The dashboard's Hi
+// cell and the menu's Contact link here.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import EcgTrace from '../components/EcgTrace.astro';
+import profile from '../data/profile.json';
+import portrait from '../assets/portrait.jpg';
+import { withBase } from '../lib/url';
+
+const elsewhere = [
+  { code: 'in', label: 'LinkedIn', handle: '/in/sseman', what: 'Career and roles', href: profile.links.linkedin },
+  { code: 'gh', label: 'GitHub', handle: '@ManSe404', what: 'Code and open source', href: profile.links.github },
+  { code: 'gs', label: 'Google Scholar', handle: profile.name, what: 'Publications and citations', href: profile.links.scholar },
+  { code: 'rg', label: 'ResearchGate', handle: profile.name, what: 'Papers and research', href: profile.links.researchgate },
+];
+const topics = [
+  {
+    title: 'Engineering work',
+    text: 'Production AI systems: LLM and RAG architectures, document intelligence, and the cloud plumbing that keeps them running.',
+  },
+  {
+    title: 'Research collaboration',
+    text: 'Computational cardiology, exercise physiology, and machine learning for biomedical data.',
+  },
+];
+const languages = profile.languages.map((l) => `${l.name} (${l.level.toLowerCase()})`).join(', ');
+---
+
+<Base
+  title="Contact — Stefan Seman"
+  description="Write to Stefan Seman about production AI engineering work or research collaboration."
+>
+  <section class="page-head section">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1 class="page-title">Get in touch.</h1>
+      <p class="page-lede">
+        Building something that needs to actually ship? Open to conversations about engineering work and
+        research collaboration alike.
+      </p>
+    </div>
+  </section>
+
+  <section class="section contact-section" aria-label="Ways to reach me">
+    <div class="wrap contact-grid">
+      <article class="card who">
+        <EcgTrace height={64} class="who-ecg" />
+        <div class="who-body">
+          <div class="who-id">
+            <div class="who-portrait">
+              <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[112, 224]} sizes="112px" format="webp" quality={78} />
+            </div>
+            <div>
+              <p class="who-name">{profile.name}</p>
+              <p class="who-headline">{profile.headline}</p>
+              <p class="who-meta mono">{profile.location} · {languages}</p>
+            </div>
+          </div>
+
+          <p class="who-label mono">Email</p>
+          <p class="who-mail"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+          <div class="who-actions">
+            <a class="btn" href={`mailto:${profile.email}`}>Send an email <span aria-hidden="true">→</span></a>
+            <button class="btn btn-ghost" type="button" data-copy={profile.email} hidden>Copy address</button>
+            <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="side">
+        <p class="side-label mono">Elsewhere</p>
+        <ul class="links">
+          {elsewhere.map((l) => (
+            <li>
+              <a class="link card" href={l.href} target="_blank" rel="noopener noreferrer">
+                <span class="link-hex mono" aria-hidden="true">{l.code}</span>
+                <span class="link-text">
+                  <span class="link-label">{l.label} <span aria-hidden="true">↗</span></span>
+                  <span class="link-handle mono">{l.handle}</span>
+                  <span class="link-what">{l.what}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="topics">
+        <p class="side-label mono">Good reasons to write</p>
+        <ul class="topic-list">
+          {topics.map((t) => (
+            <li class="card topic">
+              <p class="topic-title">{t.title}</p>
+              <p class="topic-text">{t.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Copy the address: shown only with JavaScript and a clipboard to write to.
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    if (!navigator.clipboard) return;
+    b.hidden = false;
+    const label = b.textContent;
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy ?? '');
+        b.textContent = 'Copied ✓';
+      } catch {
+        b.textContent = 'Copy failed';
+      }
+      setTimeout(() => (b.textContent = label), 2000);
+    });
+  });
+</script>
+
+<style>
+  .page-head { padding-top: 2.5rem; padding-bottom: 0; }
+  .page-head .eyebrow { font-size: 0.75rem; }
+  .page-title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin-block: 0.6rem 0.85rem;
+    background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .page-lede { color: var(--text-dim); max-width: 62ch; font-size: 1.03rem; }
+  .contact-section { padding-top: clamp(1.5rem, 4vh, 2.75rem); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  /* The main card: the ECG across its top, then who, then the email. */
+  .who {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(34rem 18rem at 12% 0%, rgba(var(--bio-rgb), 0.10), transparent 65%),
+      radial-gradient(30rem 16rem at 92% 100%, rgba(var(--ai-rgb), 0.08), transparent 62%),
+      var(--surface);
+  }
+  .who :global(.who-ecg) { opacity: 0.6; }
+  .who-body { padding: 0.5rem clamp(1.4rem, 3.5vw, 2.4rem) clamp(1.6rem, 3.5vw, 2.4rem); }
+  .who-id { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.8rem; }
+  .who-portrait {
+    width: 96px; height: 111px; flex: none;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--border-strong);
+  }
+  .who-portrait :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.25); }
+  .who-name { margin: 0; font-size: 1.35rem; font-weight: 600; color: var(--text); }
+  .who-headline { margin: 0.15rem 0 0.35rem; color: var(--text-dim); }
+  .who-meta { margin: 0; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
+  .who-label { margin: 0 0 0.3rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+  .who-mail { margin: 0 0 1.3rem; font-family: var(--font-mono); font-size: clamp(1.05rem, 2.3vw, 1.45rem); overflow-wrap: anywhere; }
+  .who-mail a { color: var(--bio); text-decoration: none; }
+  .who-mail a:hover { text-decoration: underline; }
+  .who-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .who-actions [hidden] { display: none; }
+
+  /* Elsewhere: one card per profile, a hexagon with its short code. */
+  .side-label { margin: 0 0 0.7rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+  .links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+  .link {
+    display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; text-decoration: none;
+    transition: border-color 0.25s var(--ease), background 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .link:hover, .link:focus-visible { border-color: rgba(var(--bio-rgb), 0.6); background: var(--surface-hover); transform: translateX(3px); }
+  .link-hex {
+    width: 2.6rem; height: 3rem; flex: none; display: grid; place-items: center; font-size: 0.8rem;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: rgba(var(--bio-rgb), 0.16); color: var(--bio);
+  }
+  .link-text { display: grid; gap: 0.1rem; min-width: 0; }
+  .link-label { color: var(--text); font-weight: 600; }
+  .link-handle { font-size: 0.8rem; color: var(--bio); overflow-wrap: anywhere; }
+  .link-what { font-size: 0.85rem; color: var(--text-dim); }
+
+  /* What to write about, across the full width. */
+  .topics { grid-column: 1 / -1; margin-top: 0.6rem; }
+  .topic-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .topic { padding: 1.2rem 1.4rem; border-left: 3px solid var(--bio); }
+  .topic-title { margin: 0 0 0.35rem; font-weight: 600; color: var(--text); }
+  .topic-text { margin: 0; color: var(--text-dim); line-height: 1.6; }
+
+  @media (prefers-reduced-motion: reduce) { .link { transition: none; } .link:hover { transform: none; } }
+
+  @media (max-width: 900px) {
+    .contact-grid { grid-template-columns: minmax(0, 1fr); }
+    .topic-list { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (min-width: 720px) {
+    .page-head { padding-top: clamp(3.5rem, 9vh, 6.5rem); }
+  }
+</style>

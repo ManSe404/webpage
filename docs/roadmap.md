@@ -74,7 +74,7 @@ lights up as the page scrolls; a click on a marker scrolls to its section.
 
 - **Written for a longer page.** The item was planned when the home page had six sections (Work,
   Collaborations, Career, Research, Stack, Contact). Since the hive redesign it has the dashboard and one
-  section, Chosen work (`#work`); contact is the dashboard's Contact panel (`/#contact`), the career is the Career
+  section, Chosen work (`#work`); contact has its own page (`/contact/`), the career is the Career
   cell (`/#experience`) and the lab has its own page (`/lab/`). **Open:** whether a rail
   still earns its place on a page this short, and if it does, which markers it carries.
 - **Touches:** `website/src/pages/index.astro`, a new component for the rail, `website/src/components/Nav.astro`.

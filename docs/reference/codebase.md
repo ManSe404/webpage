@@ -29,6 +29,7 @@ website/                      the Astro project
       index.astro             home page: dashboard, the Chosen work honeycomb, contact
       projects/index.astro    every project in one big honeycomb, with field and type-of-work filters
       research.astro          publications and the numbers derived from them
+      contact.astro           the contact page: email card (send, copy, CV), profiles, what to write about
       lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
       hive/HiveDashboard.astro home dashboard: the ECG trace across the top, portrait, name, tagline and actions, seven honeycomb cells with count-up numbers, deep links that open a panel

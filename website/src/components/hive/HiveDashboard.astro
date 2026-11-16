@@ -43,7 +43,7 @@ const cells: Cell[] = [
   { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/lab/', tone: 'bio', jump: true },
   { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },
   { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
-  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#hive-contact', tone: 'bio' },
+  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'get in touch', href: '/contact/', tone: 'bio', jump: true },
 ];
 
 // Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
@@ -158,10 +158,14 @@ const panelData = {
     // Deep links: /#experience, /#toolkit … open that cell's panel, from the
     // menu, from another page, or by typing the address. No element carries
     // these ids, so the browser does not jump on its own.
-    const ids = new Set(cells.map((c) => c.dataset.cell));
+    const ids = new Set(cells.filter((c) => !c.hasAttribute('data-jump')).map((c) => c.dataset.cell));
+    // A cell that is a page of its own (the lab, contact): its old in-page
+    // address (/#lab, /#contact) goes to that page.
+    const pages = new Map(cells.filter((c) => c.hasAttribute('data-jump')).map((c) => [c.dataset.cell, c.href]));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const openFromHash = (hash: string) => {
       const id = hash.replace('#', '');
+      if (pages.has(id) && !document.getElementById(id)) { location.replace(pages.get(id)!); return true; }
       // A real section with that id (such as #work) wins: the browser scrolls to it.
       if (!ids.has(id) || document.getElementById(id)) return false;
       show(id);

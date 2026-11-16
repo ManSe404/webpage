@@ -15,7 +15,7 @@ const links: Link[] = [
     label: 'Lab', href: withBase('/lab'), page: true,
     sub: LAB_DEMOS.map((d) => ({ label: d.label, href: `${withBase('/lab/')}#${d.hash}` })),
   },
-  { label: 'Contact', href: withBase('/#contact'), page: false },
+  { label: 'Contact', href: withBase('/contact'), page: true },
 ];
 
 const here = Astro.url.pathname.replace(/\/$/, '');
