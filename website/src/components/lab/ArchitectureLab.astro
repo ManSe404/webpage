@@ -6,7 +6,8 @@
 // box's details show as a list under its diagram.
 //
 // Props: `id` (optional, default "arch") prefixes every element id, so the
-// component can appear twice on one page. The page wraps it in a section;
+// component can appear twice on one page; `bare` keeps the switch hidden, for a
+// page whose own tabs pick the diagram (the lab's tabs click the hidden switch). The page wraps it in a section;
 // the component renders a small heading per diagram.
 // Content: data/architectures.json.
 import architectures from '../../data/architectures.json';
@@ -14,13 +15,14 @@ import ArchDiagram from './ArchDiagram.astro';
 
 interface Props {
   id?: string;
+  bare?: boolean;
 }
 
-const { id = 'arch' } = Astro.props;
+const { id = 'arch', bare = false } = Astro.props;
 const { diagrams } = architectures;
 ---
 
-<div class="alab" id={id} data-alab>
+<div class="alab" id={id} data-alab data-alab-bare={bare ? '' : undefined}>
   <div class="alab-switch" role="tablist" aria-label="Choose a diagram" data-alab-switch hidden>
     {diagrams.map((d, i) => (
       <button
@@ -121,7 +123,7 @@ const { diagrams } = architectures;
 
     // From here on one diagram and one details entry show at a time.
     lab.classList.add('is-enhanced');
-    if (switcher) switcher.hidden = false;
+    if (switcher && !lab.hasAttribute('data-alab-bare')) switcher.hidden = false;
     showPanel(tabs.find((t) => t.getAttribute('aria-selected') === 'true')?.dataset.tab ?? tabs[0]?.dataset.tab ?? '');
   });
 </script>

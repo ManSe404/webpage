@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import HiveDashboard from '../components/hive/HiveDashboard.astro';
 import Section from '../components/Section.astro';
 import ProjectHive from '../components/hive/ProjectHive.astro';
-import Lab from '../components/lab/Lab.astro';
 import Contact from '../components/Contact.astro';
 import { withBase } from '../lib/url';
 
@@ -30,15 +29,6 @@ const chosen = projects.filter((p) => p.data.home).sort((a, b) => (a.data.home ?
     <div class="section-cta" data-reveal>
       <a class="btn btn-ghost" href={withBase('/projects/')}>All {projects.length} projects <span aria-hidden="true">→</span></a>
     </div>
-  </Section>
-
-  <Section
-    id="lab"
-    eyebrow="Lab"
-    title="See it work."
-    lede="Two small demos that run in your browser: a synthetic biosignal cleaned step by step, and how the data platforms and AI systems I build fit together. Every number and row here is synthetic."
-  >
-    <Lab />
   </Section>
 
   <Contact />

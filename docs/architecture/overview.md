@@ -56,8 +56,9 @@ the pages and components that need them.
 
 | Route | File | What it renders |
 |---|---|---|
-| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project), the lab (a synthetic signal demo and two architecture diagrams), contact |
+| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project), contact |
 | `/projects/` | `projects/index.astro` | Every project in one big honeycomb (six cells per row on wide screens), clustered by field (AI, Data & analytics, Software & research) and coloured by it, each cell opening a popup, with field and type-of-work filters that combine and run in the browser |
+| `/lab/` | `lab.astro` | Three demos behind tabs: a synthetic signal, a data platform and an AI system; the address picks the tab (`#signal`, `#data-platform`, `#ai-system`), which is where the menu's Lab dropdown links |
 | `/research/` | `research.astro` | The publication list, works per year, research areas, and headline numbers computed from the list: works, total citations, h-index, first-author count |
 
 ### Layout and components

@@ -1,27 +1,27 @@
 ---
-// The home page's lab: two small interactive demos behind two tabs. Without
-// JavaScript both show, one under the other.
+// The lab: three small interactive demos behind three tabs: a synthetic
+// signal, a data platform and an AI system. The two diagrams live in one
+// ArchitectureLab, whose own switch is hidden here; the tabs drive it. Each tab
+// has an address (/lab/#signal, #data-platform, #ai-system) that the menu's
+// dropdown links to. Without JavaScript everything shows, one under the other.
 import SignalLab from './SignalLab.astro';
 import ArchitectureLab from './ArchitectureLab.astro';
-
-const tabs = [
-  { id: 'signal', label: 'Signal processing' },
-  { id: 'architecture', label: 'Architecture' },
-];
+import { LAB_DEMOS } from '../../lib/lab';
 ---
 
 <div class="lab" data-lab>
   <div class="lab-tabs" role="tablist" aria-label="Lab demos" data-lab-tabs hidden>
-    {tabs.map((t, i) => (
-      <button class="lab-tab mono" type="button" role="tab" id={`lab-tab-${t.id}`} aria-controls={`lab-${t.id}`}
-        aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-lab-tab={t.id}>{t.label}</button>
+    {LAB_DEMOS.map((t, i) => (
+      <button class="lab-tab mono" type="button" role="tab" id={`lab-tab-${t.hash}`} aria-controls={`lab-${t.panel}`}
+        aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+        data-lab-tab={t.hash} data-panel={t.panel} data-diagram={t.diagram}>{t.label}</button>
     ))}
   </div>
-  <div class="lab-panel" id="lab-signal" role="tabpanel" aria-labelledby="lab-tab-signal" data-lab-panel="signal">
+  <div class="lab-panel" id="lab-signal" role="tabpanel" data-lab-panel="signal">
     <SignalLab />
   </div>
-  <div class="lab-panel" id="lab-architecture" role="tabpanel" aria-labelledby="lab-tab-architecture" data-lab-panel="architecture">
-    <ArchitectureLab />
+  <div class="lab-panel" id="lab-architecture" role="tabpanel" data-lab-panel="architecture">
+    <ArchitectureLab bare />
   </div>
 </div>
 
@@ -30,29 +30,45 @@ const tabs = [
     const bar = lab.querySelector<HTMLElement>('[data-lab-tabs]');
     const tabs = [...lab.querySelectorAll<HTMLButtonElement>('[data-lab-tab]')];
     const panels = [...lab.querySelectorAll<HTMLElement>('[data-lab-panel]')];
-    const select = (id: string, focus = false) => {
+    const select = (hash: string, focus = false) => {
+      const tab = tabs.find((t) => t.dataset.labTab === hash) ?? tabs[0];
       for (const t of tabs) {
-        const on = t.dataset.labTab === id;
+        const on = t === tab;
         t.setAttribute('aria-selected', String(on));
         t.tabIndex = on ? 0 : -1;
         if (on && focus) t.focus();
       }
-      for (const p of panels) p.hidden = p.dataset.labPanel !== id;
+      for (const p of panels) p.hidden = p.dataset.labPanel !== tab.dataset.panel;
+      // A diagram tab picks its diagram in the architecture demo.
+      if (tab.dataset.diagram) lab.querySelector<HTMLButtonElement>(`[data-alab] [data-tab="${tab.dataset.diagram}"]`)?.click();
+      return tab;
+    };
+    // The address picks the tab, also when the menu changes it on this page.
+    const fromHash = (scroll: boolean) => {
+      const hash = location.hash.slice(1);
+      if (!tabs.some((t) => t.dataset.labTab === hash)) return;
+      select(hash);
+      if (scroll) bar?.scrollIntoView({ block: 'start' });
     };
     if (bar) bar.hidden = false;
     tabs.forEach((t, i) => {
-      t.addEventListener('click', () => select(t.dataset.labTab ?? 'signal'));
+      t.addEventListener('click', () => {
+        select(t.dataset.labTab ?? '');
+        history.replaceState(null, '', `#${t.dataset.labTab}`);
+      });
       t.addEventListener('keydown', (e) => {
         const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length].dataset.labTab ?? 'signal', true); }
+        if (step) { e.preventDefault(); tabs[(i + step + tabs.length) % tabs.length].click(); tabs[(i + step + tabs.length) % tabs.length].focus(); }
       });
     });
-    select(tabs[0]?.dataset.labTab ?? 'signal');
+    select(tabs[0]?.dataset.labTab ?? '');
+    fromHash(false);
+    window.addEventListener('hashchange', () => fromHash(true));
   });
 </script>
 
 <style>
-  .lab-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
+  .lab-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; scroll-margin-top: 6rem; }
   .lab-tabs[hidden] { display: none; }
   .lab-tab {
     min-height: 38px; padding: 0 1rem; font-size: 0.8rem; color: var(--text-dim);
