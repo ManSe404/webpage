@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import HiveDashboard from '../components/hive/HiveDashboard.astro';
 import Section from '../components/Section.astro';
 import ProjectHive from '../components/hive/ProjectHive.astro';
-import Contact from '../components/Contact.astro';
 import { withBase } from '../lib/url';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -31,7 +30,6 @@ const chosen = projects.filter((p) => p.data.home).sort((a, b) => (a.data.home ?
     </div>
   </Section>
 
-  <Contact />
 </Base>
 
 <style>

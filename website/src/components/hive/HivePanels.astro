@@ -135,6 +135,8 @@ const featured = (await getCollection('projects')).filter((p) => p.data.featured
 
   <section class="panel" id="hive-contact" data-panel="contact" aria-label="Contact">
     <p class="panel-title">Get in touch</p>
+    <p class="contact-pitch">Building something that needs to actually ship? I work on production AI systems: LLM and RAG architectures, document intelligence, and the cloud plumbing that keeps them running. Open to engineering work and research collaboration alike.</p>
+    <p class="contact-mail mono"><a href={`mailto:${data.profile.email}`}>{data.profile.email}</a></p>
     <div class="panel-links">
       <a class="btn" href={`mailto:${data.profile.email}`}>Email</a>
       <a class="btn btn-ghost" href={data.profile.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
@@ -161,6 +163,10 @@ const featured = (await getCollection('projects')).filter((p) => p.data.featured
   .panel-note { margin: 0.8rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
   .panel-more { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
   .panel-more:hover { text-decoration: underline; }
+  .contact-pitch { margin: 0 0 0.6rem; max-width: 62ch; color: var(--text-dim); line-height: 1.6; }
+  .contact-mail { margin: 0 0 1.1rem; font-size: 0.95rem; }
+  .contact-mail a { color: var(--bio); text-decoration: none; }
+  .contact-mail a:hover { text-decoration: underline; }
   .panel-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; align-items: center; }
 
   .items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }

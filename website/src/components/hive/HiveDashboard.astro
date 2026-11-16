@@ -43,7 +43,7 @@ const cells: Cell[] = [
   { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/lab/', tone: 'bio', jump: true },
   { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },
   { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
-  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#contact', tone: 'bio' },
+  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#hive-contact', tone: 'bio' },
 ];
 
 // Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
@@ -162,10 +162,12 @@ const panelData = {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const openFromHash = (hash: string) => {
       const id = hash.replace('#', '');
-      // A real section with that id (such as #contact) wins: the browser scrolls to it.
+      // A real section with that id (such as #work) wins: the browser scrolls to it.
       if (!ids.has(id) || document.getElementById(id)) return false;
       show(id);
-      root.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      // The dashboard opens the page: go to the top, so the ECG above the portrait
+      // is not left under the sticky menu.
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
       return true;
     };
     document.addEventListener('click', (e) => {

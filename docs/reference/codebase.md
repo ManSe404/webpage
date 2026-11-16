@@ -39,7 +39,6 @@ website/                      the Astro project
       lab/SignalLab.astro     synthetic ECG-like signal, filter and peak detection with sliders, live numbers, donut
       lab/ArchitectureLab.astro data platform and AI system diagrams with a switch (hidden with `bare`, where the lab's tabs drive it); draws each with lab/ArchDiagram.astro
       Section.astro           section wrapper with eyebrow, title and lede
-      Contact.astro           contact channels
       Nav.astro               menu (Projects, Research, Lab with a dropdown of the demos, Contact), CV download, mobile toggle
       Footer.astro            footer links
       EcgTrace.astro          animated ECG trace on a canvas (once, at the top of the dashboard)

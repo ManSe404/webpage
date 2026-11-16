@@ -55,7 +55,7 @@ the pages and components that need them.
 
 | Route | File | What it renders |
 |---|---|---|
-| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project), contact |
+| `/` | `index.astro` | The dashboard (an ECG trace across the top, then seven honeycomb cells, each opening a panel; the Contact cell's panel is the page's contact), the Chosen work honeycomb (the eight projects with a `home` rank, in that order, a popup per project) |
 | `/projects/` | `projects/index.astro` | Every project in one big honeycomb (six cells per row on wide screens), clustered by field (AI, Data & analytics, Software & research) and coloured by it, each cell opening a popup, with field and type-of-work filters that combine and run in the browser |
 | `/lab/` | `lab.astro` | Three demos behind tabs: a synthetic signal, a data platform and an AI system; the address picks the tab (`#signal`, `#data-platform`, `#ai-system`), which is where the menu's Lab dropdown links |
 | `/research/` | `research.astro` | The publication list, works per year, research areas, and headline numbers computed from the list: works, total citations, h-index, first-author count |
@@ -68,7 +68,7 @@ the pages and components that need them.
 - `src/components/hive/`: `HiveDashboard` (the dashboard and its cells), `HivePanels` (the panel each cell
   opens, the career timeline among them), `ProjectDetails` (one project's five-line description) and `ProjectHive` (a honeycomb of projects with
   a popup per project, used by the home page and `/projects/`).
-- `src/components/`: `Section`, `Contact`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
+- `src/components/`: `Section`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
   `NodeField`. See the [codebase map](../reference/codebase.md).
 - `src/styles/global.css`: the shared styles and design tokens.
 
