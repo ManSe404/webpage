@@ -73,6 +73,10 @@ const panelData = {
 <section class="dash" id="home" data-hive>
   <NodeField />
 
+  <div class="dash-ecg wrap">
+    <EcgTrace height={80} />
+  </div>
+
   <div class="dash-inner wrap">
     <div class="dash-copy">
       <div class="dash-id">
@@ -82,6 +86,7 @@ const panelData = {
         <p class="eyebrow">{profile.headline}</p>
       </div>
       <h1 class="dash-name">{profile.name}</h1>
+      <p class="dash-tagline">{profile.tagline}</p>
       <div class="dash-actions">
         <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
@@ -89,7 +94,6 @@ const panelData = {
     </div>
 
     <div class="hive-wrap">
-      <p class="dash-tagline">{profile.tagline}</p>
       <ul class="hive" aria-label="Explore by area">
         {cells.map((cell, i) => {
           const d = place(i, 4);
@@ -117,10 +121,6 @@ const panelData = {
 
   <div class="wrap">
     <HivePanels data={panelData} />
-  </div>
-
-  <div class="dash-ecg wrap">
-    <EcgTrace height={96} />
   </div>
 </section>
 
@@ -212,8 +212,8 @@ const panelData = {
 <style>
   .dash {
     position: relative;
-    padding-top: clamp(3rem, 9vh, 6rem);
-    padding-bottom: 1rem;
+    padding-top: clamp(0.75rem, 2vh, 1.5rem);
+    padding-bottom: 2.5rem;
     overflow: hidden;
   }
 
@@ -236,7 +236,7 @@ const panelData = {
   @media (max-width: 640px) { .dash-portrait { width: 112px; height: 129px; } }
 
   .dash-name { font-size: clamp(2.4rem, 5.4vw, 4.2rem); line-height: 1.02; margin: 0 0 0.9rem; }
-  .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 34rem; margin: 0 auto 1.2rem; text-align: center; }
+  .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 30rem; margin: 0 0 1.4rem; }
   .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 
   /* Honeycomb: cells span two half-columns, rows overlap by a quarter hex. */
@@ -281,7 +281,8 @@ const panelData = {
 
   .hive-hint { margin: 0.6rem 0 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
 
-  .dash-ecg { margin-top: 0.5rem; }
+  /* The ECG runs across the top of the page, above the portrait. */
+  .dash-ecg { position: relative; margin-bottom: clamp(1rem, 3vh, 2rem); }
 
   @media (max-width: 1080px) {
     .dash-inner { grid-template-columns: 1fr; }

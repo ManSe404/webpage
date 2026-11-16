@@ -31,7 +31,7 @@ website/                      the Astro project
       research.astro          publications and the numbers derived from them
       lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
-      hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace
+      hive/HiveDashboard.astro home dashboard: the ECG trace across the top, portrait, name, tagline and actions, seven honeycomb cells with count-up numbers, deep links that open a panel
       hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (every paper by year, the most cited as ranked cards), skills, in progress, contact
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
@@ -42,7 +42,7 @@ website/                      the Astro project
       Contact.astro           contact channels
       Nav.astro               menu (Projects, Research, Lab with a dropdown of the demos, Contact), CV download, mobile toggle
       Footer.astro            footer links
-      EcgTrace.astro          animated ECG trace on a canvas
+      EcgTrace.astro          animated ECG trace on a canvas (once, at the top of the dashboard)
       NodeField.astro         animated node-and-edge field behind the top of the dashboard: at most one screen high, 1x resolution, 30 frames a second
     lib/
       honeycomb.ts            honeycomb placement (cell position, row tracks, columns), shared by the dashboard and the project honeycombs, server and browser

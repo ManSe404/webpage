@@ -1,7 +1,6 @@
 ---
 import profile from '../data/profile.json';
 import { withBase } from '../lib/url';
-import EcgTrace from './EcgTrace.astro';
 
 const channels = [
   { label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
@@ -13,8 +12,6 @@ const channels = [
 <section class="section contact" id="contact">
   <div class="wrap">
     <div class="contact-card" data-reveal>
-      <EcgTrace height={72} class="contact-ecg" />
-
       <div class="contact-body">
         <p class="eyebrow">Get in touch</p>
         <h2>Building something that needs to actually ship?</h2>
@@ -60,16 +57,11 @@ const channels = [
     overflow: hidden;
   }
 
-  .contact-ecg {
-    opacity: 0.5;
-  }
-
   .contact-body {
     display: flex;
     flex-direction: column;
     gap: 1.1rem;
     padding: clamp(1.75rem, 4vw, 3rem);
-    padding-top: clamp(0.5rem, 1vw, 1rem);
   }
 
   .contact-lede {
