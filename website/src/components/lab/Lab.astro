@@ -1,0 +1,65 @@
+---
+// The home page's lab: two small interactive demos behind two tabs. Without
+// JavaScript both show, one under the other.
+import SignalLab from './SignalLab.astro';
+import ArchitectureLab from './ArchitectureLab.astro';
+
+const tabs = [
+  { id: 'signal', label: 'Signal processing' },
+  { id: 'architecture', label: 'Architecture' },
+];
+---
+
+<div class="lab" data-lab>
+  <div class="lab-tabs" role="tablist" aria-label="Lab demos" data-lab-tabs hidden>
+    {tabs.map((t, i) => (
+      <button class="lab-tab mono" type="button" role="tab" id={`lab-tab-${t.id}`} aria-controls={`lab-${t.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-lab-tab={t.id}>{t.label}</button>
+    ))}
+  </div>
+  <div class="lab-panel" id="lab-signal" role="tabpanel" aria-labelledby="lab-tab-signal" data-lab-panel="signal">
+    <SignalLab />
+  </div>
+  <div class="lab-panel" id="lab-architecture" role="tabpanel" aria-labelledby="lab-tab-architecture" data-lab-panel="architecture">
+    <ArchitectureLab />
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lab]').forEach((lab) => {
+    const bar = lab.querySelector<HTMLElement>('[data-lab-tabs]');
+    const tabs = [...lab.querySelectorAll<HTMLButtonElement>('[data-lab-tab]')];
+    const panels = [...lab.querySelectorAll<HTMLElement>('[data-lab-panel]')];
+    const select = (id: string, focus = false) => {
+      for (const t of tabs) {
+        const on = t.dataset.labTab === id;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      }
+      for (const p of panels) p.hidden = p.dataset.labPanel !== id;
+    };
+    if (bar) bar.hidden = false;
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(t.dataset.labTab ?? 'signal'));
+      t.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length].dataset.labTab ?? 'signal', true); }
+      });
+    });
+    select(tabs[0]?.dataset.labTab ?? 'signal');
+  });
+</script>
+
+<style>
+  .lab-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
+  .lab-tabs[hidden] { display: none; }
+  .lab-tab {
+    min-height: 38px; padding: 0 1rem; font-size: 0.8rem; color: var(--text-dim);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+  }
+  .lab-tab[aria-selected='true'] { color: var(--on-accent); background: var(--bio); border-color: var(--bio); }
+  .lab-tab:focus-visible { outline: 2px solid var(--bio); outline-offset: 2px; }
+  .lab-panel + .lab-panel { margin-top: 2rem; }
+  .lab-panel[hidden] { display: none; }
+</style>

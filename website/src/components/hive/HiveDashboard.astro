@@ -14,6 +14,7 @@ import {
   attribution, consultancyPartners, formatMonth, hIndex, inProgress,
   isOwnWork, projectResult, rolesNewestFirst, toolUsage, topCited,
 } from '../../lib/dashboard';
+import { place } from '../../lib/honeycomb';
 import EcgTrace from '../EcgTrace.astro';
 import NodeField from '../NodeField.astro';
 import HivePanels from './HivePanels.astro';
@@ -37,35 +38,24 @@ type Cell = {
 };
 
 const cells: Cell[] = [
-  { id: 'projects', label: 'Projects', value: projects.length, caption: `${clientWork} client · ${projects.length - clientWork} own`, href: '#work', tone: 'ai' },
-  { id: 'experience', label: 'Years', value: years.value, suffix: years.suffix, caption: `${roles.length} roles since ${firstYear}`, href: '#journey', tone: 'bio' },
-  { id: 'research', label: 'Papers', value: publications.length, caption: `${citations} citations`, href: '#research', tone: 'bio' },
-  { id: 'education', label: 'Education', text: 'PhD', caption: 'in progress', href: '#stack', tone: 'bio' },
-  { id: 'toolkit', label: 'Tools', value: tools.length, caption: 'across the projects', href: '#stack', tone: 'ai' },
-  { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '#work', tone: 'ai' },
-  { id: 'consultancy', label: '404 Solutions', value: consultancy.projects, caption: `projects · ${consultancy.partners.length} partners`, href: '#consultancy', tone: 'ai' },
-  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '#contact', tone: 'bio' },
+  { id: 'projects', label: 'Projects', value: projects.length, caption: `${clientWork} client · ${projects.length - clientWork} own`, href: '/#work', tone: 'ai' },
+  { id: 'experience', label: 'Years', value: years.value, suffix: years.suffix, caption: `${roles.length} roles since ${firstYear}`, href: profile.cv, tone: 'bio' },
+  { id: 'research', label: 'Papers', value: publications.length, caption: `${citations} citations`, href: '/research/', tone: 'bio' },
+  { id: 'education', label: 'Education', text: 'PhD', caption: 'in progress', href: profile.cv, tone: 'bio' },
+  { id: 'toolkit', label: 'Tools', value: tools.length, caption: 'across the projects', href: '/projects/', tone: 'ai' },
+  { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
+  { id: 'consultancy', label: '404 Solutions', value: consultancy.projects, caption: `projects · ${consultancy.partners.length} partners`, href: '/#contact', tone: 'ai' },
+  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#contact', tone: 'bio' },
 ];
 
-// Honeycomb placement: four per row on wide screens, two per row on phones.
-// Each cell spans two half-columns; every second row shifts by one.
-const place = (i: number, perRow: number) => {
-  const row = Math.floor(i / perRow) + 1;
-  const col = (i % perRow) * 2 + 1 + (row % 2 === 0 ? 1 : 0);
-  return { row, col };
-};
+// Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
 
 const panelData = {
   featured: projects.filter((p) => p.data.featured).map((p) => ({
     id: p.id, title: p.data.title, category: p.data.category, org: attribution(p),
-    summary: p.data.summary, result: projectResult(p), stack: p.data.stack,
+    summary: p.data.summary, result: projectResult(p), stack: p.data.stack, link: p.data.link,
   })),
   projectCount: projects.length,
-  roles: roles.map((r) => ({
-    role: r.data.role, company: r.data.company,
-    period: `${formatMonth(r.data.start)} — ${formatMonth(r.data.end)}`,
-    highlights: r.data.highlights.slice(0, 2), stack: r.data.stack.slice(0, 5),
-  })),
   research: {
     works: publications.length, citations,
     h: hIndex(publications.map((p) => p.data.citations)),
@@ -87,12 +77,11 @@ const panelData = {
     <div class="dash-copy">
       <div class="dash-id">
         <div class="dash-portrait">
-          <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[96, 192]} sizes="96px" format="webp" quality={78} loading="eager" />
+          <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[176, 352]} sizes="160px" format="webp" quality={78} loading="eager" />
         </div>
         <p class="eyebrow">{profile.headline}</p>
       </div>
       <h1 class="dash-name">{profile.name}</h1>
-      <p class="dash-tagline">{profile.tagline}</p>
       <div class="dash-actions">
         <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
@@ -101,13 +90,14 @@ const panelData = {
     </div>
 
     <div class="hive-wrap">
+      <p class="dash-tagline">{profile.tagline}</p>
       <ul class="hive" aria-label="Explore by area">
         {cells.map((cell, i) => {
           const d = place(i, 4);
           const p = place(i, 2);
           return (
             <li class={`cell tone-${cell.tone}`} style={`--rd:${d.row};--cd:${d.col};--rp:${p.row};--cp:${p.col}`}>
-              <a class="hex" href={withBase(`/${cell.href}`)} data-cell={cell.id}>
+              <a class="hex" href={withBase(cell.href)} data-cell={cell.id}>
                 <span class="hex-value mono">
                   {cell.text ?? <><span data-count={cell.value}>{cell.value}</span>{cell.suffix}</>}
                 </span>
@@ -151,6 +141,8 @@ const panelData = {
     };
 
     root.classList.add('is-enhanced');
+    show(null);
+    root.querySelector<HTMLElement>('[data-close]')?.removeAttribute('hidden');
     root.querySelector<HTMLElement>('[data-hive-hint]')?.removeAttribute('hidden');
     for (const c of cells) {
       c.setAttribute('role', 'button');
@@ -165,26 +157,28 @@ const panelData = {
       });
     }
     root.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => show(null)));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) show(null); });
 
-    // Steppers: one item at a time, buttons and arrow keys.
-    root.querySelectorAll<HTMLElement>('[data-steps]').forEach((steps) => {
-      const items = [...steps.querySelectorAll<HTMLElement>('[data-step]')];
-      const counter = steps.querySelector('[data-counter]');
-      let i = 0;
-      const go = (n: number) => {
-        i = (n + items.length) % items.length;
-        items.forEach((item, k) => { item.hidden = k !== i; });
-        if (counter) counter.textContent = `${i + 1} / ${items.length}`;
-      };
-      steps.querySelector('[data-prev]')?.addEventListener('click', () => go(i - 1));
-      steps.querySelector('[data-next]')?.addEventListener('click', () => go(i + 1));
-      steps.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') go(i + 1);
-        if (e.key === 'ArrowLeft') go(i - 1);
-      });
-      go(0);
+    // Deep links: /#experience, /#consultancy … open that cell's panel, from the
+    // menu, from another page, or by typing the address. No element carries
+    // these ids, so the browser does not jump on its own.
+    const ids = new Set(cells.map((c) => c.dataset.cell));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const openFromHash = (hash: string) => {
+      const id = hash.replace('#', '');
+      // A real section with that id (such as #contact) wins: the browser scrolls to it.
+      if (!ids.has(id) || document.getElementById(id)) return false;
+      show(id);
+      root.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      return true;
+    };
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest?.('a');
+      if (!a || a.dataset.cell || a.pathname !== location.pathname || !a.hash) return;
+      if (openFromHash(a.hash)) { e.preventDefault(); history.replaceState(null, '', a.hash); }
     });
+    window.addEventListener('hashchange', () => openFromHash(location.hash));
+    if (location.hash) openFromHash(location.hash);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) show(null); });
 
     // The real numbers are in the HTML; with motion allowed they count up once.
     const counters = [...root.querySelectorAll<HTMLElement>('[data-count]')];
@@ -229,14 +223,15 @@ const panelData = {
   .dash-id { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
 
   .dash-portrait {
-    width: 64px; height: 74px; flex: none;
+    width: 160px; height: 185px; flex: none;
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
     background: var(--border-strong);
   }
   .dash-portrait :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.25); }
+  @media (max-width: 640px) { .dash-portrait { width: 112px; height: 129px; } }
 
   .dash-name { font-size: clamp(2.4rem, 5.4vw, 4.2rem); line-height: 1.02; margin: 0 0 0.9rem; }
-  .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 34rem; margin: 0 0 1.6rem; }
+  .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 34rem; margin: 0 auto 1.2rem; text-align: center; }
   .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
   .dash-link { display: inline-block; margin-top: 1rem; font-size: 0.85rem; color: var(--bio); text-decoration: none; }
   .dash-link:hover { text-decoration: underline; }

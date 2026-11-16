@@ -3,28 +3,22 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import HiveDashboard from '../components/hive/HiveDashboard.astro';
 import Section from '../components/Section.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import Collaborations from '../components/Collaborations.astro';
-import Consultancy from '../components/Consultancy.astro';
-import consultancy from '../data/consultancy.json';
-import Timeline from '../components/Timeline.astro';
-import SkillGrid from '../components/SkillGrid.astro';
+import ProjectHive from '../components/hive/ProjectHive.astro';
+import Lab from '../components/lab/Lab.astro';
 import Contact from '../components/Contact.astro';
-import education from '../data/education.json';
 import { withBase } from '../lib/url';
 
-const projects = await getCollection('projects');
-const byOrder = (a: typeof projects[number], b: typeof projects[number]) =>
-  a.data.order - b.data.order;
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 
-const featured = projects.filter((p) => p.data.featured).sort(byOrder);
-const rest = projects.filter((p) => !p.data.featured).sort(byOrder);
-
-const publications = await getCollection('publications');
-const recent = publications
-  .map((entry) => entry.data)
-  .sort((a, b) => b.year - a.year)
-  .slice(0, 3);
+// One honeycomb of chosen work: the first five AI projects and the first
+// three data projects by order, AI in ember and data in honey. /projects/
+// shows all of them.
+const AI_TOPICS = new Set(['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision']);
+const DATA_TOPICS = new Set(['Data Engineering', 'Machine Learning']);
+const chosen = [
+  ...projects.filter((p) => AI_TOPICS.has(p.data.category)).slice(0, 5),
+  ...projects.filter((p) => DATA_TOPICS.has(p.data.category)).slice(0, 3),
+].sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base>
@@ -32,227 +26,38 @@ const recent = publications
 
   <Section
     id="work"
-    eyebrow="Selected work"
+    eyebrow="Chosen work"
     title="Systems first."
-    lede="Production AI and data platforms delivered for enterprise clients, taken from problem statement through to something running, monitored and maintained — and, since 2025, open-source tools and prototypes built the same way, each with its stage stated plainly."
+    lede="AI systems and data platforms taken from problem statement to something running, monitored and maintained. Pick a cell to read what it is, what it achieved, my role, the tools and who it was for."
   >
-    <div class="featured-grid">
-      {featured.map((project) => (
-        <ProjectCard project={project} featured />
-      ))}
-    </div>
-
-    <div class="more-grid">
-      {rest.slice(0, 4).map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-
+    <p class="legend mono"><span class="dot dot-ai"></span>AI systems <span class="dot dot-data"></span>Data &amp; analytics</p>
+    <ProjectHive id="work" projects={chosen} />
     <div class="section-cta" data-reveal>
-      <a class="btn btn-ghost" href={withBase('/projects')}>
-        All {projects.length} projects
-        <span aria-hidden="true">→</span>
-      </a>
-    </div>
-  </Section>
-
-  <Section id="consultancy" {...consultancy.section}>
-    <Consultancy />
-  </Section>
-
-  <Section
-    id="collaborations"
-    eyebrow="Collaborations"
-    title="Who I build with."
-    lede="Delivery partners I build for through 404 Solutions, my B2B consultancy — agencies and product firms in Croatia, Bulgaria, and the US who bring me in for their enterprise clients."
-  >
-    <Collaborations />
-  </Section>
-
-  <Section
-    id="journey"
-    eyebrow="Career"
-    title="Ten years, one throughline."
-    lede="From biomedical signal processing to leading an AI practice — the domain and the scope changed, the discipline of turning messy data into something dependable did not."
-  >
-    <Timeline />
-  </Section>
-
-  <Section
-    id="research"
-    eyebrow="Research"
-    title="Published, cited, applied."
-    lede="Peer-reviewed work in computational cardiology and exercise physiology, with machine learning as the through-line."
-  >
-    <ul class="pub-list">
-      {recent.map((pub, index) => (
-        <li class="pub card" data-reveal style={`--reveal-delay:${index * 70}ms`}>
-          <span class="pub-year mono">{pub.year}</span>
-          <div class="pub-body">
-            <h3 class="pub-title">{pub.title}</h3>
-            <p class="pub-venue">{pub.venue} · <span class="text-dim">{pub.type}</span></p>
-          </div>
-          <span class="chip chip-ai">{pub.topic}</span>
-        </li>
-      ))}
-    </ul>
-
-    <div class="section-cta" data-reveal>
-      <a class="btn btn-ghost" href={withBase('/research')}>
-        Full research profile
-        <span aria-hidden="true">→</span>
-      </a>
+      <a class="btn btn-ghost" href={withBase('/projects/')}>All {projects.length} projects <span aria-hidden="true">→</span></a>
     </div>
   </Section>
 
   <Section
-    id="stack"
-    eyebrow="Toolkit"
-    title="What I build with."
-    lede="The stack behind the systems above — weighted toward Python, cloud-native services, and the retrieval infrastructure that generative AI actually runs on."
+    id="lab"
+    eyebrow="Lab"
+    title="See it work."
+    lede="Two small demos that run in your browser: a synthetic biosignal cleaned step by step, and how the data platforms and AI systems I build fit together. Every number and row here is synthetic."
   >
-    <SkillGrid />
-
-    <div class="edu-grid">
-      <div class="card" data-reveal>
-        <h3 class="edu-heading">Education</h3>
-        <ul class="edu-list">
-          {education.degrees.map((degree) => (
-            <li>
-              <span class="edu-degree">{degree.degree}</span>
-              <span class="edu-inst mono">
-                {degree.institution}{degree.period && ` · ${degree.period}`}
-              </span>
-              {degree.note && <span class="edu-note">{degree.note}</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="card" data-reveal style="--reveal-delay:80ms">
-        <h3 class="edu-heading">Certifications</h3>
-        <ul class="edu-list">
-          {education.certifications.map((cert) => (
-            <li>
-              <span class="edu-degree">{cert.name}</span>
-              <span class="edu-inst mono">{cert.issuer}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <Lab />
   </Section>
 
   <Contact />
 </Base>
 
 <style>
-  .featured-grid {
-    display: grid;
-    /* Two columns at desktop width, one on narrow screens. The min() keeps a
-       single column inside the page on phones instead of a fixed 420 px. */
-    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
-    gap: 1.15rem;
-  }
-
-  .more-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.15rem;
-    margin-top: 1.15rem;
-  }
+  .legend { display: flex; justify-content: center; align-items: center; gap: 0.5rem 1.2rem; flex-wrap: wrap; margin: -0.5rem 0 1.2rem; font-size: 0.75rem; color: var(--text-dim); }
+  .dot { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; border-radius: 50%; vertical-align: middle; }
+  .dot-ai { background: var(--ai); }
+  .dot-data { background: var(--bio); }
 
   .section-cta {
     display: flex;
     justify-content: center;
     margin-top: 2.25rem;
-  }
-
-  /* --- Publications preview --------------------------------------------- */
-
-  .pub-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-  }
-
-  .pub {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 1.25rem;
-  }
-
-  .pub-year {
-    font-size: 1.15rem;
-    color: var(--bio);
-  }
-
-  .pub-title {
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.4;
-  }
-
-  .pub-venue {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    margin-top: 0.2rem;
-  }
-
-  /* --- Education / certifications --------------------------------------- */
-
-  .edu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 1.15rem;
-    margin-top: 1.15rem;
-  }
-
-  .edu-heading {
-    font-size: 0.98rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .edu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.05rem;
-  }
-
-  .edu-list li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .edu-degree {
-    font-size: 0.94rem;
-    font-weight: 500;
-  }
-
-  .edu-inst {
-    font-size: 0.76rem;
-    color: var(--bio);
-  }
-
-  .edu-note {
-    font-size: 0.85rem;
-    color: var(--text-faint);
-    margin-top: 0.2rem;
-  }
-
-  @media (max-width: 620px) {
-    .pub {
-      grid-template-columns: auto 1fr;
-      row-gap: 0.75rem;
-    }
-
-    .pub :global(.chip) {
-      grid-column: 2;
-      justify-self: start;
-    }
   }
 </style>

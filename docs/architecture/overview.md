@@ -17,13 +17,14 @@ offers is listed in the [feature catalogue](../product/features/README.md).
 
 ## Goals
 
-- Content changes without touching a component: case studies are Markdown files, records are JSON and CSV
-  ([ADR 0001](../adr/0001-content-as-data-files.md)).
+- Content changes without touching a component: projects are Markdown files of frontmatter, records are JSON
+  and CSV ([ADR 0001](../adr/0001-content-as-data-files.md)).
 - Numbers are computed from the data, so they cannot drift from it: the research page counts the publication
   list, and the home dashboard reduces the projects, career, education and publication files in
   `src/lib/dashboard.ts`. Only the years of experience are typed into `profile.json`.
 - A typo in content fails the build instead of rendering an empty page: every collection has a Zod schema.
-- Works without JavaScript; animations respect `prefers-reduced-motion`.
+- Pages work without JavaScript, except the dashboard panels, which stay closed (their cells link to a page
+  instead); animations respect `prefers-reduced-motion`.
 
 ## Constraints
 
@@ -32,9 +33,8 @@ offers is listed in the [feature catalogue](../product/features/README.md).
   strips a trailing slash first, so it works either way.
 - No UI framework and no client-side router: Astro components only, with `astro` as the single runtime
   dependency.
-- Moving to another repository name or a custom domain means changing `site` and `base` in `astro.config.mjs`,
-  and the links between case studies inside `src/content/projects/*.md`, which are written with the `/webpage/`
-  prefix because Markdown cannot call `withBase()`.
+- Moving to another repository name or a custom domain means changing `site` and `base` in `astro.config.mjs`.
+  The project files have no Markdown body, so no internal link is written by hand outside `withBase()`.
 
 ## Building blocks
 
@@ -44,21 +44,20 @@ Four content collections, each with a schema (fields in [data-model](../referenc
 
 | Collection | Loader | Source |
 |---|---|---|
-| `projects` | `glob` over Markdown | `src/content/projects/*.md`: frontmatter plus the case-study body |
+| `projects` | `glob` over Markdown | `src/content/projects/*.md`: frontmatter only; the files have no body |
 | `experience` | `file` | `src/data/experience.json` |
 | `collaborations` | `file` | `src/data/collaborations.json` |
 | `publications` | `file` with a CSV parser | `src/data/publications.csv`, parsed by `src/lib/csv.ts`; the id is a slug of year, venue and title |
 
-`profile.json`, `skills.json` and `education.json` in `src/data/` are imported directly by the pages and
-components that need them.
+`profile.json`, `consultancy.json`, `skills.json` and `education.json` in `src/data/` are imported directly by
+the pages and components that need them.
 
 ### Pages (`website/src/pages/`)
 
 | Route | File | What it renders |
 |---|---|---|
-| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), selected work (featured projects and four more), collaborations, career timeline, the three latest publications, skills with education and certifications, contact |
-| `/projects/` | `projects/index.astro` | Every project by `order` as one list of rows, with type-of-work and topic filters that combine and run in the browser |
-| `/projects/<id>/` | `projects/[...slug].astro` | One case study per Markdown file, with previous and next by `order` |
+| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), the Chosen work honeycomb (the first five AI projects and the first three data projects by `order`, a popup per project), the lab (a synthetic signal demo and two architecture diagrams), contact |
+| `/projects/` | `projects/index.astro` | Every project by `order` as honeycombs grouped by field (AI, Data & analytics, Software & research), each cell opening a popup, with a type-of-work filter that runs in the browser |
 | `/research/` | `research.astro` | The publication list, works per year, research areas, and headline numbers computed from the list: works, total citations, h-index, first-author count |
 
 ### Layout and components
@@ -66,15 +65,22 @@ components that need them.
 - `src/layouts/Base.astro`: the HTML shell for every page: title and description (from `profile.json` unless a
   page passes its own), canonical URL, Open Graph and Twitter card tags, a schema.org `Person` in JSON-LD, the
   fonts, navigation, footer and the scroll-reveal script.
-- `src/components/`: `hive/HiveDashboard` and `hive/HivePanels`, `Section`, `ProjectCard`, `Collaborations`, `Timeline`, `SkillGrid`, `Contact`,
-  `Nav`, `Footer`, and two canvas animations, `EcgTrace` and `NodeField`. See the [codebase map](../reference/codebase.md).
+- `src/components/hive/`: `HiveDashboard` (the dashboard and its cells), `HivePanels` (the panel each cell
+  opens), `JourneyBoard` (the career board in the Years panel) and `ProjectHive` (a honeycomb of projects with
+  a popup per project, used by the home page and `/projects/`).
+- `src/components/`: `Section`, `Contact`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
+  `NodeField`. See the [codebase map](../reference/codebase.md).
 - `src/styles/global.css`: the shared styles and design tokens.
 
 ### Scripts in the browser
 
 The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the dashboard's
-cells, panels and count-up numbers, the navigation toggle and sticky state, and the project filter. Without
-JavaScript every element still renders: the dashboard's numbers are in the HTML and each cell links to its section. The canvases stop drawing when off screen or when the tab is hidden.
+cells, panels, deep links and count-up numbers, the project honeycombs' popups and their re-packing after a
+filter (the `phive:relayout` event), the navigation toggle and sticky state, and the type-of-work filter on
+`/projects/`. The rows inside the panels and the cards of the career board open with native `<details>`, without
+a script. Without JavaScript the dashboard's numbers are still in the HTML and each cell links to a page; the
+panels stay hidden; every project popup shows as a list under its honeycomb, and each project cell links to its
+entry. The canvases stop drawing when off screen or when the tab is hidden.
 
 ## Runtime
 
@@ -98,10 +104,11 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 ## Crosscutting
 
-- **Build-time checks.** Schema errors in any collection fail the build. `Timeline.astro` prints a warning for
-  every role marked `dateUnconfirmed` in `experience.json`, so a placeholder date is visible in every build log.
-  `collaborations.json` has a `needsReview` flag for copy that still needs sign-off, but no component reads it:
-  a flagged card is published without a warning ([roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).
+- **Build-time checks.** Schema errors in any collection fail the build. The career board
+  (`components/hive/JourneyBoard.astro`) prints a warning for every role marked `dateUnconfirmed` in
+  `experience.json`, so a placeholder date is visible in every build log. `collaborations.json` has a
+  `needsReview` flag for copy that still needs sign-off, but no component reads it: a flagged partner description
+  is published without a warning ([roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).
 - **Accessibility.** A skip link to the main content, `aria-hidden` on decorative canvases with a text
   alternative for the ECG trace, and reduced motion honoured by every animation.
 - **What is public.** Everything in the repository is published or readable on GitHub. `.gitignore` keeps agent
@@ -120,8 +127,11 @@ The hand-written site this replaced is not in the working tree; it is kept at th
 ## Open
 
 - WeasyPrint is not declared anywhere in the repository; which version renders the CV is not recorded.
-- There are no tests: CI type-checks and builds, nothing more. The only logic worth a test is the CSV parser in
-  `src/lib/csv.ts` and the counting in `src/pages/research.astro`.
+- There are no tests: CI type-checks and builds, nothing more. The logic worth a test is the CSV parser in
+  `src/lib/csv.ts`, the counting in `src/pages/research.astro` and `src/lib/dashboard.ts`, and the honeycomb
+  placement in `src/components/hive/ProjectHive.astro`.
+- With JavaScript, a link to one project (`#<group>-<id>`) does not open its popup: `ProjectHive.astro` does
+  not read the address, so a single project cannot be linked to.
 - `body` has `overflow-x: hidden` in `global.css`, so content wider than the screen is cut off instead of
   scrolling, which hides layout mistakes on narrow screens; grids use `minmax(min(…, 100%), 1fr)` so they fit
   ([roadmap F1](../roadmap.md#f1-featured-cards-cut-off-on-phones)).

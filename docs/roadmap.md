@@ -24,6 +24,9 @@ card, its text and its chips, is cut off.
 - **Done:** the featured grid uses `minmax(min(420px, 100%), 1fr)`, the collaborations grid got the same guard,
   and the lead grid on `/projects/` is gone with the list (item 3). Measured with no horizontal overflow at 360,
   390, 768, 1024 and 1440 px on the home page, `/projects/`, a case study and `/research/`.
+- **Since:** the featured grid, the collaborations grid, the list and the case-study pages are all gone with the
+  hive redesign (item 3). The honeycombs take their cell width from the screen width on a phone; the new layout
+  has not been measured for overflow the same way.
 
 ## F2. Hero numbers from the publication list
 
@@ -39,12 +42,13 @@ typed in as well.
 
 ## F3. Make the review flag do something
 
-`needsReview` in `website/src/data/collaborations.json` is in the schema, but no component reads it: a card
-marked for review is published like any other, and the build does not say so. `dateUnconfirmed` on the
-career timeline, by contrast, prints a warning on every build.
+`needsReview` in `website/src/data/collaborations.json` is in the schema, but no component reads it: a partner
+description marked for review is published in the 404 Solutions panel like any other, and the build does not
+say so. `dateUnconfirmed` on the career board, by contrast, prints a warning on every build.
 
-- **Fix:** warn in `Collaborations.astro` the way `Timeline.astro` does, or leave flagged cards out of the
-  build, or drop the field.
+- **Fix:** warn in `components/hive/HivePanels.astro`, which reads the partner descriptions, the way
+  `components/hive/JourneyBoard.astro` warns about dates, or leave flagged descriptions out of the build, or
+  drop the field.
 - **Open:** which of the three.
 
 ## F4. Upgrade Astro
@@ -70,14 +74,17 @@ advisory is about `define:vars`, which the site does not use.
 
 ## 1. Section rail on the home page
 
-A vertical line at the side of the home page with one marker per section: Work, Collaborations, Career,
-Research, Stack, Contact. The marker of the section in view lights up as the page scrolls; a click on a marker
-scrolls to its section.
+A vertical line at the side of the home page with one marker per section. The marker of the section in view
+lights up as the page scrolls; a click on a marker scrolls to its section.
 
-- **Touches:** `website/src/pages/index.astro` (sections `work`, `collaborations`, `journey`, `research`,
-  `stack`, and `contact` in `Contact.astro`), a new component for the rail, `website/src/components/Nav.astro`.
-- **The top menu changes with it.** Collaborations, Career and Contact are in-page links today
-  (`/#collaborations`, `/#journey`, `/#contact`), the same jumps the rail makes. Open: which links stay in the
+- **Written for a longer page.** The item was planned when the home page had six sections (Work,
+  Collaborations, Career, Research, Stack, Contact). Since the hive redesign it has the dashboard and two
+  sections: Chosen work (`#work`) and Contact (`#contact` in `Contact.astro`); Career and 404 Solutions are
+  dashboard panels the menu opens (`/#experience`, `/#consultancy`). **Open:** whether a rail
+  still earns its place on a page this short, and if it does, which markers it carries.
+- **Touches:** `website/src/pages/index.astro`, a new component for the rail, `website/src/components/Nav.astro`.
+- **The top menu changes with it.** Career, 404 Solutions and Contact are in-page links today; Career and
+  404 Solutions open a dashboard panel (`components/hive/HiveDashboard.astro`). Open: which links stay in the
   top menu (for example only the pages: Projects, Research and the CV) and which the rail takes over.
 - **Conventions that apply** ([development guide](guides/development.md#conventions)): no UI framework, a small
   inline script, plain anchor links so it works without JavaScript, smooth scrolling only without
@@ -90,40 +97,46 @@ a phone in its own right, in the same hive palette, not only one that fits.
 
 - **Open:** what the section rail from item 1 becomes on a narrow screen (for example a thin bar with the
   section markers along the top or bottom edge); how the dashboard, with the ECG trace and the node field, behaves on
-  a small screen; how the project cards read with one hand.
+  a small screen; how the project honeycombs and their popups read with one hand.
 - **Check:** widths from 360 to 430 px, no horizontal scrolling, touch targets large enough to hit.
 
 ## 3. Projects redesigned, the CV follows
 
-Rework how projects look: the cards on the home page and on `/projects`, and the case-study pages
-`/projects/<slug>`. The project Markdown files in `website/src/content/projects/` are rewritten where the new
-design needs it. The CV source `files/cv/stefan-seman-cv.html` mirrors the site data, so it takes the same
-structure and wording.
+Rework how projects look on the home page and on `/projects`. The project Markdown files in
+`website/src/content/projects/` are rewritten where the new design needs it. The CV source
+`files/cv/stefan-seman-cv.html` mirrors the site data, so it takes the same structure and wording.
 
-- **Done:** `/projects/` is one list with type-of-work and topic filters (`components/ProjectRow.astro`), and the
-  big card in Selected work follows the redesign concept: role and employer, a Result box, four tools
-  (`components/ProjectCard.astro`).
-- **Open:** the case-study page; re-measuring the big card's character limits; a measured `Result` metric for
-  each featured project (all six fall back to their first impact line today).
-- **Check the numbers that describe other repositories** while the files are rewritten: a case study that
-  counts something in another project (packs, skills, tests) is typed in and goes stale when that project
-  moves on. The code comments that count projects (`pages/index.astro`, `pages/projects/index.astro`,
-  `components/ProjectCard.astro`) go with it.
+- **Done:** projects are honeycombs whose cells open a short popup (description, result, role, stack, company
+  and client, and the outside link): one on the home page, Chosen work (five AI and three data projects), and one per field on
+  `/projects/` with a type-of-work filter (`components/hive/ProjectHive.astro`, `pages/projects/index.astro`).
+  The popup is a project's whole description: the case-study pages and the Markdown body of every project file
+  are removed, and so are the list, the big card and the Selected work section. Career and education are one
+  board in the dashboard's Years panel (`components/hive/JourneyBoard.astro`).
+- **Open:** a measured `Result` metric for each project: two have one today and none of the six featured, so
+  the rest show their first impact line as the result.
+- **Open:** what to do with the frontmatter nothing shows any more: `impact` lines after the first, and
+  `metrics` with a label other than `Role`, `Result` or `Stage` (such as Eval or Scope) were shown on the
+  case-study page and are now read by nothing. Show them in the popup, or drop them from the files.
+- **Open:** a link to one project. With JavaScript, `#<group>-<id>` does not open its popup, so no address
+  points at a single project.
+- **Check the numbers that describe other repositories** while the files are rewritten: a summary or an
+  impact line that counts something in another project (packs, skills, tests) is typed in and goes stale when
+  that project moves on.
 
 ## 4. One template for a project
 
-Done as two templates, one per card type: `docs/guides/templates/lead-card.md` for the big cards and
-`docs/guides/templates/project-card.md` for the rest. Each carries every field of the `projects` collection and
-the three case study sections, with the character limits measured on the real cards.
-[Writing a project](guides/writing-a-project.md) explains which card shows which field and what breaks past
-each limit.
+Done as two templates, one per card type of the earlier home page: `docs/guides/templates/lead-card.md` for
+featured projects and `docs/guides/templates/project-card.md` for the rest. Each carries every field of the
+`projects` collection. [Writing a project](guides/writing-a-project.md) explains where each field shows.
 
-- **Open:** every project fits its card, with two exceptions kept by choice: three titles in the home page row
-  take three lines there (Document Chatbot That Talks to Data, Multilingual Document QA Chatbot, Supply Chain &
-  Sales Forecasting), and the partner lines "404 Solutions · with …" wrap on the small cards.
-  They are brought in line as part of item 3, and the limits change if item 3 changes the cards.
-- **Open:** nothing checks the limits. A build warning, in the style of the `[timeline] UNCONFIRMED DATE`
-  warning, would name each field over its limit.
+- **Open:** whether the two become one. The big and small cards they were made for are gone with item 3, and
+  every project now shows the same fields in the same places; the templates differ only in their notes on
+  `featured` and on the number of stack items.
+- **Open:** no length is measured for the places a project shows today. The character limits in the templates
+  were measured on the earlier cards and are kept as a rough guide only. The honeycomb cell is the one place
+  where length shows: it holds the title up to " — " in a hexagon about 150 px wide.
+- **Open:** nothing checks lengths. A build warning, in the style of the `[timeline] UNCONFIRMED DATE` warning,
+  would name each field over a limit once there is one.
 - **Open:** whether the CV entries get a template of their own as well.
 
 ## 5. CV and LinkedIn brought in line

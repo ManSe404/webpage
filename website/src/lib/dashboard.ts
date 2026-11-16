@@ -25,6 +25,10 @@ export function formatMonth(value: string | null): string {
 
 export const isOwnWork = (org?: string) => org === 'Personal' || org === 'Open source';
 
+/** Who the work was for: own projects, the research institute, or a client or employer. */
+export const workType = (org?: string): 'personal' | 'research' | 'client' =>
+  isOwnWork(org) ? 'personal' : org === 'BioIRC' ? 'research' : 'client';
+
 /** The largest h where h works each have at least h citations. */
 export function hIndex(citations: number[]): number {
   const sorted = [...citations].sort((a, b) => b - a);

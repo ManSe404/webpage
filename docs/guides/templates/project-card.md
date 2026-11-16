@@ -1,43 +1,31 @@
 ---
-# PROJECT CARD: every project that is not featured. On /projects/ it is a list row (category, title, summary,
-# org and period); the four with the lowest order on the home page get a regular card with five stack chips
-# as well. The case study page shows every field.
-# Copy this file to website/src/content/projects/<id>.md, fill it in and delete these comments.
-# Limits are characters, measured on the real card; docs/guides/writing-a-project.md says what breaks past each.
-title: Name of the System                    # ≤ 29 for the four in the home page row; the /projects/ list has room for more
-category: Data Engineering                   # reuse a category from the filter row on /projects/
-summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 130–180
-featured: false                              # true makes it a big card on the home page: use lead-card.md
-order: 10                                    # sorts every list; projects are grouped by employer, personal ones last
-org: 404 Solutions                           # the employer; "org · with client" ≤ 29
+# PROJECT CARD: every project that is not featured. The name is left from the small card the home page used
+# to have; every project now shows the same fields: a honeycomb cell and its popup (on the home page when it
+# is among the chosen work, always on /projects/). The frontmatter is the whole project: there is no
+# body and no project page. docs/guides/writing-a-project.md says where each field shows.
+# Copy this file to website/src/content/projects/<id>.md, fill it in and delete these comments. No length is
+# measured for the current layout; numbers marked "earlier card" were measured on cards that are gone.
+title: Name of the System — What It Does      # the cell shows the part before " — "; ≤ 29 on the earlier small card
+category: Data Engineering                   # data field: Data Engineering, Machine Learning; the home page shows the first three by order
+summary: One sentence with the problem solved and the value it brought, then what was built — the popup's Project description.   # 130–180 on the earlier small card
+featured: false                              # true lists it in the Projects panel of the home dashboard: use lead-card.md
+order: 10                                    # sorts every place; projects are grouped by employer, personal ones last
+org: 404 Solutions                           # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2025"                               # quoted, so a bare year stays text
-impact:                                      # 3–4 results a reader can check, not tools; case study page only
-  - First outcome, a fact a reader can check         # ≤ 120 each
+impact:                                      # results a reader can check, not tools; only the first is shown, and only without a Result metric
+  - First outcome, a fact a reader can check         # the strongest first: it stands in for the result; ≤ 120 each
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps
-stack:                                       # 4–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the home page card shows five
+stack:                                       # 4–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the popup shows all
   - Python
   - FastAPI
   - Docker
   - Azure
-metrics:                                     # 2–3, case study page only; a Result only if it happened
+metrics:                                     # 2–3, found by label; Role, Result and Stage are shown, any other label is not
   - label: Role
-    value: Lead engineer
+    value: Lead engineer                     # the popup's Role & responsibilities; leave it out and the line is left out
   - label: Result
-    value: Manual tagging cut                # measured, or what happened; never an estimate
-# link: https://example.com                  # public URL only
+    value: Manual tagging cut                # the popup's Achieved result; measured, or what happened, never an estimate; only if it happened
+# link: https://example.com                  # public URL only; adds "Visit project ↗" to the popup
 ---
-
-## The problem
-
-<!-- 50–100 words. Who had the problem, what it cost them, and why the usual approach did not solve it. -->
-
-## The approach
-
-<!-- 100–200 words. One sentence on the idea that shaped the design, then three to five bullets, each a bold
-     lead-in and one or two sentences. Say who did what: "I designed", "the team built". -->
-
-## The outcome
-
-<!-- 30–60 words. What runs now, for whom, and the stage stated plainly. No number you cannot show. -->

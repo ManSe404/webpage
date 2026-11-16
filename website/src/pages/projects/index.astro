@@ -1,50 +1,34 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import ProjectRow from '../../components/ProjectRow.astro';
+import ProjectHive from '../../components/hive/ProjectHive.astro';
+import { workType } from '../../lib/dashboard';
 
-const projects = (await getCollection('projects')).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const total = projects.length;
+
+// One honeycomb per field. A category not listed here falls into the last
+// group, so a new category never makes a project disappear.
+const GROUPS = [
+  { id: 'ai', label: 'AI', topics: ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'] },
+  { id: 'data', label: 'Data & analytics', topics: ['Data Engineering', 'Machine Learning'] },
+  { id: 'software', label: 'Software & research', topics: [] as string[] },
+];
+const known = new Set(GROUPS.flatMap((g) => g.topics));
+const groups = GROUPS.map((g, i) => ({
+  ...g,
+  projects: projects.filter((p) =>
+    i === GROUPS.length - 1 ? !known.has(p.data.category) : g.topics.includes(p.data.category)),
+})).filter((g) => g.projects.length);
 
 // Type of work follows who the work was for: own projects, the research
 // institute, and everything delivered for an employer or a client.
-const kindOf = (org?: string) =>
-  org === 'Personal' || org === 'Open source' ? 'personal' : org === 'BioIRC' ? 'research' : 'client';
-
-const rows = projects.map((project) => ({
-  project,
-  kind: kindOf(project.data.org),
-  topic: project.data.category,
-}));
-const count = (key: 'kind' | 'topic', value: string) =>
-  rows.filter((row) => row[key] === value).length;
-
-// Every topic in use, the largest first, so the long tail sits at the end of
-// the chip row that scrolls sideways on a phone.
-const topics = [...new Set(rows.map((row) => row.topic))].sort(
-  (a, b) => count('topic', b) - count('topic', a) || a.localeCompare(b),
-);
-
-// The rendered counts are those of "All + All"; the script recomputes them for
-// every other combination.
-const groups = (
-  [
-    {
-      id: 'kind',
-      label: 'Type of work',
-      options: [['client', 'Client work'], ['research', 'Research'], ['personal', 'Personal & open source']],
-    },
-    { id: 'topic', label: 'Topic', options: topics.map((topic) => [topic, topic]) },
-  ] as const
-).map((group) => ({
-  ...group,
-  options: [
-    { value: 'all', label: 'All', count: total },
-    ...group.options.map(([value, label]) => ({ value, label, count: count(group.id, value) })),
-  ],
-}));
+const TYPES = [
+  { id: 'all', label: 'All' },
+  { id: 'client', label: 'Client work' },
+  { id: 'research', label: 'Research' },
+  { id: 'personal', label: 'Personal & open source' },
+].map((t) => ({ ...t, count: t.id === 'all' ? total : projects.filter((p) => workType(p.data.org) === t.id).length }));
 ---
 
 <Base
@@ -56,151 +40,72 @@ const groups = (
       <p class="eyebrow">Portfolio</p>
       <h1 class="page-title">Projects</h1>
       <p class="page-lede">
-        {total} systems across generative AI, document intelligence, data
-        engineering, and biomedical research — the client work built to run in
-        production, the personal projects honest about where they stand.
+        {total} systems across generative AI, document intelligence, data engineering, and
+        biomedical research. Pick a cell to read what it is, what it achieved, my role, the
+        tools and who it was for.
       </p>
     </div>
   </section>
 
-  <section class="section projects-section" aria-label="Project list">
+  <section class="section projects-section" aria-label="Projects by field" data-projects>
     <div class="wrap">
-      {/* Hidden until the script runs: without JavaScript every row shows and
-          the buttons would have nothing to do. */}
-      <div class="filter-panel" data-filters hidden>
-        {groups.map((group) => (
-          <div class="filter-group">
-            <span class="filter-label mono" id={`filter-${group.id}`}>{group.label}</span>
-            <div class="filter-scroll">
-              <div class="filter-chips" role="group" aria-labelledby={`filter-${group.id}`}>
-                {group.options.map((option, index) => (
-                  <button
-                    class="filter mono"
-                    type="button"
-                    data-group={group.id}
-                    data-value={option.value}
-                    aria-pressed={index === 0 ? 'true' : 'false'}
-                  >
-                    {option.label}
-                    <span class="filter-count" data-count>{option.count}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+      <div class="types" role="group" aria-label="Filter by type of work" data-types hidden>
+        {TYPES.map((t, i) => (
+          <button class="type mono" type="button" data-type={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {t.label} <span class="type-count">{t.count}</span>
+          </button>
         ))}
       </div>
+      <p class="status mono" aria-live="polite" data-status></p>
 
-      <div class="list-bar">
-        <p class="list-status mono" aria-live="polite" data-status>
-          Showing all {total} projects
-        </p>
-        <button class="list-reset mono" type="button" data-reset hidden>Clear filters</button>
-      </div>
-
-      <ul class="project-list" role="list">
-        {rows.map(({ project, kind, topic }) => (
-          <li data-row data-kind={kind} data-topic={topic}>
-            <ProjectRow project={project} />
-          </li>
-        ))}
-      </ul>
-
-      <div class="empty" data-empty hidden>
-        <p class="empty-title">No project matches both filters.</p>
-        <button class="btn" type="button" data-reset>Show all {total} projects</button>
-      </div>
+      {groups.map((g) => (
+        <section class="group" data-group aria-labelledby={`group-${g.id}`}>
+          <h2 class="group-title" id={`group-${g.id}`}>{g.label} <span class="group-count mono" data-group-count>{g.projects.length}</span></h2>
+          <ProjectHive id={g.id} projects={g.projects} />
+        </section>
+      ))}
     </div>
   </section>
 </Base>
 
 <script>
-  type Group = 'kind' | 'topic';
+  const root = document.querySelector<HTMLElement>('[data-projects]');
+  const bar = root?.querySelector<HTMLElement>('[data-types]');
+  if (root && bar) {
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-type]')];
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-group]')];
+    const total = root.querySelectorAll('[data-pcell]').length;
+    bar.hidden = false;
 
-  const panel = document.querySelector<HTMLElement>('[data-filters]');
-  const rows = [...document.querySelectorAll<HTMLElement>('[data-row]')];
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-group]')];
-  const status = document.querySelector<HTMLElement>('[data-status]');
-  const empty = document.querySelector<HTMLElement>('[data-empty]');
-  const clear = document.querySelector<HTMLButtonElement>('.list-bar [data-reset]');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const apply = (type: string) => {
+      let shown = 0;
+      for (const g of groups) {
+        const cells = [...g.querySelectorAll<HTMLElement>('li[data-type]')];
+        let inGroup = 0;
+        for (const li of cells) {
+          li.hidden = type !== 'all' && li.dataset.type !== type;
+          if (!li.hidden) inGroup++;
+        }
+        g.hidden = inGroup === 0;
+        const count = g.querySelector('[data-group-count]');
+        if (count) count.textContent = String(inGroup);
+        g.querySelector('[data-phive]')?.dispatchEvent(new Event('phive:relayout'));
+        shown += inGroup;
+      }
+      for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.type === type));
+      if (status) status.textContent = type === 'all' ? `Showing all ${total} projects` : `Showing ${shown} of ${total} projects`;
+    };
 
-  const state: Record<Group, string> = { kind: 'all', topic: 'all' };
-  const total = rows.length;
-
-  const matches = (row: HTMLElement, kind: string, topic: string) =>
-    (kind === 'all' || row.dataset.kind === kind) &&
-    (topic === 'all' || row.dataset.topic === topic);
-
-  function render() {
-    // Each button counts what the list would show if it were picked, with the
-    // other group left as it is.
-    for (const button of buttons) {
-      const group = button.dataset.group as Group;
-      const value = button.dataset.value ?? 'all';
-      const n = rows.filter((row) =>
-        matches(row, group === 'kind' ? value : state.kind, group === 'topic' ? value : state.topic),
-      ).length;
-      button.setAttribute('aria-pressed', String(state[group] === value));
-      button.classList.toggle('is-zero', n === 0);
-      const counter = button.querySelector<HTMLElement>('[data-count]');
-      if (counter) counter.textContent = String(n);
-    }
-
-    let shown = 0;
-    for (const row of rows) {
-      row.hidden = !matches(row, state.kind, state.topic);
-      if (!row.hidden) shown++;
-    }
-
-    if (status) {
-      status.textContent =
-        shown === total ? `Showing all ${total} projects` : `Showing ${shown} of ${total} projects`;
-    }
-    if (empty) empty.hidden = shown > 0;
-    if (clear) clear.hidden = state.kind === 'all' && state.topic === 'all';
-  }
-
-  if (panel) {
-    panel.hidden = false;
-
-    for (const button of buttons) {
-      button.addEventListener('click', () => {
-        state[button.dataset.group as Group] = button.dataset.value ?? 'all';
-        render();
-        // On a phone the chip rows scroll sideways; keep the picked chip in view.
-        button.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
-      });
-    }
-
-    // Both reset buttons hide themselves once clicked, so focus moves to the
-    // first "All" chip instead of falling back to the top of the page.
-    for (const reset of document.querySelectorAll<HTMLButtonElement>('[data-reset]')) {
-      reset.addEventListener('click', () => {
-        state.kind = 'all';
-        state.topic = 'all';
-        render();
-        buttons[0]?.focus();
-      });
-    }
-
-    render();
+    for (const b of buttons) b.addEventListener('click', () => apply(b.dataset.type ?? 'all'));
+    apply('all');
   }
 </script>
 
 <style>
-  /* Tighter than other pages on a phone, so the first project row still fits
-     on the first screen under the head and the two chip rows. */
-  .page-head {
-    padding-top: 2.5rem;
-    padding-bottom: 0;
-  }
-
+  .page-head { padding-top: 2.5rem; padding-bottom: 0; }
   /* The global eyebrow is 0.72rem; this page keeps every text at 12px or more. */
-  .page-head .eyebrow {
-    font-size: 0.75rem;
-  }
-
+  .page-head .eyebrow { font-size: 0.75rem; }
   .page-title {
     font-size: clamp(2.4rem, 6vw, 4rem);
     margin-block: 0.6rem 0.85rem;
@@ -209,195 +114,27 @@ const groups = (
     background-clip: text;
     color: transparent;
   }
+  .page-lede { color: var(--text-dim); max-width: 62ch; font-size: 1.03rem; }
 
-  .page-lede {
-    color: var(--text-dim);
-    max-width: 62ch;
-    font-size: 1.03rem;
+  .projects-section { padding-top: clamp(1.5rem, 4vh, 2.75rem); }
+
+  .types { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .types[hidden] { display: none; }
+  .type {
+    min-height: 36px; padding: 0 0.9rem; font-size: 0.8rem; color: var(--text-dim);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
   }
+  .type[aria-pressed='true'] { color: var(--on-accent); background: var(--bio); border-color: var(--bio); }
+  .type-count { margin-left: 0.3rem; opacity: 0.75; }
+  @media (hover: hover) { .type:hover { border-color: var(--bio); color: var(--text); } .type[aria-pressed='true']:hover { color: var(--on-accent); } }
+  .status { margin: 0.8rem 0 0; font-size: 0.75rem; color: var(--text-faint); }
 
-  .projects-section {
-    padding-top: clamp(1.5rem, 4vh, 2.75rem);
-  }
+  .group { margin-top: clamp(2rem, 5vh, 3rem); }
+  .group[hidden] { display: none; }
+  .group-title { margin: 0 0 1.2rem; font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
+  .group-count { margin-left: 0.4rem; font-size: 0.8rem; color: var(--bio); vertical-align: middle; }
 
-  .filter-panel[hidden],
-  .list-reset[hidden],
-  .empty[hidden],
-  .project-list > li[hidden] {
-    display: none;
-  }
-
-  .filter-panel,
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    min-width: 0;
-  }
-
-  .filter-group {
-    gap: 0.3rem;
-  }
-
-  .filter-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-  }
-
-  /* Phone: each group is one row of chips that scrolls sideways, bleeding to
-     the screen edges and fading there, so the clipped chip reads as "more". */
-  .filter-scroll {
-    --fade: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
-    margin-inline: calc(var(--gutter) * -1);
-    overflow-x: auto;
-    /* A picked chip scrolls clear of the fade, with a peek at the next one. */
-    scroll-padding-inline: calc(var(--gutter) * 2);
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -webkit-mask-image: var(--fade);
-    mask-image: var(--fade);
-  }
-
-  .filter-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .filter-chips {
-    display: flex;
-    gap: 0.45rem;
-    width: max-content;
-    padding-inline: var(--gutter);
-    /* Room for the focus ring, which the scroller would otherwise clip. */
-    padding-block: 4px;
-  }
-
-  .filter,
-  .list-reset {
-    min-height: 2.5rem;
-    padding: 0.4rem 0.95rem;
-    font-size: 0.8rem;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-    color: var(--text-dim);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    transition: color 0.25s var(--ease), border-color 0.25s var(--ease),
-      background 0.25s var(--ease);
-  }
-
-  .filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 999px;
-  }
-
-  .filter:focus-visible {
-    outline-offset: 1px;
-  }
-
-  .filter-count {
-    font-size: 0.75rem;
-    color: var(--text-faint);
-  }
-
-  /* Still clickable, so the empty state stays reachable, but visibly a dead end. */
-  .filter.is-zero {
-    color: var(--text-faint);
-    border-color: var(--border);
-  }
-
-  @media (hover: hover) {
-    .filter:hover {
-      color: var(--text);
-      border-color: var(--text-dim);
-    }
-
-    .list-reset:hover {
-      color: var(--bio);
-      border-color: rgba(var(--bio-rgb), 0.5);
-    }
-  }
-
-  /* After the hover rules, so hovering the picked chip keeps dark ink on honey. */
-  .filter[aria-pressed='true'],
-  .filter[aria-pressed='true'] .filter-count {
-    color: var(--on-accent);
-    background: var(--bio);
-    border-color: var(--bio);
-  }
-
-  .list-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    min-height: 2.5rem;
-    margin-top: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .list-status {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-  }
-
-  .empty {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding-block: 3rem;
-  }
-
-  .empty-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-  }
-  /* Desktop: the filters sit in one panel, each label beside its chips, and
-     the chips wrap instead of scrolling. */
   @media (min-width: 720px) {
-    .page-head {
-      padding-top: clamp(3.5rem, 9vh, 6.5rem);
-    }
-
-    .filter-panel {
-      gap: 0.9rem;
-      padding: 1.25rem 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-
-    .filter-group {
-      flex-direction: row;
-      align-items: baseline;
-      gap: 1.25rem;
-    }
-
-    .filter-label {
-      flex: 0 0 7.5rem;
-    }
-
-    .filter-scroll {
-      margin-inline: 0;
-      overflow: visible;
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-
-    .filter-chips {
-      flex-wrap: wrap;
-      width: auto;
-      padding: 0;
-    }
-
-    .list-bar {
-      margin-top: 1.5rem;
-    }
+    .page-head { padding-top: clamp(3.5rem, 9vh, 6.5rem); }
   }
 </style>

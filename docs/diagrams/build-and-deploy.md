@@ -7,8 +7,8 @@ workflow, `.github/workflows/deploy-website.yml`, checks every pull request and 
 flowchart LR
     subgraph repo["Repository"]
         direction TB
-        md["website/src/content/projects/*.md<br/>case studies"]
-        json["website/src/data/*.json<br/>profile, experience, collaborations,<br/>skills, education"]
+        md["website/src/content/projects/*.md<br/>projects, frontmatter only"]
+        json["website/src/data/*.json<br/>profile, experience, collaborations,<br/>consultancy, skills, education"]
         csv["website/src/data/publications.csv"]
         src["website/src/pages, components,<br/>layouts, styles, assets"]
         pub["website/public/<br/>CV PDF, favicon, social image"]

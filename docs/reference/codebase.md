@@ -21,33 +21,33 @@ website/                      the Astro project
     images/                   favicon and the Open Graph image
   src/
     content.config.ts         the four content collections and their schemas
-    content/projects/         one Markdown case study per project
+    content/projects/         one Markdown file per project, frontmatter only
     data/                     profile, experience, collaborations, consultancy, skills, education (JSON); publications (CSV)
     assets/                   images optimised at build time (the portrait)
     layouts/Base.astro        HTML shell: meta tags, JSON-LD, fonts, navigation, footer, scroll reveal
     pages/
-      index.astro             home page
-      projects/index.astro    all projects as one list with type-of-work and topic filters
-      projects/[...slug].astro one page per case study
+      index.astro             home page: dashboard, the Chosen work honeycomb, contact
+      projects/index.astro    every project as honeycombs grouped by field, with a type-of-work filter
       research.astro          publications and the numbers derived from them
     components/
-      hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, the ECG trace
-      hive/HivePanels.astro   the panel each cell opens: steppers through featured projects and roles, research, education, tools, in progress, 404 Solutions, contact
+      hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career board, research, education, tools and skills, in progress, 404 Solutions services and partners, contact
+      hive/JourneyBoard.astro career and education board (three tracks across three eras) in the Years panel; warns about unconfirmed dates
+      hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
+      lab/Lab.astro           the home page lab: two tabs, Signal processing and Architecture
+      lab/SignalLab.astro     synthetic ECG-like signal, filter and peak detection with sliders, live numbers, donut
+      lab/ArchitectureLab.astro data platform and AI system diagrams with a switch; draws each with lab/ArchDiagram.astro
       Section.astro           section wrapper with eyebrow, title and lede
-      ProjectCard.astro       project card: big (Selected work) or regular (the row below it); a compact variant is kept but unused
-      ProjectRow.astro        one row of the /projects/ list
-      Collaborations.astro    collaboration cards
-      Consultancy.astro       the 404 Solutions services, from data/consultancy.json
-      Timeline.astro          career timeline; warns about unconfirmed dates
-      SkillGrid.astro         grouped skill chips
       Contact.astro           contact channels
-      Nav.astro               menu (Projects, Collaborations, Career, Research, Contact), CV download, mobile toggle
+      Nav.astro               menu (Projects, Career, 404 Solutions, Research, Contact), CV download, mobile toggle
       Footer.astro            footer links
       EcgTrace.astro          animated ECG trace on a canvas
       NodeField.astro         animated node-and-edge field behind the dashboard
     lib/
+      honeycomb.ts            honeycomb placement (cell position, row tracks, columns), shared by the dashboard and the project honeycombs, server and browser
+      signal.ts               pure functions behind the signal lab: generation, filtering, peak detection, scoring, plot paths
       url.ts                  withBase(): prefixes paths with the configured base
-      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, tool use, what is in progress); also used by research.astro
+      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, tool use, what is in progress, partners, a project's result and attribution); also used by research.astro, ProjectHive, JourneyBoard and projects/index.astro
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation
@@ -63,5 +63,4 @@ docs/                         this documentation
 
 Generated and not committed: `website/node_modules/`, `website/dist/`, `website/.astro/`.
 
-Entry points: the four files under `website/src/pages/`, one route each (the case-study file makes one route per
-project).
+Entry points: the three files under `website/src/pages/`, one route each: `/`, `/projects/` and `/research/`.

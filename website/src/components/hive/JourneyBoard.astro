@@ -1,0 +1,119 @@
+---
+// Career and education on one board: three tracks (rows) across three eras
+// (columns). A card is one role or degree; current ones are marked Now.
+// Choosing a card opens its highlights below it (native <details>, so it
+// works without JavaScript). Roles come from experience.json, degrees from
+// education.json; certifications have no dates, so they sit in a strip below.
+import { getCollection } from 'astro:content';
+import education from '../../data/education.json';
+import { formatMonth } from '../../lib/dashboard';
+
+const RESEARCH = new Set(['University of Belgrade', 'BioIRC — Bioengineering R&D Center', 'Sport and Recreation Center Obliqus']);
+const eras = [
+  { id: 'e1', label: '2014 — 2019', note: 'Foundations', from: 0, to: 2019 },
+  { id: 'e2', label: '2020 — 2021', note: 'Research to ML', from: 2020, to: 2021 },
+  { id: 'e3', label: '2022 — now', note: 'Leading AI', from: 2022, to: 9999 },
+];
+const eraOf = (year: number) => eras.find((e) => year >= e.from && year <= e.to)!.id;
+
+type Card = { title: string; org: string; period: string; now: boolean; era: string; points: string[]; year: number };
+
+const experience = await getCollection('experience');
+// Loud during dev and CI builds so a placeholder date cannot quietly ship.
+for (const r of experience.filter((e) => e.data.dateUnconfirmed)) {
+  console.warn(
+    `[timeline] UNCONFIRMED DATE: "${r.data.role} @ ${r.data.company}" starts ${r.data.start} ` +
+      `- placeholder, confirm before publishing (src/data/experience.json)`,
+  );
+}
+
+const roles = experience.map((r) => ({
+  track: RESEARCH.has(r.data.company) ? 'research' : 'industry',
+  title: r.data.role,
+  org: r.data.company,
+  period: `${formatMonth(r.data.start)} — ${formatMonth(r.data.end)}`,
+  now: r.data.end === null,
+  year: Number(r.data.start.slice(0, 4)),
+  era: eraOf(Number(r.data.start.slice(0, 4))),
+  points: r.data.highlights.slice(0, 3),
+}));
+
+// Degrees without a period came before the PhD, which started in 2018.
+const degrees: Card[] = education.degrees.map((d) => {
+  const year = Number(/\d{4}/.exec(d.period ?? '')?.[0] ?? 2017);
+  return { title: d.degree, org: d.institution, period: d.period || 'Before 2018', now: /present/i.test(d.period ?? ''), year, era: eraOf(year), points: d.note ? [d.note] : [] };
+});
+
+const tracks = [
+  { id: 'industry', label: 'AI & software', cards: roles.filter((r) => r.track === 'industry') },
+  { id: 'research', label: 'Research & biomedicine', cards: roles.filter((r) => r.track === 'research') },
+  { id: 'education', label: 'Education', cards: degrees },
+].map((t) => ({ ...t, cards: (t.cards as Card[]).sort((a, b) => b.year - a.year) }));
+---
+
+<div class="board">
+  <div class="board-head" aria-hidden="true">
+    <span></span>
+    {eras.map((e) => <span class="era mono">{e.label}<small>{e.note}</small></span>)}
+  </div>
+
+  {tracks.map((t) => (
+    <section class="lane" aria-label={t.label}>
+      <h4 class="lane-label">{t.label}</h4>
+      {eras.map((e) => (
+        <div class="cell" data-era={e.label}>
+          <span class="cell-era mono">{e.label}</span>
+          {t.cards.filter((c) => c.era === e.id).map((c) => (
+            <details class={`jcard ${c.now ? 'is-now' : ''}`} name="journey">
+              <summary>
+                <span class="jcard-title">{c.title}</span>
+                <span class="jcard-org">{c.org}</span>
+                <span class="jcard-period mono">{c.now && <b>Now</b>}{c.period}</span>
+              </summary>
+              {c.points.length > 0 && <ul class="jcard-points">{c.points.map((p) => <li>{p}</li>)}</ul>}
+            </details>
+          ))}
+        </div>
+      ))}
+    </section>
+  ))}
+
+  <div class="certs">
+    <span class="lane-label">Certified</span>
+    <div class="chips">{education.certifications.map((c) => <span class="chip">{c.name}</span>)}</div>
+  </div>
+</div>
+
+<style>
+  .board { display: grid; gap: 0; }
+  .board-head, .lane { display: grid; grid-template-columns: 11rem repeat(3, minmax(0, 1fr)); gap: 0 0.8rem; }
+  .board-head { padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  .era { display: grid; font-size: 0.75rem; letter-spacing: 0.06em; color: var(--bio); }
+  .era small { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0; color: var(--text-faint); }
+  .lane { padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+  .lane-label { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+  .cell { display: grid; gap: 0.5rem; align-content: start; }
+  .cell-era { display: none; }
+
+  .jcard { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+  .jcard.is-now { border-color: var(--bio); }
+  .jcard summary { display: grid; gap: 0.1rem; padding: 0.55rem 0.7rem; cursor: pointer; list-style: none; }
+  .jcard summary::-webkit-details-marker { display: none; }
+  .jcard summary:hover .jcard-title, .jcard[open] .jcard-title { color: var(--bio); }
+  .jcard summary:focus-visible { outline: 1px dashed var(--border-strong); outline-offset: 2px; }
+  .jcard-title { font-size: 0.9rem; font-weight: 600; line-height: 1.3; }
+  .jcard-org { font-size: 0.8rem; color: var(--text-dim); }
+  .jcard-period { font-size: 0.75rem; color: var(--text-faint); }
+  .jcard-period b { margin-right: 0.4rem; padding: 0 0.35rem; border-radius: 4px; background: var(--bio); color: var(--on-accent); font-weight: 500; }
+  .jcard-points { margin: 0; padding: 0 0.8rem 0.7rem 1.8rem; font-size: 0.85rem; color: var(--text-dim); display: grid; gap: 0.3rem; }
+
+  .certs { display: grid; grid-template-columns: 11rem 1fr; gap: 0.8rem; align-items: start; padding-top: 0.8rem; }
+  .certs .chip { font-size: 0.75rem; }
+
+  @media (max-width: 760px) {
+    .board-head { display: none; }
+    .lane, .certs { grid-template-columns: 1fr; gap: 0.5rem; }
+    .cell:empty, .cell:not(:has(.jcard)) { display: none; }
+    .cell-era { display: block; font-size: 0.75rem; color: var(--bio); }
+  }
+</style>

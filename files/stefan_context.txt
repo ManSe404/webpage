@@ -1,5 +1,5 @@
 Stefan Seman - Reusable Context
-Updated 2026-08-13 from the site data in website/src (profile, experience, collaborations,
+Updated 2026-11-16 from the site data in website/src (profile, experience, collaborations,
 skills, projects, publications) and from the live Google Scholar profile.
 Canonical sources: website/src/data/*.json, website/src/data/publications.csv,
 website/src/content/projects/*.md, files/cv/stefan-seman-cv.html.
@@ -56,126 +56,178 @@ production.
 
 EXPERIENCE
 Apr 2025 - Present | Head of AI | ExpertGroup (Belgrade, Serbia)
-- Lead the AI and Data team, reporting to the CEO — organisation, people management, hiring,
-  and mentoring.
+- Lead the AI and Data team — organisation, people management, hiring and mentoring.
 - Own AI initiatives end to end: originating projects, presales, architecture, and engineering
   standards.
-- Delivered RAG chatbots over live document collections — multilingual retrieval with answer
-  lineage and real-time index updates.
+- Stay hands-on — building demo pitches, proofs of concept and MVPs alongside the team.
+- Set technical direction and make delivery decisions across the AI portfolio.
+- Built a document chatbot that talks to data — every number computed in code and traced to its
+  source cell, never by the model — and delivered multilingual document QA.
 - Built gradient-boosted time series models for supply chain and sales forecasting.
-- Architecting crowd movement prediction and venue analytics for large-scale events.
-- Stays hands-on: demo pitches, proofs of concept, and MVPs built alongside the team.
-- Stack: Python, FastAPI, LangChain, Qdrant, RabbitMQ, Azure AI Foundry, Microsoft Fabric,
-  Azure DevOps, Docker, XGBoost, Computer Vision.
+- Lead the evaluation framework for the team's LLM chatbots and agents, and data analytics and
+  reporting on Microsoft Fabric, where capacity cost was cut by half.
+- Stack: Python, FastAPI, LangChain, Qdrant, RabbitMQ, Azure AI Foundry, Microsoft Fabric, Power
+  BI, Azure DevOps, Docker, XGBoost, DeepEval.
 
 Oct 2024 - Present | Independent AI & ML Consultant | 404 Solutions (own B2B consultancy)
-- Delivers AI and software work for delivery partners in Europe and the US, serving their
-  enterprise clients.
+- Run an independent practice delivering AI systems for partner organisations across several
+  countries.
 - Designed and operated multi-tenant AI systems for enterprise clients.
-- Delivered document intelligence for automated extraction, classification, and summarization.
-- Built agentic graph RAG architectures for multi-document summarization and risk analysis.
-- Built scalable AWS workflows on S3, Step Functions, Bedrock, and APIs.
+- Delivered document intelligence solutions for automated extraction, classification, and
+  summarization.
+- Delivered a multilingual document chatbot with live answer lineage over a living document set.
+- Architecting crowd movement prediction and venue analytics for a large-scale event.
+- Built scalable AWS workflows using S3, Step Functions, Bedrock, and APIs for multiple
+  organizations.
 - Deployed, monitored, and maintained production systems across distributed client environments.
-- Stack: Python, FastAPI, RAG, AI Agents, LangChain, AWS Bedrock, Lambda, Step Functions, S3,
-  ECS, DynamoDB.
+- Stack: Python, AI Agents, FastAPI, RAG, AWS, Bedrock, Computer Vision.
 
 Oct 2023 - Sep 2024 | Senior Data Scientist & Software Engineer in AI, R&D | Publicis Sapient
 - Led development from proof of concept to production-grade systems.
 - Built enterprise RAG systems with retrieval optimization.
-- Delivered an enterprise AI code copilot grounded in internal code and documentation.
 - Delivered client-facing solutions and technical propositions.
 - Stack: Python, FastAPI, LangChain, Transformers, PyTorch, Docker, Azure, KubeFlow, Redis,
   Milvus, Azure OpenAI.
 
-May 2022 - Oct 2023 | Data Scientist & Developer -> Senior Specialist | Valcon (Netherlands)
+May 2022 - Oct 2023 | Data Scientist & Developer → Senior Specialist | Valcon Netherlands
 - Led and mentored a team of 6 engineers.
 - Owned design of document processing microservices.
-- Built data extraction and document classification services from scratch.
-- Stack: Python, Azure DevOps, Azure Data Factory, Synapse, Data Lake, PyTorch, Flask, Docker.
+- Built a document processing platform from scratch — ETL on Azure Data Factory and Synapse, ML
+  classification on a trained embedding layer, Power BI reporting.
+- Stack: Python, Azure DevOps, Azure Data Factory, Synapse, Data Lake, Docker.
 
 Oct 2021 - Apr 2022 | Data Scientist | Optimal Systems GmbH
-- Model evaluation and hyperparameter tuning for ML classification.
-- Built an Azure extraction and transformation platform feeding self-service Power BI reporting.
-- Stack: Python, Azure Data Factory, Synapse, Data Lake, Power BI, Docker.
+- Extracted data from invoices with ML text classification, so every field landed in its place
+  in the database.
+- Performed model evaluation, hyperparameter tuning, testing and validation of the
+  classification models.
+- Stack: Python, Docker, Machine Learning, Azure.
 
-Mar 2020 - Mar 2022 | Researcher | BioIRC - Bioengineering R&D Center
+Mar 2020 - Mar 2022 | Researcher | BioIRC — Bioengineering R&D Center
 - Built components for the SILICOFCM EU Horizon 2020 computational platform.
-- ECG, CPET, and biomedical data processing; contributed to peer-reviewed publications.
-- Stack: Python, PyTorch, Statistical Analysis, SPSS, ECG, CPET.
+- Worked on ECG, CPET, and biomedical data processing.
+- Contributed to peer-reviewed publications.
+- Stack: Python, Statistical Analysis, SPSS, ECG, CPET, Biomedicine.
 
 Oct 2018 - Mar 2022 | PhD Researcher | University of Belgrade
 - Developed research methodology and statistical frameworks.
-- Applied machine learning to biomedical datasets; published internationally.
+- Applied machine learning to biomedical datasets.
+- Published papers internationally.
 - Stack: Python, PyTorch, SPSS, Machine Learning, Biostatistics.
 
 Oct 2014 - Jul 2018 | Sports Scientist | Sport and Recreation Center Obliqus
 - Built algorithms for signal processing and data collection.
-- Functional testing and performance analysis for athletes.
+- Performed functional testing and performance analysis for athletes.
 - Stack: Python, SPSS, LabVIEW, Data Analysis.
 
 DELIVERY PARTNERS (through 404 Solutions)
 - Provectus Inc (United States) — document intelligence: summarization and point-of-interest
-  extraction, multi-document risk analysis, and the ingestion pipelines underneath both.
+  extraction, and multi-document risk analysis.
   Delivered for a specialty insurance client.
 - WiserTech (Bulgaria) — machine learning engineering for a UAE-based sovereign AI organisation:
   speech-to-text pipelines, orchestrated agent graphs over RAG retrieval, cross-source
   summarization.
 - Q Agency (Croatia) — a complete content platform (web search and deep-research agents,
-  long-form generation, publishing to connected channels), plus a discovery-led backend
-  rebuild for one of their enterprise clients.
+  long-form generation, publishing to connected channels), plus system discovery and a new
+  backend build for one of their enterprise clients.
+- ExpertGroup (Serbia) — crowd movement prediction for a large-scale public event, and a
+  multilingual document chatbot with live answer lineage.
 Note: 404 Solutions is Stefan's own consultancy. The partners above are the organisations he
 delivers through; their end clients are generally not named publicly.
 
-PROJECTS (18 total; full write-ups at manse404.github.io/webpage/projects)
+PROJECTS (26 total; each one is a short card at manse404.github.io/webpage/projects)
 ExpertGroup
-1. Crowd Analytics & Movement Prediction (Computer Vision) — crowd movement prediction for a
-   large-scale public event, forecasting where density is about to build so visitors can be
-   routed around congestion. Role: architect and technical lead.
-2. Document Chatbot with Live Lineage (Generative AI) — high-precision multilingual chatbot over
-   a living document set; every answer traceable to its source passage, index updated in real
-   time, precision favoured over recall.
-3. Multilingual Document QA Chatbot (Generative AI) — retrieval-augmented assistant answering in
-   the user's own language, deliberately contained in scope, delivered end to end by the team.
-4. Supply Chain & Sales Forecasting (Machine Learning) — gradient-boosted demand forecasting for
-   wholesale distribution on a monthly planning cycle.
+1. Document Chatbot That Talks to Data (Generative AI) — A chatbot over market research
+   workbooks and decks that gets the numbers right — code computes every figure, the model plans
+   and explains, and each number traces to its cell. Role: Architect & builder.
+2. Multilingual Document QA Chatbot (Generative AI) — A retrieval-augmented assistant answering
+   questions over a document set in the user's own language — deliberately contained in scope,
+   led and delivered end to end by the team. Role: Team lead & delivery.
+3. LLM Evaluation Framework (Generative AI) — One shared way to measure the team's chatbots and
+   agents — retrieval, correctness and safety on a golden set — so a change ships on a number,
+   not on a demo that looked fine. Role: Lead & product owner.
+4. Supply Chain & Sales Forecasting (Machine Learning) — Gradient-boosted demand forecasts for
+   wholesale distribution, per product group on the monthly planning cycle — built so planners
+   trust the number enough to order against it. Role: Team lead & delivery.
+5. Data Analytics & Reporting (Data Engineering) — Every new report meant another fragile
+   dataflow — one Fabric lakehouse now feeds finance, sales, marketing and operations, with
+   numbers people trust at half the capacity cost. Result: Capacity cost cut by half. Role: Team
+   lead & delivery.
 
-404 Solutions (with partners)
-5. Agentic AI Insights Platform (Agentic AI, with WiserTech) — orchestration graphs coordinating
-   multiple agents across summarization, suggestion, and meeting preparation.
-6. Marketing Content Manager (Agentic AI, with Q Agency) — web search and deep-research agents
-   feeding long-form generation and blog drafting, publishing to connected channels.
-7. System Discovery & Backend Rebuild (Software Engineering, with Q Agency) — recovered what
-   an undocumented production system did, specified it, and rebuilt the backend against it.
-8. AI-Powered Document Summarizer (Generative AI, with Provectus) — summarization and
-   point-of-interest extraction over large multi-document sets on an agentic graph RAG
-   architecture.
-9. RiskFocus - Risk Summariser (Generative AI, with Provectus) — multi-document risk extraction
-   surfacing where documents reinforce, qualify, or contradict each other, with source lineage.
-10. Large-Scale Document ETL Pipelines (Cloud / AWS, with Provectus) — serverless ingestion and
-    transformation at scale; the substrate the summarization and risk systems run on.
+404 Solutions
+6. Crowd Analytics & Movement Prediction (Computer Vision, with ExpertGroup) — Crowd movement
+   prediction for a large-scale public event — forecasting where density is about to build so
+   visitors can be routed around congestion instead of into it. Role: Architect & tech lead.
+7. Document Chatbot with Live Lineage (Generative AI, with ExpertGroup) — A high-precision
+   multilingual chatbot over a living document set — every answer traceable to its source
+   passage, with the index updated in real time as documents change. Role: Team lead & delivery.
+8. Agentic AI Platform (Agentic AI, with WiserTech) — Board-meeting work split across many
+   manual jobs in two languages, now one agent platform — briefings ready sooner, minutes
+   faster, the whole process in one place.
+9. Marketing Content Manager (Agentic AI, with Q Agency) — Writers spent their time finding
+   sources and moving drafts between tools — research agents now feed drafting and publish
+   straight out, so more pieces get out in less time.
+10. Backend Build & System Discovery (Software Engineering, with Q Agency) — Nobody knew exactly
+    what an old production system did — system discovery turned that into a specification, and
+    the backend built to it replaced the old one without incidents.
+11. AI-Powered Document Summarizer (Generative AI, with Provectus) — Summaries and key points
+    across large multi-document sets, built on an agentic graph RAG architecture that keeps
+    context together where fixed-size chunking breaks it.
+12. RiskFocus — Risk Summarizer (Generative AI, with Provectus) — Multi-document risk extraction
+    that shows where documents reinforce, qualify or contradict each other, with every finding
+    traceable back to its source.
 
 Publicis Sapient
-11. Slingshot - AI Code Copilot (Generative AI) — enterprise copilot from proof of concept
-    through MVP to delivered product, with access-aware retrieval over internal code and docs.
-12. RAG Document Chatbot (Generative AI) — enterprise RAG chatbot evaluated for accuracy and
-    consistency rather than fluency.
-13. Auto Market Data Platform (Data Engineering) — multi-source ingestion combining production
-    databases and web-scraped market data into one normalized analytical layer.
+13. Slingshot — Enterprise AI Assistant (Generative AI) — Answers on code, the roadmap and hard
+    tasks were spread across repositories, Jira and Confluence — one enterprise assistant
+    reaches them all, in daily use and speeding onboarding.
+14. RAG Document Chatbot (Generative AI) — The same internal questions kept absorbing support
+    time — an enterprise RAG chatbot now answers them from the document estate, faster than
+    asking around, the same way every time.
+15. Automotive Market Data Platform (Data Engineering) — Production databases and web-scraped
+    market data combined into one normalized analytical layer, so downstream teams stopped re-
+    deriving the same joins and disagreeing.
 
 Valcon Netherlands
-14. Document Data Extractor Service (Software Engineering) — extraction and classification built
-    from scratch, delivered to production by a team of six he led.
-15. Voice-Enabled Support Chatbot (Conversational AI) — telephone-based voice support covering
-    the full conversational loop.
-16. Document Classification Service (Software Engineering) — containerized Azure microservices
-    for extraction, categorization, and structured storage.
+16. Document Processing Platform (Data Engineering) — Documents in every shape and structure,
+    normalized by ETL and ML classification into analytics — less manual tagging, and self-serve
+    reports on resource use for management. Role: Design owner · led team of 6.
+17. Telephone Voice Assistant (Conversational AI) — Callers reach a support line once every
+    other channel has failed them — a voice assistant now handles those calls around the clock,
+    taking support load off the team. Result: Support load down.
 
-Earlier
-17. Data Extraction Service (Data Engineering, Optimal Systems GmbH) — Azure extraction and
-    transformation platform feeding self-service Power BI reporting.
-18. SILICOFCM - EU Horizon 2020 (Research, BioIRC) — computational platform for in silico
-    clinical trials of familial cardiomyopathies; ECG and CPET analysis, statistical modelling,
-    patient-specific 3D heart models. Reference: https://silicofcm.eu/
+Optimal Systems GmbH
+18. Document Data Extraction & Classification (Machine Learning) — Data extracted from invoices
+    and labeled by ML text classification, so every field lands in its right place in the
+    database — with the classification models evaluated and tuned. Role: Data scientist.
+
+BioIRC
+19. SILICOFCM — EU Horizon 2020 (Research) — Clinical trials that cannot be run on patients, run
+    in silico — my part ran from ECG and CPET measurement through statistics and data governance
+    to the platform and its papers. Role: Measurement to publication.
+
+Personal and open source
+20. Mosaic — Document AI Bricks (Generative AI) — Pipelines treat every document and question
+    alike and never measure — Mosaic makes each a plan, keeps a brick only if it beats BM25, and
+    runs document-buddy; still a prototype.
+21. Role Skill Packs for Claude Code (Agentic AI) — Ask an assistant to review a repository and
+    you get estimates lost in a transcript — these Claude Code skills count with scripts, end in
+    one page, and save review time at work.
+22. Document Buddy — Your Documents (Generative AI) — A self-hosted chatbot over your own PDFs,
+    Word files and folders, with a page-quality gate and vision OCR, because the text layer of a
+    real document estate lies.
+23. PDF Assistant — Chat with One PDF (Generative AI) — Ask one PDF questions and every answer
+    cites the page it came from, while thumbs-up votes steer the model and retrieval settings of
+    later chats — frozen as a public demo.
+24. Mission Control (Agentic AI) — A local dashboard for long Claude Code runs — every step,
+    subagent and error, live across all sessions — with missions whose checks, run outside the
+    session, decide what is done.
+25. Co-Parenting App (Software Engineering) — A shared space for separated parents — agreements,
+    a custody calendar, the child's record — where anything concerning both needs the other's
+    consent, enforced in the database.
+26. Car Watch — Used-Car Prices (Machine Learning) — Used-car ads you browse on a Serbian
+    marketplace, saved by a Chrome extension rather than a scraper, with ads flagged when priced
+    below what similar cars cost.
 
 RESEARCH PROFILE
 Themes: machine learning for biomedical datasets, exercise physiology, cardiovascular research,

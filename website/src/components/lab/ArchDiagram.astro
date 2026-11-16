@@ -1,0 +1,257 @@
+---
+// One diagram of the ArchitectureLab: a flow of table boxes with arrows, the
+// side boxes that run across the whole flow, and one details entry per box.
+// Without JavaScript the boxes are inert and every details entry shows as a
+// list under the diagram; ArchitectureLab's script turns the boxes into
+// buttons that open one entry at a time. Content: data/architectures.json.
+interface Box {
+  id: string;
+  name: string;
+  rows: string[];
+  text: string;
+  risk?: string;
+  tools: string[];
+  sample?: { columns: string[]; rows: string[][]; note?: string };
+}
+
+interface Props {
+  prefix: string;
+  diagram: { id: string; label: string; tone: string; lede: string; flow: Box[]; side: Box[] };
+}
+
+const { prefix, diagram: d } = Astro.props;
+const base = `${prefix}-${d.id}`;
+const n = d.flow.length;
+const pad = (i: number) => String(i + 1).padStart(2, '0');
+const across = 'Across the whole flow';
+
+// Middle widths: four boxes per row, every second row runs right to left so
+// each arrow lands on the next box (a snake). The script needs none of this.
+const PER_ROW = 4;
+const snake = (i: number) => {
+  const row = Math.floor(i / PER_ROW);
+  const pos = i % PER_ROW;
+  const col = row % 2 === 0 ? pos + 1 : PER_ROW - pos;
+  const arrow = i === n - 1 ? 'none' : pos === PER_ROW - 1 ? 'down' : row % 2 === 0 ? 'right' : 'left';
+  return { row: row + 1, col, arrow };
+};
+
+const entries = [
+  ...d.flow.map((b, i) => ({ b, where: `Step ${i + 1} of ${n}` })),
+  ...d.side.map((b) => ({ b, where: across })),
+];
+---
+
+<section class={`ad tone-${d.tone}`} id={base} data-ad={d.id} aria-labelledby={`${base}-h`}>
+  <header class="ad-head">
+    <h3 id={`${base}-h`}>{d.label}</h3>
+    <p class="ad-lede">{d.lede}</p>
+  </header>
+
+  <ol class="ad-flow" style={`--n:${n}`} aria-label={`${d.label}, in order`}>
+    {d.flow.map((b, i) => {
+      const s = snake(i);
+      return (
+        <li class="ad-step" data-step={i} data-arrow-m={s.arrow} style={`--i:${i + 1};--cm:${s.col};--rm:${s.row}`}>
+          <button class="tbox" type="button" data-box={b.id} aria-controls={`${base}-${b.id}`} disabled>
+            <span class="tbox-head"><span class="tbox-no mono">{pad(i)}</span><span class="tbox-name">{b.name}</span></span>
+            <span class="tbox-rows">{b.rows.map((r) => <span class="tbox-row mono">{r}</span>)}</span>
+          </button>
+          {i < n - 1 && <span class="ad-arrow" aria-hidden="true"></span>}
+        </li>
+      );
+    })}
+  </ol>
+
+  <div class="ad-side">
+    <p class="ad-side-label mono">{across}</p>
+    <ul class="ad-side-boxes" aria-label={`${d.label}, ${across.toLowerCase()}`}>
+      {d.side.map((b) => (
+        <li>
+          <button class="tbox tbox-side" type="button" data-box={b.id} aria-controls={`${base}-${b.id}`} disabled>
+            <span class="tbox-head"><span class="tbox-no mono">+</span><span class="tbox-name">{b.name}</span></span>
+            <span class="tbox-rows">{b.rows.map((r) => <span class="tbox-row mono">{r}</span>)}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="ad-details">
+    {entries.map(({ b, where }) => (
+      <article class:list={['ad-detail', { 'has-sample': b.sample }]} id={`${base}-${b.id}`} data-detail={b.id} aria-labelledby={`${base}-${b.id}-h`}>
+        <div class="ad-detail-main">
+          <p class="ad-where mono">{where}</p>
+          <h4 id={`${base}-${b.id}-h`}>{b.name}</h4>
+          <p class="ad-text">{b.text}</p>
+          {b.risk && <p class="ad-risk"><span class="mono">What can go wrong</span>{b.risk}</p>}
+          <p class="ad-label mono">Tools</p>
+          <ul class="ad-tools">{b.tools.map((t) => <li class="mono">{t}</li>)}</ul>
+        </div>
+        {b.sample && (
+          <figure class="ad-sample">
+            <figcaption><span class="ad-synth mono">Synthetic sample row</span>{b.sample.note}</figcaption>
+            <table>
+              <thead><tr>{b.sample.columns.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+              <tbody>
+                {b.sample.rows.map((r) => (
+                  <tr>{r.map((v, j) => <td data-label={b.sample?.columns[j]}>{v}</td>)}</tr>
+                ))}
+              </tbody>
+            </table>
+          </figure>
+        )}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .tone-bio { --tone: var(--bio); --tone-rgb: var(--bio-rgb); --tone-glow: var(--glow-bio); }
+  .tone-ai { --tone: var(--ai); --tone-rgb: var(--ai-rgb); --tone-glow: var(--glow-ai); }
+
+  .ad { --gap-x: 1.25rem; --gap-y: 1.5rem; }
+  .ad[hidden] { display: none; }
+  .ad + .ad { margin-top: 3rem; }
+  :global(.is-enhanced) .ad + .ad { margin-top: 0; }
+  .ad-head { display: grid; gap: 0.35rem; margin-bottom: 1.4rem; max-width: 62ch; }
+  .ad-head h3 { font-size: 1.15rem; color: var(--tone); }
+  .ad-lede { color: var(--text-dim); }
+
+  /* --- Flow: narrow = one column, arrows down ------------------------------ */
+  .ad-flow { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--gap-y); column-gap: var(--gap-x); }
+  .ad-step { position: relative; display: flex; min-width: 0; }
+
+  .ad-arrow {
+    position: absolute; z-index: 1; height: 10px; width: var(--gap-y);
+    left: 50%; top: 100%; transform-origin: 0 0; transform: rotate(90deg) translateY(-50%);
+    color: var(--border-strong); transition: color 0.3s var(--ease);
+  }
+  .ad-arrow::before { content: ''; position: absolute; left: 3px; right: 7px; top: 4px; height: 2px; background: currentColor; }
+  .ad-arrow::after {
+    content: ''; position: absolute; right: 2px; top: 0; width: 7px; height: 10px;
+    background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .ad-step.is-past .ad-arrow, .ad-step.is-on .ad-arrow { color: var(--tone); }
+
+  /* --- Table box ----------------------------------------------------------- */
+  .tbox {
+    flex: 1; min-width: 0; padding: 0; display: grid; grid-template-columns: minmax(6.75rem, 36%) minmax(0, 1fr);
+    text-align: left; background: var(--bg-raised); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); overflow: hidden;
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .tbox:disabled { cursor: default; color: var(--text); opacity: 1; }
+  .tbox-head {
+    display: flex; align-items: baseline; gap: 0.45rem; padding: 0.5rem 0.65rem;
+    background: rgba(var(--tone-rgb), 0.08); border-right: 1px solid var(--border);
+    transition: background 0.25s var(--ease), color 0.25s var(--ease);
+  }
+  .tbox-no { flex: none; font-size: 0.75rem; color: var(--tone); }
+  .tbox-name { font-size: 0.9rem; font-weight: 600; line-height: 1.25; color: var(--text); overflow-wrap: break-word; hyphens: auto; }
+  .tbox-rows { display: flex; flex-direction: column; justify-content: center; }
+  .tbox-row { font-size: 0.75rem; line-height: 1.4; color: var(--text-dim); padding: 0.3rem 0.65rem; }
+  .tbox-row + .tbox-row { border-top: 1px solid var(--border); }
+
+  :global(.is-enhanced) .tbox:hover { border-color: rgba(var(--tone-rgb), 0.6); }
+  .tbox:focus-visible { outline-color: var(--tone); }
+  .tbox[aria-pressed='true'] { border-color: var(--tone); box-shadow: 0 0 22px -8px var(--tone-glow); }
+  .tbox[aria-pressed='true'] .tbox-head { background: var(--tone); }
+  .tbox[aria-pressed='true'] .tbox-no,
+  .tbox[aria-pressed='true'] .tbox-name { color: var(--on-accent); }
+
+  /* --- Side boxes ---------------------------------------------------------- */
+  .ad-side { margin-top: 1.6rem; }
+  .ad-side-label {
+    display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.8rem;
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint);
+  }
+  .ad-side-label::after { content: ''; flex: 1; border-top: 1px dashed var(--border-strong); }
+  .ad-side-boxes { display: grid; gap: 0.8rem; }
+  .ad-side-boxes li { display: flex; }
+  .tbox-side { border-style: dashed; }
+
+  /* --- Details ------------------------------------------------------------- */
+  .ad-details { display: grid; gap: 1rem; margin-top: 1.6rem; }
+  .ad-detail {
+    display: grid; gap: 1.2rem 2rem; padding: clamp(1.1rem, 2.5vw, 1.6rem);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    border-top: 2px solid var(--tone); scroll-margin-top: 5.5rem;
+  }
+  .ad-detail[hidden] { display: none; }
+  .ad-detail-main { min-width: 0; }
+  .ad-where { margin: 0 0 0.3rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone); }
+  .ad-detail h4 { margin: 0 0 0.6rem; font-size: clamp(1.15rem, 2vw, 1.35rem); }
+  .ad-text { margin: 0 0 0.8rem; color: var(--text-dim); max-width: 62ch; }
+  .ad-risk {
+    display: grid; gap: 0.2rem; margin: 0 0 0.9rem; padding: 0.6rem 0.8rem; max-width: 62ch;
+    border-left: 2px solid var(--tone); background: rgba(var(--tone-rgb), 0.06); color: var(--text);
+  }
+  .ad-risk .mono { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone); }
+  .ad-label { margin: 0 0 0.4rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .ad-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .ad-tools li {
+    font-size: 0.75rem; color: var(--tone); padding: 0.2rem 0.65rem; border-radius: 999px;
+    border: 1px solid rgba(var(--tone-rgb), 0.3); background: rgba(var(--tone-rgb), 0.07);
+  }
+
+  .ad-sample { margin: 0; min-width: 0; }
+  .ad-sample figcaption { margin-bottom: 0.6rem; font-size: 0.85rem; color: var(--text-dim); }
+  .ad-synth {
+    display: inline-block; margin-right: 0.55rem; padding: 0.05rem 0.55rem; border-radius: 999px;
+    font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tone);
+    border: 1px dashed rgba(var(--tone-rgb), 0.5);
+  }
+  .ad-sample table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.75rem; }
+  .ad-sample th {
+    text-align: left; font-weight: 500; white-space: nowrap; color: var(--tone);
+    padding: 0.45rem 0.6rem; background: rgba(var(--tone-rgb), 0.07); border-bottom: 1px solid var(--border-strong);
+  }
+  .ad-sample td {
+    padding: 0.45rem 0.6rem; vertical-align: top; color: var(--text); border-bottom: 1px solid var(--border);
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+
+  /* Narrow: each sample row becomes a small card of label and value. */
+  @container alab (max-width: 599.98px) {
+    .ad-sample thead { display: none; }
+    .ad-sample table, .ad-sample tbody, .ad-sample tr { display: block; }
+    .ad-sample tr { padding: 0.3rem 0; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .ad-sample tr + tr { margin-top: 0.5rem; }
+    .ad-sample td { display: grid; grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr); gap: 0.6rem; border: 0; padding: 0.25rem 0.6rem; }
+    .ad-sample td::before { content: attr(data-label); color: var(--tone); white-space: normal; }
+  }
+
+  @container alab (min-width: 560px) {
+    .ad-side-boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tbox { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+    .tbox-head { border-right: 0; border-bottom: 1px solid var(--border); }
+    .tbox-rows { justify-content: flex-start; }
+  }
+
+  /* Middle: four per row as a snake, rows of arrows between them. */
+  @container alab (min-width: 560px) and (max-width: 1079.98px) {
+    .ad-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ad-step { grid-column: var(--cm); grid-row: var(--rm); }
+    .ad-step[data-arrow-m='right'] .ad-arrow,
+    .ad-step[data-arrow-m='left'] .ad-arrow { width: var(--gap-x); top: 50%; transform-origin: 50% 50%; }
+    .ad-step[data-arrow-m='right'] .ad-arrow { left: 100%; transform: translateY(-50%); }
+    .ad-step[data-arrow-m='left'] .ad-arrow { left: auto; right: 100%; transform: translateY(-50%) scaleX(-1); }
+  }
+
+  /* Wide: the whole flow in one row, arrows to the right. */
+  @container alab (min-width: 1080px) {
+    .ad-flow { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+    .ad-step { grid-column: var(--i); grid-row: 1; }
+    .ad-arrow { width: var(--gap-x); left: 100%; top: 50%; transform-origin: 50% 50%; transform: translateY(-50%); }
+  }
+
+  /* As a table, the first column keeps its value on one line ("sales_0203.json"). */
+  @container alab (min-width: 600px) {
+    .ad-sample td:first-child { white-space: nowrap; }
+  }
+
+  @container alab (min-width: 900px) {
+    .ad-detail.has-sample { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: start; }
+  }
+</style>

@@ -2,8 +2,8 @@
 
 ## Why
 
-A personal portfolio and research site: one public place that shows the work (project case studies), the career,
-the collaborations, the skills and the peer-reviewed research, with a CV to download. It replaced an earlier
+A personal portfolio and research site: one public place that shows the work (a short description per
+project), the career, the collaborations, the skills and the peer-reviewed research, with a CV to download. It replaced an earlier
 hand-written site.
 
 ## For whom
@@ -17,9 +17,9 @@ They read it in a browser, often on a phone, often once.
   research page computes its numbers from the publication list, and so does the home dashboard, which also
   counts the projects, tools and career; only the years of experience are typed in.
 - **A typo fails the build.** Every collection has a schema, so a broken frontmatter field never ships as an empty
-  page.
-- **Readable everywhere.** Static pages that work without JavaScript, respect reduced motion and keep the
-  animations off when they are not on screen.
+  block.
+- **Readable everywhere.** Static pages that work without JavaScript, apart from the home dashboard's panels,
+  respect reduced motion and keep the animations off when they are not on screen.
 - **One source for the CV.** The CV is rendered from one HTML file that mirrors the site data.
 
 What the site offers, feature by feature, is in the [feature catalogue](features/README.md).

@@ -8,7 +8,7 @@ const projects = defineCollection({
     title: z.string(),
     category: z.string(),
     summary: z.string(),
-    // Featured projects get a full case-study treatment on the home page.
+    // Featured projects are the list in the dashboard's Projects panel.
     featured: z.boolean().default(false),
     order: z.number().default(99),
     period: z.string().optional(),
@@ -33,7 +33,7 @@ const experience = defineCollection({
     start: z.string(),
     end: z.string().nullable(),
     current: z.boolean().default(false),
-    // Set when a date is a placeholder awaiting confirmation. Timeline.astro
+    // Set when a date is a placeholder awaiting confirmation. hive/JourneyBoard.astro
     // warns on every build while any entry still has this set.
     dateUnconfirmed: z.boolean().default(false),
     summary: z.string(),

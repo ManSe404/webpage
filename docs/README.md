@@ -18,9 +18,10 @@ Read in this order:
 | 9 | [reference/data-model.md](reference/data-model.md) | Where each piece of content lives and its fields | current | 2026-11-16 |
 | 10 | [reference/codebase.md](reference/codebase.md) | Where each part lives in the code | current | 2026-11-16 |
 | 11 | [guides/development.md](guides/development.md) | The dev loop, adding a project or a publication, the CV | current | 2026-11-16 |
-| 12 | [guides/writing-a-project.md](guides/writing-a-project.md) | The two project templates, which card shows which field, and how many characters each holds | current | 2026-11-16 |
+| 12 | [guides/writing-a-project.md](guides/writing-a-project.md) | The two project templates, where each field of a project shows, and what is known about lengths | current | 2026-11-16 |
 | 13 | [adr/0001-content-as-data-files.md](adr/0001-content-as-data-files.md) | Why content is Markdown, JSON and CSV read at build time | accepted | 2026-11-16 |
 | 14 | [adr/0002-every-pull-request-runs-the-required-build.md](adr/0002-every-pull-request-runs-the-required-build.md) | Why every pull request builds the site, even a docs-only one | accepted | 2026-11-16 |
+| 15 | [adr/0003-projects-as-short-cards-without-pages.md](adr/0003-projects-as-short-cards-without-pages.md) | Why a project is a short card with a popup and has no page of its own | accepted | 2026-11-16 |
 
 `website/README.md` is the short guide next to the code: commands and where content lives.
 

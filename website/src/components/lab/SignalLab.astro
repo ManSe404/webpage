@@ -1,0 +1,362 @@
+---
+// Signal lab: a synthetic ECG run through the steps a real recording needs
+// (baseline removal, smoothing, R-peak detection), with two sliders to break
+// and repair it. The default view is also computed here at build time, so the
+// page shows a real picture and real numbers before or without JavaScript;
+// the script below recomputes everything in the browser from the same code.
+import * as sig from '../../lib/signal';
+
+interface Props {
+  /** Heading of the demo, rendered as an h3: the page wraps it in its own section. */
+  title?: string;
+}
+
+const { title = 'From noise to heartbeat.' } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 8);
+const view = sig.analyse(sig.record(), sig.DEFAULT_NOISE / 100, sig.DEFAULT_FILTER);
+const out = sig.readout(view);
+const stages = ['Raw', 'Filtered', 'Peaks'];
+const ticks = [0, 2, 4, 6, 8, 10];
+const R = 15.915; // circle radius in the 42-unit donut box
+---
+
+<div class="lab" data-signal-lab data-stage="peaks">
+  <header class="lab-head">
+    <p class="lab-kicker mono">Signal lab</p>
+    <h3>{title}</h3>
+    <p class="lab-note">
+      <strong>Synthetic signal, generated in your browser.</strong> Ten seconds of ECG-like data at
+      250&nbsp;Hz from a beat model, with breathing drift, mains hum and noise mixed in. No patient
+      data, and not a product: a small look at the steps behind a heart-rate number.
+    </p>
+  </header>
+
+  <div class="lab-grid">
+    <div class="lab-main">
+      <div class="lab-bar">
+        <fieldset class="stages">
+          <legend class="lab-label mono">Stage</legend>
+          {stages.map((s, i) => (
+            <label class="stage">
+              <input type="radio" name={`stage-${uid}`} value={s.toLowerCase()} checked={i === 2} disabled />
+              <span><span class="mono">{i + 1}</span>{s}</span>
+            </label>
+          ))}
+        </fieldset>
+        <div class="lab-actions">
+          <button type="button" class="lab-btn mono" data-reseed disabled>New signal</button>
+          <button type="button" class="lab-btn mono" data-reset disabled>Reset</button>
+        </div>
+      </div>
+
+      <figure class="plot">
+        <div class="plot-area">
+          <svg viewBox="0 0 1000 100" preserveAspectRatio="none" role="img" data-plot
+            aria-label="Synthetic ECG trace over ten seconds, peaks stage">
+            <path class="trace trace-raw" d={sig.tracePath(view.raw)} data-raw />
+            <path class="trace trace-filtered" d={sig.tracePath(view.filtered)} data-filtered />
+          </svg>
+          <div class="marks" data-marks aria-hidden="true">
+            {view.markers.map((m) => (
+              <span class={`mark is-${m.kind}`} style={`left:${m.left.toFixed(2)}%;top:${m.top.toFixed(2)}%`}></span>
+            ))}
+          </div>
+        </div>
+        <div class="axis mono" aria-hidden="true">
+          {ticks.map((t) => <span style={`left:${t * 10}%`}>{t} s</span>)}
+        </div>
+        <figcaption class="legend">
+          <span><i class="key key-raw"></i>Raw</span>
+          <span data-k="filtered"><i class="key key-filtered"></i>Filtered</span>
+          <span data-k="marks"><i class="mark is-clean"></i>R peak found</span>
+          <span data-k="marks"><i class="mark is-false"></i>False peak</span>
+          <span data-k="marks"><i class="mark is-missed"></i>Missed beat</span>
+          <span class="seed mono">seed <span data-seed>{sig.DEFAULT_SEED}</span></span>
+        </figcaption>
+      </figure>
+
+      <div class="sliders">
+        <div class="ctl">
+          <label for={`noise-${uid}`}>Noise</label>
+          <output class="mono" for={`noise-${uid}`} data-noise-out>{sig.DEFAULT_NOISE} %</output>
+          <input id={`noise-${uid}`} type="range" min="0" max="100" step="5" value={sig.DEFAULT_NOISE} disabled data-noise />
+        </div>
+        <div class="ctl">
+          <label for={`filter-${uid}`}>Filter strength</label>
+          <output class="mono" for={`filter-${uid}`} data-filter-out>{sig.filterLabel(sig.DEFAULT_FILTER)}</output>
+          <input id={`filter-${uid}`} type="range" min="0" max={sig.FILTER_STEPS} step="1" value={sig.DEFAULT_FILTER}
+            aria-valuetext={sig.filterLabel(sig.DEFAULT_FILTER)} disabled data-filter />
+        </div>
+      </div>
+    </div>
+
+    <aside class="stats" aria-label="Measured from the detected peaks">
+      <dl class="figs">
+        <div>
+          <dt>Heart rate</dt>
+          <dd><span class="big mono" data-bpm>{out.bpm}</span> <span class="unit">bpm</span></dd>
+          <dd class="truth mono">generated <span data-bpm-true>{out.bpmTrue}</span></dd>
+        </div>
+        <div>
+          <dt>HRV · RMSSD</dt>
+          <dd><span class="big mono" data-rmssd>{out.rmssd}</span> <span class="unit">ms</span></dd>
+          <dd class="truth mono">generated <span data-rmssd-true>{out.rmssdTrue}</span></dd>
+        </div>
+        <div class="wide">
+          <dt>Beats detected</dt>
+          <dd><span class="big mono" data-found>{out.found}</span> <span class="unit">of <span data-generated>{out.generated}</span> generated</span></dd>
+        </div>
+      </dl>
+      <div class="donut-row">
+        <div class="donut">
+          <svg viewBox="0 0 42 42" aria-hidden="true">
+            <circle class="donut-track" cx="21" cy="21" r={R} />
+            {sig.donut(view.score).map((d) => (
+              <circle class={`seg seg-${d.kind}`} cx="21" cy="21" r={R} pathLength="100"
+                stroke-dasharray={d.dash} stroke-dashoffset={d.offset} data-seg={d.kind} />
+            ))}
+          </svg>
+          <p class="donut-mid"><span class="mono" data-share>{out.share}%</span><span>clean</span></p>
+        </div>
+        <ul class="donut-key">
+          <li><i class="sw sw-clean"></i>Clean <span class="mono" data-n="clean">{view.score.clean}</span></li>
+          <li><i class="sw sw-missed"></i>Missed <span class="mono" data-n="missed">{view.score.missed}</span></li>
+          <li><i class="sw sw-false"></i>False <span class="mono" data-n="false">{view.score.false}</span></li>
+        </ul>
+      </div>
+      <p class="sr-only" aria-live="polite" data-live></p>
+    </aside>
+  </div>
+
+  <noscript>
+    <p class="lab-nojs">The controls need JavaScript. The trace and numbers above show the default settings, computed when this page was built.</p>
+  </noscript>
+</div>
+
+<script>
+  import * as sig from '../../lib/signal';
+
+  document.querySelectorAll<HTMLElement>('[data-signal-lab]').forEach((lab) => {
+    const $ = <T extends Element>(sel: string) => lab.querySelector<T>(sel)!;
+    const noise = $<HTMLInputElement>('[data-noise]');
+    const strength = $<HTMLInputElement>('[data-filter]');
+    const radios = [...lab.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+    const plot = $<SVGSVGElement>('[data-plot]');
+    const text = (sel: string, value: string | number) => ($<HTMLElement>(sel).textContent = String(value));
+
+    let seed = sig.DEFAULT_SEED;
+    let rec = sig.record(seed);
+    let timer = 0;
+
+    const setStage = () => {
+      const stage = radios.find((r) => r.checked)?.value ?? 'peaks';
+      lab.dataset.stage = stage;
+      plot.setAttribute('aria-label', `Synthetic ECG trace over ten seconds, ${stage} stage`);
+    };
+
+    const render = (announce: boolean) => {
+      const level = Number(noise.value);
+      const step = Number(strength.value);
+      const view = sig.analyse(rec, level / 100, step);
+      const out = sig.readout(view);
+
+      $<SVGPathElement>('[data-raw]').setAttribute('d', sig.tracePath(view.raw));
+      $<SVGPathElement>('[data-filtered]').setAttribute('d', sig.tracePath(view.filtered));
+      $<HTMLElement>('[data-marks]').innerHTML = view.markers
+        .map((m) => `<span class="mark is-${m.kind}" style="left:${m.left.toFixed(2)}%;top:${m.top.toFixed(2)}%"></span>`)
+        .join('');
+
+      text('[data-noise-out]', `${level} %`);
+      text('[data-filter-out]', sig.filterLabel(step));
+      strength.setAttribute('aria-valuetext', sig.filterLabel(step));
+      text('[data-seed]', seed);
+      text('[data-bpm]', out.bpm);
+      text('[data-bpm-true]', out.bpmTrue);
+      text('[data-rmssd]', out.rmssd);
+      text('[data-rmssd-true]', out.rmssdTrue);
+      text('[data-found]', out.found);
+      text('[data-generated]', out.generated);
+      text('[data-share]', `${out.share}%`);
+      for (const d of sig.donut(view.score)) {
+        const seg = $<SVGCircleElement>(`[data-seg="${d.kind}"]`);
+        seg.setAttribute('stroke-dasharray', d.dash);
+        seg.setAttribute('stroke-dashoffset', d.offset);
+        text(`[data-n="${d.kind}"]`, view.score[d.kind]);
+      }
+
+      // Screen readers hear one summary once the slider rests, not every step.
+      if (!announce) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const { clean, missed, false: wrong } = view.score;
+        text('[data-live]', `Heart rate ${out.bpm} beats per minute, RMSSD ${out.rmssd} milliseconds. ` +
+          `${clean} of ${out.generated} beats detected cleanly, ${missed} missed, ${wrong} false.`);
+      }, 600);
+    };
+
+    noise.addEventListener('input', () => render(true));
+    strength.addEventListener('input', () => render(true));
+    radios.forEach((r) => r.addEventListener('change', setStage));
+
+    $<HTMLButtonElement>('[data-reseed]').addEventListener('click', () => {
+      seed = 1 + Math.floor(Math.random() * 99999);
+      rec = sig.record(seed);
+      render(true);
+    });
+
+    $<HTMLButtonElement>('[data-reset]').addEventListener('click', () => {
+      seed = sig.DEFAULT_SEED;
+      rec = sig.record(seed);
+      noise.value = String(sig.DEFAULT_NOISE);
+      strength.value = String(sig.DEFAULT_FILTER);
+      radios.forEach((r) => (r.checked = r.value === 'peaks'));
+      setStage();
+      render(true);
+    });
+
+    // The controls ship disabled so a page without JavaScript shows no dead
+    // inputs; switch them on and redraw from the browser's own signal (the
+    // browser may also have restored slider positions from a previous visit).
+    lab.querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button').forEach((el) => (el.disabled = false));
+    setStage();
+    render(false);
+  });
+</script>
+
+<style>
+  .lab {
+    color-scheme: dark;
+    padding: clamp(1.1rem, 2.5vw, 1.6rem);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .lab-kicker { margin: 0 0 0.35rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bio); }
+  .lab-head h3 { margin: 0 0 0.45rem; }
+  .lab-note { margin: 0; max-width: 62rem; font-size: 0.9rem; color: var(--text-dim); }
+  .lab-note strong { color: var(--text); font-weight: 600; }
+
+  .lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 17.5rem; gap: 1.4rem; margin-top: 1.1rem; }
+  .lab-main { min-width: 0; display: grid; gap: 0.9rem; align-content: start; }
+
+  .lab-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.6rem 1rem; }
+  .stages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+  .lab-label { float: left; margin-right: 0.4rem; padding: 0; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .stage { position: relative; display: inline-flex; align-items: center; }
+  .stage + .stage::before { content: '→'; margin-right: 0.35rem; font-size: 0.8rem; color: var(--text-faint); }
+  .stage input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+  .stage > span {
+    display: inline-flex; align-items: center; gap: 0.4rem; min-height: 34px; padding: 0 0.75rem;
+    font-size: 0.85rem; color: var(--text-dim); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .stage > span .mono { font-size: 0.75rem; color: var(--text-faint); }
+  .stage:hover > span { color: var(--text); border-color: var(--border-strong); }
+  .stage input:checked + span { color: var(--bio); border-color: rgba(var(--bio-rgb), 0.6); background: rgba(var(--bio-rgb), 0.1); }
+  .stage input:checked + span .mono { color: var(--bio); }
+  .stage input:focus-visible + span { outline: 2px solid var(--bio); outline-offset: 2px; }
+  .lab-actions { display: flex; gap: 0.4rem; }
+  .lab-btn {
+    min-height: 34px; padding: 0 0.7rem; font-size: 0.75rem; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+  }
+  .lab-btn:hover:not(:disabled) { color: var(--text); border-color: var(--border-strong); }
+  .lab :disabled, .lab :disabled + span { cursor: default; opacity: 0.55; }
+
+  .plot { margin: 0; }
+  .plot-area {
+    position: relative; height: clamp(170px, 24vw, 230px); overflow: hidden;
+    background-color: rgba(var(--bg-rgb), 0.55);
+    /* ECG paper: a line every second and every 0.2 s across, every 0.5 mV down. */
+    background-image:
+      linear-gradient(90deg, rgba(var(--bio-rgb), 0.11) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--bio-rgb), 0.04) 1px, transparent 1px),
+      linear-gradient(rgba(var(--bio-rgb), 0.05) 1px, transparent 1px);
+    background-size: 10% 100%, 2% 100%, 100% calc(100% / 7);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+  }
+  .plot-area svg { width: 100%; height: 100%; max-width: none; }
+  .trace { fill: none; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+  .trace-raw { stroke: var(--text-dim); stroke-width: 1; opacity: 0.22; }
+  .trace-filtered { stroke: var(--bio); stroke-width: 1.6; filter: drop-shadow(0 0 3px rgba(var(--bio-rgb), 0.45)); }
+  .lab[data-stage='raw'] .trace-raw { opacity: 0.9; stroke-width: 1.2; }
+  .lab[data-stage='raw'] .trace-filtered { opacity: 0; }
+  .lab:not([data-stage='peaks']) .marks { opacity: 0; visibility: hidden; }
+
+  /* Markers are rebuilt with innerHTML, which scoped styles do not reach. */
+  .marks { position: absolute; inset: 0; pointer-events: none; }
+  .lab :global(.mark) { position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%); }
+  .lab :global(.mark.is-clean) { background: var(--ai); box-shadow: 0 0 8px var(--glow-ai); }
+  .lab :global(.mark.is-false) { background: var(--ai); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--ai); }
+  .lab :global(.mark.is-missed) { width: 13px; height: 13px; border: 1.5px dashed var(--text); background: transparent; }
+
+  .axis { position: relative; height: 1.3rem; margin-top: 0.2rem; font-size: 0.75rem; color: var(--text-faint); }
+  .axis span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+  .axis span:first-child { transform: none; }
+  .axis span:last-child { transform: translateX(-100%); }
+  .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 1.1rem; margin-top: 0.35rem; font-size: 0.8rem; color: var(--text-dim); }
+  .legend > span { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .legend :global(.mark) { position: static; transform: none; flex: none; }
+  .lab[data-stage='raw'] [data-k='filtered'], .lab:not([data-stage='peaks']) [data-k='marks'] { opacity: 0.4; }
+  .key { display: inline-block; width: 16px; height: 2px; border-radius: 1px; }
+  .key-raw { background: var(--text-dim); opacity: 0.6; }
+  .key-filtered { background: var(--bio); }
+  .seed { margin-left: auto; font-size: 0.75rem; color: var(--text-faint); }
+
+  .sliders { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem 1.6rem; }
+  .ctl { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0.15rem 0.8rem; }
+  .ctl label { font-size: 0.9rem; font-weight: 600; }
+  .ctl output { font-size: 0.8rem; color: var(--bio); }
+  .ctl input { grid-column: 1 / -1; width: 100%; margin: 0.25rem 0 0; accent-color: var(--bio); cursor: pointer; }
+
+  .stats { display: grid; gap: 1rem; align-content: start; }
+  .figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin: 0; }
+  .figs > div { padding: 0.65rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .figs .wide { grid-column: 1 / -1; }
+  .figs dt { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .figs dd { margin: 0.2rem 0 0; }
+  .big { font-size: 1.6rem; line-height: 1.1; color: var(--bio); }
+  .unit { font-size: 0.8rem; color: var(--text-dim); }
+  .truth { font-size: 0.75rem; color: var(--text-faint); }
+
+  .donut-row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1rem; align-items: center; }
+  .donut { position: relative; }
+  .donut svg { width: 100%; height: auto; }
+  .donut circle { fill: none; stroke-width: 5; }
+  .donut-track { stroke: var(--surface-hover); }
+  .seg-clean { stroke: var(--bio); }
+  .seg-missed { stroke: var(--text-faint); }
+  .seg-false { stroke: var(--ai); }
+  .donut-mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; margin: 0; line-height: 1.15; }
+  .donut-mid .mono { font-size: 1.15rem; color: var(--text); }
+  .donut-mid span:last-child { font-size: 0.75rem; color: var(--text-faint); }
+  .donut-key { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; font-size: 0.85rem; color: var(--text-dim); }
+  .donut-key li { display: flex; align-items: center; gap: 0.5rem; }
+  .donut-key .mono { margin-left: auto; color: var(--text); }
+  .sw { flex: none; width: 10px; height: 10px; border-radius: 2px; }
+  .sw-clean { background: var(--bio); }
+  .sw-missed { background: var(--text-faint); }
+  .sw-false { background: var(--ai); }
+
+  .lab-nojs { margin: 1rem 0 0; padding: 0.6rem 0.8rem; font-size: 0.85rem; color: var(--text-dim); border-left: 2px solid var(--bio); background: var(--surface); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .trace { transition: opacity 0.3s var(--ease); }
+    .marks { transition: opacity 0.3s var(--ease), visibility 0.3s; }
+    .seg { transition: stroke-dasharray 0.35s var(--ease), stroke-dashoffset 0.35s var(--ease); }
+  }
+
+  @media (max-width: 900px) {
+    .lab-grid { grid-template-columns: minmax(0, 1fr); }
+    .stats { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+  }
+  @media (max-width: 640px) {
+    .sliders, .stats { grid-template-columns: minmax(0, 1fr); }
+    .seed { margin-left: 0; }
+    .lab-bar, .stages { width: 100%; }
+    .stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .lab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .stage + .stage::before { content: none; }
+    .stage > span { width: 100%; justify-content: center; padding: 0 0.4rem; }
+  }
+</style>
