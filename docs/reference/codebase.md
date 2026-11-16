@@ -39,7 +39,7 @@ website/                      the Astro project
       lab/ArchitectureLab.astro data platform and AI system diagrams with a switch; draws each with lab/ArchDiagram.astro
       Section.astro           section wrapper with eyebrow, title and lede
       Contact.astro           contact channels
-      Nav.astro               menu (Projects, Career, 404 Solutions, Research, Contact), CV download, mobile toggle
+      Nav.astro               menu (Projects, Research, 404 Solutions, Contact), CV download, mobile toggle
       Footer.astro            footer links
       EcgTrace.astro          animated ECG trace on a canvas
       NodeField.astro         animated node-and-edge field behind the dashboard

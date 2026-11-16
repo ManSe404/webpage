@@ -83,8 +83,8 @@ lights up as the page scrolls; a click on a marker scrolls to its section.
   dashboard panels the menu opens (`/#experience`, `/#consultancy`). **Open:** whether a rail
   still earns its place on a page this short, and if it does, which markers it carries.
 - **Touches:** `website/src/pages/index.astro`, a new component for the rail, `website/src/components/Nav.astro`.
-- **The top menu changes with it.** Career, 404 Solutions and Contact are in-page links today; Career and
-  404 Solutions open a dashboard panel (`components/hive/HiveDashboard.astro`). Open: which links stay in the
+- **The top menu changes with it.** 404 Solutions and Contact are in-page links today; 404 Solutions
+  opens a dashboard panel (`components/hive/HiveDashboard.astro`). Open: which links stay in the
   top menu (for example only the pages: Projects, Research and the CV) and which the rail takes over.
 - **Conventions that apply** ([development guide](guides/development.md#conventions)): no UI framework, a small
   inline script, plain anchor links so it works without JavaScript, smooth scrolling only without
@@ -111,7 +111,7 @@ Rework how projects look on the home page and on `/projects`. The project Markdo
   on `/projects/` with field and type-of-work filters (`components/hive/ProjectHive.astro`, `pages/projects/index.astro`).
   The popup is a project's whole description: the case-study pages and the Markdown body of every project file
   are removed, and so are the list, the big card and the Selected work section. The career is a timeline,
-  newest first, in the dashboard's Years panel (`components/hive/HivePanels.astro`).
+  newest first, in the dashboard's Career panel (`components/hive/HivePanels.astro`).
 - **Open:** a measured `Result` metric for each project: two have one today and none of the six featured, so
   the rest show their first impact line as the result.
 - **Open:** what to do with the frontmatter nothing shows any more: `impact` lines after the first, and

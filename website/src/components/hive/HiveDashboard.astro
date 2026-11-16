@@ -27,7 +27,6 @@ const now = inProgress(roles, projects, education.degrees);
 const consultancy = consultancyPartners(projects);
 const years = profile.stats.find((s) => /years/i.test(s.label)) ?? { value: 10, suffix: '+' };
 const clientWork = projects.filter((p) => !isOwnWork(p.data.org)).length;
-const firstYear = roles.at(-1)?.data.start.slice(0, 4);
 const consultancyRole = roles.find((r) => r.data.company === '404 Solutions');
 
 type Cell = {
@@ -41,7 +40,7 @@ type Cell = {
 
 const cells: Cell[] = [
   { id: 'projects', label: 'Projects', value: projects.length, caption: `${clientWork} client · ${projects.length - clientWork} own`, href: '/#work', tone: 'ai' },
-  { id: 'experience', label: 'Years', value: years.value, suffix: years.suffix, caption: `${roles.length} roles since ${firstYear}`, href: profile.cv, tone: 'bio' },
+  { id: 'experience', label: 'Career', value: years.value, suffix: years.suffix, caption: `years · ${roles.length} roles`, href: profile.cv, tone: 'bio' },
   { id: 'research', label: 'Papers', value: publications.length, caption: `${citations} citations`, href: '/research/', tone: 'bio' },
   { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/#lab', tone: 'bio', jump: true },
   { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },

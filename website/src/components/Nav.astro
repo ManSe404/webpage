@@ -4,12 +4,11 @@ import { withBase } from '../lib/url';
 
 // Pages and home-page sections, in the order the home page tells the story.
 // `page` marks a link that owns a route, so it can be highlighted while you
-// are on it (or below it, as on a case study under /projects).
+// are on it.
 const links = [
   { label: 'Projects', href: withBase('/projects'), page: true },
-  { label: 'Career', href: withBase('/#experience'), page: false },
-  { label: '404 Solutions', href: withBase('/#consultancy'), page: false },
   { label: 'Research', href: withBase('/research'), page: true },
+  { label: '404 Solutions', href: withBase('/#consultancy'), page: false },
   { label: 'Contact', href: withBase('/#contact'), page: false },
 ];
 
