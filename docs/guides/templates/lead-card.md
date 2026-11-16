@@ -19,7 +19,7 @@ impact:                                      # results a reader can check, not t
   - First outcome, a fact a reader can check         # the strongest first: it stands in for the result; ≤ 120 each
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps
-stack:                                       # 6–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the popup shows all, the Projects panel four, then +N
+stack:                                       # 6–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the popup shows all of them
   - Python
   - FastAPI
   - PostgreSQL

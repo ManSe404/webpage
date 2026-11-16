@@ -2,7 +2,7 @@
 
 A project is one Markdown file in `website/src/content/projects/`, and the frontmatter is the whole project:
 the file has no body and the site has no page per project. The frontmatter fills a honeycomb cell and its
-popup, on the home page and on `/projects/`, and the featured panel of the home dashboard. The fields and their
+popup, on the home page and on `/projects/`, and the Projects panel of the home dashboard. The fields and their
 types are in the [content model](../reference/data-model.md#projects); this guide is about where each one shows
 and how to write it.
 
@@ -30,7 +30,7 @@ folder.
 | Home page, Chosen work | the projects with a `home` rank, in that order (eight, strongest first, client work only) | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
 | `/projects/` | every project in one honeycomb, clustered by field (AI, Data & analytics, then Software & research for every other category) and by `order` inside each | the same cell and popup; the field filter (from `category`) and the type-of-work filter (from `org`) hide cells |
 | The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client · period"); "Visit project ↗" when `link` is set |
-| Home dashboard, Projects panel | the projects with a `featured` position, in that order (six) | a numbered row with the title and "org · with client · category"; opened: the result as in the popup, the summary, the first four `stack` items then +N, and "Visit project ↗" when `link` is set |
+| Home dashboard, Projects panel | the projects with a `featured` position, in that order (six) | the same honeycomb cell and popup as everywhere else, inside the panel |
 | Home dashboard, Roadmap panel | projects whose `period` runs to the present and that have a `Stage` metric | the title and the `Stage` value, under Building |
 
 `order` sorts every place but the home page, where `home` sets the order. `featured` decides only the Projects
@@ -49,11 +49,11 @@ breaks the build.
 | Field | What to aim for | Where it came from |
 |---|---|---|
 | `title` | a short name before " — ": the cell shows only that part, in a hexagon about 150 px wide on a wide screen and at most 160 px on a phone, where a long name wraps | no limit measured for the cell; ≤ 38 (big card) and ≤ 29 (small card) were measured on the earlier cards |
-| `summary` | one sentence | 150–200 (big card) and 130–180 (small card) were measured on the earlier cards; the popup and the featured panel show it in full |
+| `summary` | one sentence | 150–200 (big card) and 130–180 (small card) were measured on the earlier cards; the popup shows it in full |
 | `org` and `client` | as short as the names allow | ≤ 29 for "org · with client" was measured on the earlier small card; the popup shows the line in full |
 | The result: the `Result` metric value, else the first `impact` line | one line | never measured |
 | `impact` | ≤ 120 each | a writing limit, not a layout one; only the first line is shown, and only without a `Result` metric |
-| `stack` | 6–8 for a featured project where it really uses that many, 4–8 for the rest | the popup shows every item; the featured panel shows four, then +N |
+| `stack` | 6–8 for a featured project where it really uses that many, 4–8 for the rest | the popup shows every item |
 | `metrics` | 2–3 | `Role`, `Result` and `Stage` are read by label; any other label is not shown anywhere |
 
 **How the earlier limits were measured.** Each was the longest text, cut at a word boundary, that stayed within
@@ -72,7 +72,7 @@ gone, people using it. What was built and with which tools come after, as the wa
   solved, the value* or *what was built, for whom, so that the value*. The test: someone who reads only the
   popup can say what was wrong before and what is better now.
 - **The result** is a `metrics` entry labelled `Result`, with a number where one exists ("Capacity cost cut by
-  half"). The popup shows it as Achieved result and the featured panel as Result. A result nobody measured is
+  half"). The popup shows it as Achieved result. A result nobody measured is
   stated as what happened ("in daily use", "support load down"), never as an estimated number. No result yet
   means no `Result` entry; the first `impact` line then stands in, and with neither the line is left out.
 - **`impact`** lines are results a reader can check, what changed for the people who used it, not the tools.
@@ -95,7 +95,7 @@ gone, people using it. What was built and with which tools come after, as the wa
   **`client`** is the partner or end customer, and only where it can be named publicly.
 - **`stack`** names tools, libraries and platforms a reader could look up: XGBoost, Azure Data Factory,
   LangGraph. Concepts such as RAG, AI agents, time series or telephony are not a stack; they belong in the
-  summary. The most telling item goes first, because the featured panel shows four.
+  summary. The most telling item goes first.
 - **`category`** decides the honeycomb (see [where a project shows up](#where-a-project-shows-up)); reuse one
   that exists unless the project needs a new one. A new category lands under Software & research on
   `/projects/` and nowhere on the home page until `website/src/pages/index.astro` lists it.
@@ -104,7 +104,7 @@ gone, people using it. What was built and with which tools come after, as the wa
   popup leaves that line out (the result falls back to the first `impact` line). A `Stage` entry ("Library,
   prototype") lists a project whose period runs to the present in the Roadmap panel. Entries with any other
   label are not shown.
-- **`link`** is a public URL only; it adds "Visit project ↗" to the popup and the featured panel.
+- **`link`** is a public URL only; it adds "Visit project ↗" to the popup.
 
 ## Check it
 

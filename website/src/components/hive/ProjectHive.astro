@@ -15,9 +15,11 @@ interface Props {
   projects: CollectionEntry<'projects'>[];
   /** Six cells per row on wide screens (one big honeycomb), instead of four. */
   wide?: boolean;
+  /** Put the open project's address in the bar and open it from a link (off inside a dashboard panel). */
+  linkable?: boolean;
 }
 
-const { id, projects, wide = false } = Astro.props;
+const { id, projects, wide = false, linkable = true } = Astro.props;
 
 // "Mosaic — Document AI Bricks" -> "Mosaic"; titles without a dash stay whole.
 const shortTitle = (title: string) => title.split(' — ')[0];
@@ -39,7 +41,7 @@ const items = projects.map((p) => ({
 }));
 ---
 
-<div class={`phive ${wide ? 'is-wide' : ''}`} data-phive style={`--tracks-w:${tracks(items.length, 6)};--tracks-d:${tracks(items.length, 4)};--tracks-p:${tracks(items.length, 2)};--cols-w:${cols(items.length, 6)};--cols-d:${cols(items.length, 4)};--cols-p:${cols(items.length, 2)}`}>
+<div class={`phive ${wide ? 'is-wide' : ''}`} data-phive data-linkable={linkable ? 'true' : 'false'} style={`--tracks-w:${tracks(items.length, 6)};--tracks-d:${tracks(items.length, 4)};--tracks-p:${tracks(items.length, 2)};--cols-w:${cols(items.length, 6)};--cols-d:${cols(items.length, 4)};--cols-p:${cols(items.length, 2)}`}>
   <ul class="phive-grid" aria-label="Projects">
     {items.map((item, i) => {
       const w = place(i, 6);
@@ -124,13 +126,15 @@ const items = projects.map((p) => ({
       show(key);
       hive.scrollIntoView({ block: 'start' });
     };
-    for (const c of cells) {
-      c.addEventListener('click', () => {
-        history.replaceState(null, '', open ? `#${open}` : location.pathname + location.search);
-      });
+    if (hive.dataset.linkable === 'true') {
+      for (const c of cells) {
+        c.addEventListener('click', () => {
+          history.replaceState(null, '', open ? `#${open}` : location.pathname + location.search);
+        });
+      }
+      window.addEventListener('hashchange', fromHash);
+      fromHash();
     }
-    window.addEventListener('hashchange', fromHash);
-    fromHash();
     hive.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) show(null); });
 
     // After a page hides cells: pack the visible ones and close a popup whose cell is gone.

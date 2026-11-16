@@ -11,8 +11,7 @@ import education from '../../data/education.json';
 import portrait from '../../assets/portrait.jpg';
 import { withBase } from '../../lib/url';
 import {
-  attribution, consultancyPartners, formatMonth, hIndex, inProgress,
-  isOwnWork, projectResult, rolesNewestFirst, toolUsage, topCited,
+  consultancyPartners, hIndex, inProgress, isOwnWork, rolesNewestFirst, toolUsage, topCited,
 } from '../../lib/dashboard';
 import { place } from '../../lib/honeycomb';
 import EcgTrace from '../EcgTrace.astro';
@@ -51,10 +50,6 @@ const cells: Cell[] = [
 // Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
 
 const panelData = {
-  featured: projects.filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0)).map((p) => ({
-    id: p.id, title: p.data.title, category: p.data.category, org: attribution(p),
-    summary: p.data.summary, result: projectResult(p), stack: p.data.stack, link: p.data.link,
-  })),
   projectCount: projects.length,
   research: {
     works: publications.length, citations,

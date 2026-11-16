@@ -8,10 +8,10 @@ import consultancy from '../../data/consultancy.json';
 import skills from '../../data/skills.json';
 import type { NowItem } from '../../lib/dashboard';
 import JourneyBoard from './JourneyBoard.astro';
+import ProjectHive from './ProjectHive.astro';
 
 interface Props {
   data: {
-    featured: { id: string; title: string; category: string; org: string; summary: string; result?: string; stack: string[]; link?: string }[];
     projectCount: number;
     research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
     education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
@@ -32,6 +32,8 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? o
 // Partners: the counts come from the projects, the descriptions from
 // collaborations.json where a partner has one ("Provectus" ~ "Provectus Inc").
 const collaborations = (await getCollection('collaborations')).map((c) => c.data);
+// The Projects panel: projects with a `featured` position, in that order.
+const featured = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0));
 const partners = data.consultancy.partners.map((p) => ({
   ...p,
   about: collaborations.find((c) => c.name.toLowerCase().startsWith(p.name.toLowerCase())),
@@ -43,24 +45,7 @@ const partners = data.consultancy.partners.map((p) => ({
 
   <section class="panel" id="hive-projects" data-panel="projects" aria-label="Featured projects">
     <p class="panel-title">Featured projects</p>
-    <ol class="items">
-      {data.featured.map((p, i) => (
-        <li>
-          <details class="item" name="hive-projects">
-            <summary>
-              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
-              <span class="item-head"><span class="item-title">{p.title}</span><span class="item-meta">{p.org} · {p.category}</span></span>
-            </summary>
-            <div class="item-body">
-              {p.result && <p class="step-result"><span class="mono">Result</span>{p.result}</p>}
-              <p class="step-text">{p.summary}</p>
-              <div class="chips">{p.stack.slice(0, 4).map((t) => <span class="chip">{t}</span>)}{p.stack.length > 4 && <span class="chip">+{p.stack.length - 4}</span>}</div>
-              {p.link && <a class="step-link mono" href={p.link} target="_blank" rel="noopener">Visit project ↗</a>}
-            </div>
-          </details>
-        </li>
-      ))}
-    </ol>
+    <ProjectHive id="top" projects={featured} linkable={false} />
     <a class="panel-more mono" href={withBase('/projects/')}>All {data.projectCount} projects →</a>
   </section>
 
