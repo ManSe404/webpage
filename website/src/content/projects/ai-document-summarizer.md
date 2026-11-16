@@ -1,7 +1,7 @@
 ---
 title: AI-Powered Document Summarizer
 category: Generative AI
-summary: Document summarization and point-of-interest extraction across large multi-document sets, built on an agentic graph RAG architecture that holds context together where chunking normally breaks it.
+summary: Summaries and key points across large multi-document sets, built on an agentic graph RAG architecture that keeps context together where fixed-size chunking breaks it.
 featured: true
 order: 11
 org: 404 Solutions

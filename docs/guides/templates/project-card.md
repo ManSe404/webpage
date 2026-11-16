@@ -6,13 +6,13 @@
 # Limits are characters, measured on the real card; docs/guides/writing-a-project.md says what breaks past each.
 title: Name of the System                    # ≤ 42: two lines on /projects/; ≤ 29 for the four in the home page row
 category: Data Engineering                   # reuse a category from the filter row on /projects/
-summary: One sentence on what it is, for whom, and what it changed — the card and the page description both use it.   # 130–180
+summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 130–180
 featured: false                              # true makes it a big card on the home page: use lead-card.md
 order: 10                                    # 4 and up; projects are grouped by employer, personal ones last
 org: 404 Solutions                           # the employer; "org · with client" ≤ 29
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2025"                               # quoted, so a bare year stays text
-impact:                                      # 3–4, shown on the case study page only
+impact:                                      # 3–4 results a reader can check, not tools; case study page only
   - First outcome, a fact a reader can check         # ≤ 120 each
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps

@@ -63,7 +63,7 @@
     "highlights": [
       "Led and mentored a team of 6 engineers.",
       "Owned design of document processing microservices.",
-      "Built data extraction and document classification services from scratch."
+      "Built a document processing platform from scratch — ETL on Azure Data Factory and Synapse, ML classification on a trained embedding layer, Power BI reporting."
     ],
     "stack": ["Python", "Azure DevOps", "Azure Data Factory", "Synapse", "Data Lake", "Docker"]
   },
@@ -76,8 +76,8 @@
     "current": false,
     "summary": "Model evaluation and tuning for ML classification systems.",
     "highlights": [
-      "Performed model evaluation and hyperparameter tuning for ML classification.",
-      "Produced data-driven insights and testing/validation for ML systems."
+      "Extracted data from invoices with ML text classification, so every field landed in its place in the database.",
+      "Performed model evaluation, hyperparameter tuning, testing and validation of the classification models."
     ],
     "stack": ["Python", "Docker", "Machine Learning", "Azure"]
   },

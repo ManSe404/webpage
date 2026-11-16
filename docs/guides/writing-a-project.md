@@ -55,6 +55,20 @@ have looked at the page. Between about 1120 and 1280 px the first row on `/proje
 `website/src/components/ProjectCard.astro` or the grids in `website/src/pages/` change, the limits change with
 them.
 
+## What a card must say
+
+A card is read in a few seconds, so it says two things before anything else: **what problem was solved** and
+**what value it brought**. What was built and with which tools come after, as the way the value came about.
+
+- **`summary`** carries both in one sentence. Shapes that work: *what was built, for whom, so that the value*
+  ("… built so planners trust the number enough to order against it") or *the problem, how it was solved, the
+  value*. The test: someone who reads only the card can say what was wrong before and what is better now.
+- **`impact`** lines are results a reader can check, what changed for the people who used it, not the tools.
+  On a big card the first three are the value, so they come first.
+- Problem and value have no fields of their own. On the card the summary carries them; on the case study page
+  The problem and The outcome do. A separate field would add lines to every small card and break the limits
+  above.
+
 ## Writing the fields
 
 - **`summary`** is one sentence and doubles as the page description for search and sharing. YAML ends a plain

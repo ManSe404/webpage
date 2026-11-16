@@ -1,8 +1,8 @@
 ---
-title: Document Buddy — Chatbot over Your Own Documents
+title: Document Buddy — Your Documents
 category: Generative AI
-summary: A self-hosted RAG chatbot template — sign-in, chat with sources, and a knowledge base that accepts PDF, Word, text or whole folders — built around a page-quality gate and vision OCR, because the text layer of a real document estate lies.
-order: 24
+summary: A self-hosted chatbot over your own PDFs, Word files and folders, with a page-quality gate and vision OCR, because the text layer of a real document estate lies.
+order: 22
 org: Personal
 period: 2025 — 2026
 link: https://manse404.github.io/document-buddy/demo/

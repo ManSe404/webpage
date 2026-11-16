@@ -27,7 +27,7 @@ unless they start with another top-level folder.
 | Plain-text profile | Reuse a text summary of the site data elsewhere | shipped, kept by hand | `files/stefan_context.txt` | [codebase](../../reference/codebase.md) |
 | Section rail | Jump between home-page sections from a rail at the side | planned | | [roadmap 1](../../roadmap.md#1-section-rail-on-the-home-page) |
 | Mobile design | Use a layout made for phones | planned | | [roadmap 2](../../roadmap.md#2-a-mobile-design-of-its-own) |
-| Project templates | Start a new project from the lead-card or the project-card template, with the character limits each card holds | partial: nothing checks the limits, and most existing projects exceed at least one | `docs/guides/templates/` | [writing a project](../../guides/writing-a-project.md) |
+| Project templates | Start a new project from the lead-card or the project-card template, with the character limits each card holds | partial: nothing checks the limits; the impact lines of most featured projects and three titles in the home page row are still over | `docs/guides/templates/` | [writing a project](../../guides/writing-a-project.md) |
 | Project redesign | Read redesigned project cards and pages | planned | | [roadmap 3](../../roadmap.md#3-projects-redesigned-the-cv-follows) |
 
 ## For visitors

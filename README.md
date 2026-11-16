@@ -44,12 +44,12 @@ Welcome to my personal portfolio website repository! I lead an AI and Data pract
 |---------|-------------|
 | 👥 **Crowd Analytics & Movement Prediction** | Forecasting where crowd density is about to build, in time to act on it |
 | 💬 **Document Chatbot with Live Lineage** | Multilingual RAG with answer traceability and real-time index updates |
-| 🕸️ **Agentic AI Insights Platform** | Orchestration graphs coordinating agents across summarization and insight synthesis |
+| 🕸️ **Agentic AI Platform** | Agents for the whole meeting cycle in English and Arabic, from agenda and document chat to spoken summaries and minutes |
 | 📄 **AI-Powered Document Summarizer** | Agentic graph RAG over large multi-document sets |
 | 🧩 **Mosaic — Document AI Bricks** | Composable document-AI bricks where pipelines and questions are plans written as data, each brick measured against a BM25 baseline |
-| 🧰 **Claude Role Skills** | Nine Claude Code skill packs, 43 skills, that count with scripts and end in a shareable page — MIT |
+| 🧰 **Role Skill Packs for Claude Code** | Ten Claude Code skill packs, 50 skills, that count with scripts and end in a shareable page — MIT |
 
-👉 [See all 28 projects →](https://manse404.github.io/webpage/projects)
+👉 [See all 26 projects →](https://manse404.github.io/webpage/projects)
 
 ---
 

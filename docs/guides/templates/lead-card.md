@@ -5,13 +5,13 @@
 # Limits are characters, measured on the real card; docs/guides/writing-a-project.md says what breaks past each.
 title: Name of the System                    # ≤ 38: two lines; ≤ 29 unless featured (it then also sits in the home page row)
 category: Generative AI                      # reuse a category from the filter row on /projects/
-summary: One sentence on what it is, for whom, and the one thing that sets it apart — the card and the page description both use it.   # 150–200; 150–180 unless featured
+summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 150–200; 150–180 unless featured
 featured: false                              # true: also a big card on the home page
 order: 1                                     # 1–3: the first row on /projects/
 org: ExpertGroup                             # the employer; "org · with client" ≤ 40
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2026 — Present"                     # quoted, so a bare year stays text
-impact:                                      # 3–4; the card shows the first three
+impact:                                      # 3–4 results a reader can check, not tools; the card shows the first three
   - First outcome, a fact a reader can check         # ≤ 65 each: two lines on the card
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps

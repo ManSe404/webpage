@@ -1,8 +1,8 @@
 ---
-title: Voice-Enabled Support Chatbot
+title: Telephone Voice Assistant
 category: Conversational AI
-summary: A telephone-based voice support system covering the full conversational loop — speech-to-text, intent recognition, dialogue state, and speech back — architected around availability from the start.
-order: 18
+summary: A telephone voice assistant covering the whole conversation — speech to text, intent, dialogue state and speech back — designed for high availability from the start.
+order: 17
 org: Valcon Netherlands
 period: 2022 — 2023
 impact:

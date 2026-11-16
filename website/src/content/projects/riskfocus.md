@@ -1,7 +1,7 @@
 ---
-title: RiskFocus — Risk Summariser
+title: RiskFocus — Risk Summarizer
 category: Generative AI
-summary: Multi-document risk extraction that surfaces the connections between documents — where they reinforce, qualify, or contradict each other — with traceable lineage back to every source.
+summary: Multi-document risk extraction that shows where documents reinforce, qualify or contradict each other, with every finding traceable back to its source.
 order: 12
 org: 404 Solutions
 client: Provectus
