@@ -31,7 +31,7 @@ website/                      the Astro project
       research.astro          publications and the numbers derived from them
     components/
       hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace
-      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research, education, tools and skills, in progress, 404 Solutions services and partners, contact
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research, tools as circles and skills, in progress, 404 Solutions services and partners, contact
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the home page lab: two tabs, Signal processing and Architecture

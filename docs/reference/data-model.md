@@ -13,7 +13,7 @@ Everything the site says comes from files under `website/src/`. The collections 
 | 404 Solutions services | `src/data/consultancy.json` (no schema) | `hive/HivePanels` reads `services` only (title, area, `deliveredWith`, description); `section`, `partners` and `links` are left from the removed 404 Solutions section and nothing reads them |
 | Architecture diagrams | `src/data/architectures.json` (no schema): the two lab diagrams, their steps, side boxes, details, tools and synthetic sample rows | `lab/ArchitectureLab`, `lab/ArchDiagram` |
 | Skills | `src/data/skills.json` | `hive/HivePanels`: the skill groups in the Tools panel |
-| Degrees, certifications, memberships | `src/data/education.json` | `hive/HiveDashboard` (degrees in progress, and the Education panel through `hive/HivePanels`), `research.astro` (memberships) |
+| Degrees, certifications, memberships | `src/data/education.json` | `hive/HiveDashboard` (degrees in progress for the Roadmap panel), `hive/HivePanels` (degrees and certifications at the end of the Years panel), `research.astro` (memberships) |
 | Publications | `src/data/publications.csv` (collection `publications`) | `hive/HiveDashboard`, `research.astro` |
 | Projects | `src/content/projects/*.md` (collection `projects`), frontmatter only | `index.astro` and `projects/index.astro`, both through `hive/ProjectHive`; `hive/HiveDashboard` (counts, featured projects, tools, 404 Solutions partners, what is in progress) |
 | Portrait | `src/assets/portrait.jpg` | `hive/HiveDashboard`, optimised by `astro:assets` |
@@ -40,7 +40,7 @@ every other number on the home dashboard is computed from the collections (`src/
 | `org` | string | none | The employer the work was delivered under; decides the type of work on `/projects/` (`Personal` and `Open source` are own work, `BioIRC` is research, the rest client work), the client and own counts on the Projects cell, and the 404 Solutions projects and partners |
 | `client` | string | none | The partner or end customer, where it can be named publicly; shown as "with client" |
 | `impact` | list of strings | empty | Only the first line is shown, as the project's result when there is no `Result` metric; the other lines are not shown anywhere |
-| `stack` | list of strings | empty | All in the popup; counted for the Tools cell and panel |
+| `stack` | list of strings | empty | All in the popup; the Tools panel draws the 30 most used as circles, sized by use and coloured by the field they are used in most (no count is shown) |
 | `metrics` | list of `{label, value}` | empty | Read by label: `Role` fills the popup's Role & responsibilities line, `Result` the popup's Achieved result, `Stage` the In progress panel; any other label is not shown anywhere |
 | `link` | URL | none | "Visit project ↗" in the popup |
 

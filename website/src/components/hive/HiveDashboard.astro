@@ -11,7 +11,7 @@ import education from '../../data/education.json';
 import portrait from '../../assets/portrait.jpg';
 import { withBase } from '../../lib/url';
 import {
-  consultancyPartners, hIndex, inProgress, isOwnWork, rolesNewestFirst, toolUsage, topCited,
+  consultancyPartners, hIndex, inProgress, isOwnWork, rolesNewestFirst, toolUsage, topCited, toolBubbles,
 } from '../../lib/dashboard';
 import { place } from '../../lib/honeycomb';
 import EcgTrace from '../EcgTrace.astro';
@@ -34,14 +34,18 @@ const consultancyRole = roles.find((r) => r.data.company === '404 Solutions');
 type Cell = {
   id: string; label: string; caption: string; href: string; tone: 'ai' | 'bio';
   value?: number; suffix?: string; text?: string;
+  /** A small picture instead of a number. */
+  visual?: 'bubbles';
+  /** A plain link to a section of the page instead of a panel. */
+  jump?: boolean;
 };
 
 const cells: Cell[] = [
   { id: 'projects', label: 'Projects', value: projects.length, caption: `${clientWork} client · ${projects.length - clientWork} own`, href: '/#work', tone: 'ai' },
   { id: 'experience', label: 'Years', value: years.value, suffix: years.suffix, caption: `${roles.length} roles since ${firstYear}`, href: profile.cv, tone: 'bio' },
   { id: 'research', label: 'Papers', value: publications.length, caption: `${citations} citations`, href: '/research/', tone: 'bio' },
-  { id: 'education', label: 'Education', text: 'PhD', caption: 'in progress', href: profile.cv, tone: 'bio' },
-  { id: 'toolkit', label: 'Tools', value: tools.length, caption: 'across the projects', href: '/projects/', tone: 'ai' },
+  { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/#lab', tone: 'bio', jump: true },
+  { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },
   { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
   { id: 'consultancy', label: '404 Solutions', value: consultancy.projects, caption: `projects · ${consultancy.partners.length} partners`, href: '/#contact', tone: 'ai' },
   { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#contact', tone: 'bio' },
@@ -58,7 +62,7 @@ const panelData = {
     top: topCited(publications).map((p) => ({ year: p.data.year, title: p.data.title, venue: p.data.venue, citations: p.data.citations, url: p.data.url })),
   },
   education,
-  tools: tools.slice(0, 10),
+  bubbles: toolBubbles(projects),
   now,
   consultancy: { ...consultancy, summary: consultancyRole?.data.summary },
   profile,
@@ -92,9 +96,13 @@ const panelData = {
           const p = place(i, 2);
           return (
             <li class={`cell tone-${cell.tone}`} style={`--rd:${d.row};--cd:${d.col};--rp:${p.row};--cp:${p.col}`}>
-              <a class="hex" href={withBase(cell.href)} data-cell={cell.id}>
+              <a class="hex" href={withBase(cell.href)} data-cell={cell.id} data-jump={cell.jump ? '' : undefined}>
                 <span class="hex-value mono">
-                  {cell.text ?? <><span data-count={cell.value}>{cell.value}</span>{cell.suffix}</>}
+                  {cell.visual === 'bubbles' ? (
+                    <svg class="hex-bubbles" viewBox="0 0 64 40" aria-hidden="true">
+                      <circle cx="22" cy="22" r="15" class="b-ai" /><circle cx="44" cy="16" r="10" class="b-data" /><circle cx="47" cy="32" r="6" class="b-other" /><circle cx="9" cy="9" r="4" class="b-data" />
+                    </svg>
+                  ) : cell.text ?? <><span data-count={cell.value}>{cell.value}</span>{cell.suffix}</>}
                 </span>
                 <span class="hex-label">{cell.label}</span>
                 <span class="hex-caption">{cell.caption}</span>
@@ -140,6 +148,8 @@ const panelData = {
     root.querySelector<HTMLElement>('[data-close]')?.removeAttribute('hidden');
     root.querySelector<HTMLElement>('[data-hive-hint]')?.removeAttribute('hidden');
     for (const c of cells) {
+      // A jump cell (the lab) stays a plain link to its section.
+      if (c.hasAttribute('data-jump')) continue;
       c.setAttribute('role', 'button');
       c.setAttribute('aria-controls', `hive-${c.dataset.cell}`);
       c.setAttribute('aria-expanded', 'false');
@@ -256,6 +266,10 @@ const panelData = {
   }
   .hex > * { position: relative; z-index: 1; }
   .hex-value { font-size: 1.85rem; line-height: 1; font-weight: 500; }
+  .hex-bubbles { display: block; width: 3.2rem; height: 2rem; }
+  .hex-bubbles .b-ai { fill: rgba(var(--ai-rgb), 0.75); }
+  .hex-bubbles .b-data { fill: rgba(var(--bio-rgb), 0.8); }
+  .hex-bubbles .b-other { fill: var(--text-dim); }
   .tone-ai .hex-value { color: var(--ai); }
   .tone-bio .hex-value { color: var(--bio); }
   .hex-label { margin-top: 0.4rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }

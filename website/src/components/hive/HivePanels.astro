@@ -15,7 +15,7 @@ interface Props {
     projectCount: number;
     research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
     education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
-    tools: { name: string; count: number }[];
+    bubbles: { name: string; size: number; field: 'ai' | 'data' | 'other' }[];
     now: NowItem[];
     consultancy: { projects: number; partners: { name: string; count: number }[]; summary?: string };
     profile: { email: string; cv: string; links: Record<string, string> };
@@ -23,7 +23,6 @@ interface Props {
 }
 
 const { data } = Astro.props;
-const maxTool = data.tools[0]?.count ?? 1;
 const groups = (['Leading', 'Studying', 'Building'] as const)
   .map((kind) => ({ kind, items: data.now.filter((n) => n.kind === kind) }))
   .filter((g) => g.items.length);
@@ -89,6 +88,14 @@ const partners = data.consultancy.partners.map((p) => ({
         </li>
       ))}
     </ol>
+    <p class="panel-sub">Education</p>
+    <ul class="rows">
+      {data.education.degrees.map((d) => (
+        <li><strong>{d.degree}</strong><span>{d.institution}{d.period && ` · ${d.period}`}</span></li>
+      ))}
+    </ul>
+    <p class="panel-sub">Certifications</p>
+    <div class="chips">{data.education.certifications.map((c) => <span class="chip">{c.name}</span>)}</div>
     <a class="panel-more mono" href={withBase(data.profile.cv)} download>Full CV (PDF) →</a>
   </section>
 
@@ -113,28 +120,12 @@ const partners = data.consultancy.partners.map((p) => ({
     <a class="panel-more mono" href={withBase('/research/')}>All publications →</a>
   </section>
 
-  <section class="panel" id="hive-education" data-panel="education" aria-label="Education">
-    <p class="panel-title">Education</p>
-    <ul class="rows">
-      {data.education.degrees.map((d) => (
-        <li><strong>{d.degree}</strong><span>{d.institution}{d.period && ` · ${d.period}`}</span></li>
-      ))}
-    </ul>
-    <p class="panel-sub">Certifications</p>
-    <div class="chips">{data.education.certifications.map((c) => <span class="chip">{c.name}</span>)}</div>
-    <p class="panel-note">{plural(data.education.memberships.length, 'professional membership')}</p>
-    <a class="panel-more mono" href={withBase(data.profile.cv)} download>Full CV (PDF) →</a>
-  </section>
-
   <section class="panel" id="hive-toolkit" data-panel="toolkit" aria-label="Tools">
-    <p class="panel-title">Most used tools, counted from the projects</p>
-    <ul class="bars">
-      {data.tools.map((t) => (
-        <li>
-          <span class="bar-name">{t.name}</span>
-          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style={`width:${Math.round((t.count / maxTool) * 100)}%`}></span></span>
-          <span class="bar-count mono">{plural(t.count, 'project')}</span>
-        </li>
+    <p class="panel-title">What I build with</p>
+    <p class="legend-line mono"><span class="dot dot-ai"></span>mostly AI work <span class="dot dot-data"></span>mostly data work <span class="dot dot-other"></span>everything else</p>
+    <ul class="bubbles" aria-label="The tools used most across the projects; a larger circle means more use">
+      {data.bubbles.map((b, i) => (
+        <li class={`bubble b-${b.field}`} style={`--d:${b.size}px;--i:${i}`}><span>{b.name}</span></li>
       ))}
     </ul>
     <p class="panel-sub">Skills</p>
@@ -271,17 +262,29 @@ const partners = data.consultancy.partners.map((p) => ({
   .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 0 1.6rem; }
   .groups .panel-sub:first-child { margin-top: 0; }
 
-  .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
-  .bars li { display: grid; grid-template-columns: minmax(7rem, 11rem) 1fr auto; gap: 0.8rem; align-items: center; }
-  .bar-name { font-size: 0.9rem; }
-  .bar-track { height: 8px; background: var(--surface-hover); border-radius: 4px; overflow: hidden; }
-  .bar-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--bio-dim), var(--bio)); border-radius: 4px; }
-  .bar-count { font-size: 0.75rem; color: var(--text-faint); }
+  .legend-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; margin: -0.3rem 0 1rem; font-size: 0.75rem; color: var(--text-dim); }
+  .dot { display: inline-block; width: 10px; height: 10px; margin-right: 0.35rem; border-radius: 50%; vertical-align: middle; }
+  .dot-ai { background: var(--ai); } .dot-data { background: var(--bio); } .dot-other { background: var(--text-dim); }
+  /* Tools as a cloud of circles: the diameter follows use, the colour the field it is used in most. */
+  .bubbles { list-style: none; margin: 0; padding: 0.4rem 0 0.6rem; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem; }
+  .bubble {
+    width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center; padding: 0.4rem;
+    text-align: center; font-size: 0.75rem; line-height: 1.15; color: var(--text);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    animation: bob 6s var(--ease) infinite alternate; animation-delay: calc(var(--i) * -0.37s);
+  }
+  .bubble span { overflow-wrap: anywhere; }
+  .b-ai { border-color: rgba(var(--ai-rgb), 0.6); background: rgba(var(--ai-rgb), 0.12); }
+  .b-data { border-color: rgba(var(--bio-rgb), 0.6); background: rgba(var(--bio-rgb), 0.12); }
+  .b-other { border-color: var(--border-strong); }
+  .bubble:hover { transform: scale(1.08); box-shadow: 0 0 18px var(--glow-bio); }
+  @keyframes bob { from { translate: 0 -3px; } to { translate: 0 3px; } }
+  @media (prefers-reduced-motion: reduce) { .bubble { animation: none; transition: none; } }
+  @media (max-width: 640px) { .bubble { width: calc(var(--d) * 0.82); height: calc(var(--d) * 0.82); } }
 
   @media (max-width: 640px) {
     .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .bars li { grid-template-columns: 1fr auto; }
-    .bar-track { grid-column: 1 / -1; grid-row: 2; }
-    .item-body { padding-left: 0.2rem; }
+        .item-body { padding-left: 0.2rem; }
   }
 </style>

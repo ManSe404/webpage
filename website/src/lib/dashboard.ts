@@ -48,6 +48,36 @@ export function toolUsage(projects: Project[]): { name: string; count: number }[
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
+export type Field = 'ai' | 'data' | 'other';
+const AI_TOPICS = ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'];
+const DATA_TOPICS = ['Data Engineering', 'Machine Learning'];
+export const fieldOf = (category: string): Field =>
+  AI_TOPICS.includes(category) ? 'ai' : DATA_TOPICS.includes(category) ? 'data' : 'other';
+
+/**
+ * Tools as bubbles: a size from how many projects use the tool (no number is
+ * shown) and the field it is used in most, for its colour. The most used first.
+ */
+export function toolBubbles(projects: Project[], limit = 30): { name: string; size: number; field: Field }[] {
+  const fields = new Map<string, Record<Field, number>>();
+  for (const p of projects) {
+    const f = fieldOf(p.data.category);
+    for (const tool of new Set(p.data.stack)) {
+      const tally = fields.get(tool) ?? { ai: 0, data: 0, other: 0 };
+      tally[f]++;
+      fields.set(tool, tally);
+    }
+  }
+  const used = toolUsage(projects).slice(0, limit);
+  const top = used[0]?.count ?? 1;
+  return used.map(({ name, count }) => {
+    const tally = fields.get(name)!;
+    const field = (Object.keys(tally) as Field[]).sort((a, b) => tally[b] - tally[a])[0];
+    // Area follows use: the diameter grows with the square root of the count.
+    return { name, size: Math.round(64 + 76 * Math.sqrt((count - 1) / Math.max(top - 1, 1))), field };
+  });
+}
+
 /** The one line that says what a project achieved: its Result metric, else its first impact line. */
 export function projectResult(p: Project): string | undefined {
   return p.data.metrics.find((m) => m.label === 'Result')?.value ?? p.data.impact[0];

@@ -26,7 +26,7 @@ change what the site says.
 | Collaborations | `src/data/collaborations.json` | Partner descriptions in the dashboard's 404 Solutions panel; `needsReview: true` is meant to mark unconfirmed copy; nothing reads it yet, so the description is still published |
 | 404 Solutions services | `src/data/consultancy.json` | The services in the dashboard's 404 Solutions panel |
 | Skills | `src/data/skills.json` | Skill groups in the dashboard's Tools panel |
-| Education, certs, memberships | `src/data/education.json` | Education panel, memberships on the research page |
+| Education, certs, memberships | `src/data/education.json` | Degrees and certifications in the Years panel, memberships on the research page |
 | Publications | `src/data/publications.csv` | Also generates the "output by year" bars |
 | Projects | `src/content/projects/*.md` | Frontmatter only: the popup is the whole project, with no body and no page of its own |
 
