@@ -31,19 +31,20 @@ works and citations there do not follow `publications.csv`
 |---|---|---|---|
 | `title` | string | required | |
 | `category` | string | required | Becomes a filter on `/projects/` |
-| `summary` | string | required | One sentence for the card and the page description |
-| `featured` | boolean | `false` | A larger card on the home page |
-| `order` | number | `99` | Sort position everywhere, and previous and next on a case study |
+| `summary` | string | required | One sentence for the cards and the page description |
+| `featured` | boolean | `false` | A big card in Selected work on the home page |
+| `order` | number | `99` | Sort position everywhere; the three lowest are the big cards leading `/projects/`; previous and next on a case study |
 | `period` | string | none | |
 | `org` | string | none | The employer the work was delivered under |
 | `client` | string | none | The partner or end customer, where it can be named publicly |
-| `impact` | list of strings | empty | |
-| `stack` | list of strings | empty | |
-| `metrics` | list of `{label, value}` | empty | Shown on the case study |
+| `impact` | list of strings | empty | The first three on a big card; all on the case study |
+| `stack` | list of strings | empty | The first eight on a big card, the first five on a regular card on the home page; all on the case study |
+| `metrics` | list of `{label, value}` | empty | The first value is the tag on a big card; all on the case study |
 | `link` | URL | none | |
 
 The Markdown body is the case study. The file name is the id and the URL: `src/content/projects/<id>.md` becomes
-`/projects/<id>/`.
+`/projects/<id>/`. Which card shows which field, the character limits and the two templates to start from are in
+[Writing a project](../guides/writing-a-project.md).
 
 ### `experience`
 

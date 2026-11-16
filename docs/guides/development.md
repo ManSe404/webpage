@@ -16,10 +16,12 @@ start date is still a placeholder.
 
 ## Add a project
 
-Add a Markdown file to `website/src/content/projects/`. The frontmatter follows the `projects` schema in
-`website/src/content.config.ts` (fields in the [content model](../reference/data-model.md#projects)); the body is
-the case study. The route, the card, the filter counts and the previous and next links follow from it. `order`
-sets the position; `featured: true` gives it a large card on the home page.
+Copy one of the two templates into `website/src/content/projects/<id>.md`: the lead card for the three lowest
+`order` values and for `featured: true` projects, the project card for the rest.
+[Writing a project](writing-a-project.md) says which card shows which field and how many characters each one
+holds. The frontmatter follows the `projects` schema in `website/src/content.config.ts` (fields in the
+[content model](../reference/data-model.md#projects)); the body is the case study. The route, the card, the
+filter counts and the previous and next links follow from it.
 
 ## Add a publication
 

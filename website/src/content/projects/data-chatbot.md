@@ -1,14 +1,14 @@
 ---
 title: Document Chatbot That Talks to Data
 category: Generative AI
-summary: A chatbot over market research workbooks and decks that gets the numbers right — the model plans the question and explains the answer, code computes every figure, and each one traces back to the cell it came from.
+summary: A chatbot over market research workbooks and decks that gets the numbers right — code computes every figure, the model plans and explains, and each number traces to its cell.
 order: 1
 org: ExpertGroup
 period: "2026"
 impact:
-  - No figure written by the language model — a deterministic engine computes every number
-  - Every number traceable to its workbook, sheet and cell
-  - Methodology rules enforced in code — incompatible data bases are refused, never blended
+  - Every number computed in code, never by the language model
+  - Each figure traceable to its workbook, sheet and cell
+  - Incompatible data bases refused in code, never blended
   - One answer rendered as chat text, an editable PowerPoint slide and a spreadsheet
 stack:
   - Python

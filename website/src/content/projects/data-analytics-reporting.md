@@ -1,7 +1,7 @@
 ---
-title: Data Analytics & Reporting on Microsoft Fabric
+title: Data Analytics & Reporting
 category: Data Engineering
-summary: Finance, sales, marketing and operations reporting for a retail and hospitality group, rebuilt from hand-built dataflows into a medallion lakehouse on Microsoft Fabric with one shared semantic layer.
+summary: Finance, sales, marketing and operations reporting for a retail and hospitality group, rebuilt as a medallion lakehouse on Microsoft Fabric with one shared semantic layer.
 order: 5
 org: ExpertGroup
 period: 2026 — Present
