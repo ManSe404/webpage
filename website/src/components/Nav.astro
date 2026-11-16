@@ -5,10 +5,13 @@ import { LAB_DEMOS } from '../lib/lab';
 
 // Pages and home-page sections, in the order the home page tells the story.
 // `page` marks a link that owns a route, so it can be highlighted while you
-// are on it. `sub` opens a dropdown on wide screens and shows indented in the
-// phone menu; the parent link still goes to its page.
-type Link = { label: string; href: string; page: boolean; sub?: { label: string; href: string }[] };
+// are on it (Home only on the home page itself: `exact`). Home sits first,
+// beside the name that also links home (Stefan, 2026-11-16). `sub` opens a
+// dropdown on wide screens and shows indented in the phone menu; the parent
+// link still goes to its page.
+type Link = { label: string; href: string; page: boolean; exact?: boolean; sub?: { label: string; href: string }[] };
 const links: Link[] = [
+  { label: 'Home', href: withBase('/'), page: true, exact: true },
   { label: 'Projects', href: withBase('/projects'), page: true },
   { label: 'Research', href: withBase('/research'), page: true },
   {
@@ -19,8 +22,9 @@ const links: Link[] = [
 ];
 
 const here = Astro.url.pathname.replace(/\/$/, '');
+const trim = (path: string) => path.replace(/\/$/, '');
 const isCurrent = (link: (typeof links)[number]) =>
-  link.page && (here === link.href || here.startsWith(`${link.href}/`));
+  link.page && (here === trim(link.href) || (!link.exact && here.startsWith(`${trim(link.href)}/`)));
 
 const social = [
   { label: 'in', title: 'LinkedIn', href: profile.links.linkedin },

@@ -10,7 +10,7 @@ category: Data Engineering                   # data field: Data Engineering, Mac
 summary: One sentence with the problem solved and the value it brought, then what was built — the popup's Project description.   # 130–180 on the earlier small card
 # featured: 1                                # only for the six in the dashboard's Projects panel: their position (use lead-card.md)
 order: 10                                    # sorts every place; projects are grouped by employer, personal ones last
-org: 404 Solutions                           # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/
+org: 404 Solutions                           # the employer; "org · with client" in the popup; also decides the type of work on /projects/
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2025"                               # quoted, so a bare year stays text
 impact:                                      # results a reader can check, not tools; only the first is shown, and only without a Result metric

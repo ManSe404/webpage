@@ -55,7 +55,7 @@ physiology. Analytical, pragmatic, and comfortable owning work from presales thr
 production.
 
 EXPERIENCE
-Apr 2025 - Present | Head of AI | ExpertGroup (Belgrade, Serbia)
+May 2026 - Present | Head of AI | ExpertGroup (Belgrade, Serbia)
 - Lead the AI and Data team — organisation, people management, hiring and mentoring.
 - Own AI initiatives end to end: originating projects, presales, architecture, and engineering
   standards.
@@ -140,27 +140,27 @@ ExpertGroup
 1. Document Chatbot That Talks to Data (Generative AI) — A chatbot over market research
    workbooks and decks that gets the numbers right — code computes every figure, the model plans
    and explains, and each number traces to its cell. Role: Architect & builder.
-2. Multilingual Document QA Chatbot (Generative AI) — A retrieval-augmented assistant answering
-   questions over a document set in the user's own language — deliberately contained in scope,
-   led and delivered end to end by the team. Role: Team lead & delivery.
-3. LLM Evaluation Framework (Generative AI) — One shared way to measure the team's chatbots and
+2. LLM Evaluation Framework (Generative AI) — One shared way to measure the team's chatbots and
    agents — retrieval, correctness and safety on a golden set — so a change ships on a number,
    not on a demo that looked fine. Role: Lead & product owner.
-4. Supply Chain & Sales Forecasting (Machine Learning) — Gradient-boosted demand forecasts for
-   wholesale distribution, per product group on the monthly planning cycle — built so planners
-   trust the number enough to order against it. Role: Team lead & delivery.
-5. Data Analytics & Reporting (Data Engineering) — Every new report meant another fragile
+3. Data Analytics & Reporting (Data Engineering) — Every new report meant another fragile
    dataflow — one Fabric lakehouse now feeds finance, sales, marketing and operations, with
    numbers people trust at half the capacity cost. Result: Capacity cost cut by half. Role: Team
    lead & delivery.
 
 404 Solutions
-6. Crowd Analytics & Movement Prediction (Computer Vision, with ExpertGroup) — Crowd movement
+4. Crowd Analytics & Movement Prediction (Computer Vision, with ExpertGroup) — Crowd movement
    prediction for a large-scale public event — forecasting where density is about to build so
    visitors can be routed around congestion instead of into it. Role: Architect & tech lead.
-7. Document Chatbot with Live Lineage (Generative AI, with ExpertGroup) — A high-precision
+5. Document Chatbot with Live Lineage (Generative AI, with ExpertGroup) — A high-precision
    multilingual chatbot over a living document set — every answer traceable to its source
    passage, with the index updated in real time as documents change. Role: Team lead & delivery.
+6. Multilingual Document QA Chatbot (Generative AI, with ExpertGroup) — A retrieval-augmented assistant answering
+   questions over a document set in the user's own language — deliberately contained in scope,
+   led and delivered end to end by the team. Role: Team lead & delivery.
+7. Supply Chain & Sales Forecasting (Machine Learning, with ExpertGroup) — Gradient-boosted demand forecasts for
+   wholesale distribution, per product group on the monthly planning cycle — built so planners
+   trust the number enough to order against it. Role: Team lead & delivery.
 8. Agentic AI Platform (Agentic AI, with WiserTech) — Board-meeting work split across many
    manual jobs in two languages, now one agent platform — briefings ready sooner, minutes
    faster, the whole process in one place.
@@ -178,7 +178,7 @@ ExpertGroup
     traceable back to its source.
 
 Publicis Sapient
-13. Slingshot — Enterprise AI Assistant (Generative AI) — Answers on code, the roadmap and hard
+13. Slingshot — Enterprise AI Assistant (Agentic AI) — Answers on code, the roadmap and hard
     tasks were spread across repositories, Jira and Confluence — one enterprise assistant
     reaches them all, in daily use and speeding onboarding.
 14. RAG Document Chatbot (Generative AI) — The same internal questions kept absorbing support

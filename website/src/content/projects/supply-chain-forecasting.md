@@ -5,7 +5,8 @@ summary: Gradient-boosted demand forecasts for wholesale distribution, per produ
 order: 4
 featured: 5
 home: 8
-org: ExpertGroup
+org: 404 Solutions
+client: ExpertGroup
 period: 2025 — Present
 impact:
   - Procurement planned against forecast demand rather than last period's numbers

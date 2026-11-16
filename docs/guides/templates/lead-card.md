@@ -12,7 +12,7 @@ summary: One sentence with the problem solved and the value it brought, then wha
 featured: 1                                  # position in the dashboard's Projects panel (the Projects cell), 1 first; six in all
 order: 1                                     # sorts every place but the home page
 # home: 1                                    # only for the eight on the home page: their position, strongest first
-org: ExpertGroup                             # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/
+org: ExpertGroup                             # the employer; "org · with client" in the popup; also decides the type of work on /projects/
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2026 — Present"                     # quoted, so a bare year stays text; "— Present" with a Stage metric lists it as in progress
 impact:                                      # results a reader can check, not tools; only the first is shown, and only without a Result metric
