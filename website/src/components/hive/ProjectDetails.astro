@@ -1,8 +1,8 @@
 ---
 // One project's short description, the same everywhere it appears: the popup
 // under a honeycomb and the rows of the dashboard's Projects panel. Five lines
-// (what it is, what it achieved, the role, the tools, for whom) and the
-// project's outside link when it has one.
+// (what it is, what it achieved, the role, the tools, for whom; no dates, the
+// career shows them) and the project's outside link when it has one.
 import type { CollectionEntry } from 'astro:content';
 import { attribution, projectResult } from '../../lib/dashboard';
 
@@ -15,7 +15,7 @@ interface Props {
 const { project: p, showTitle = true } = Astro.props;
 const result = projectResult(p);
 const role = p.data.metrics.find((m) => m.label === 'Role')?.value;
-const company = [attribution(p), p.data.period].filter(Boolean).join(' · ');
+const company = attribution(p);
 ---
 
 {showTitle && <h3 class="pop-title"><span class="pop-field">{p.data.category}:</span>{' '}{p.data.title}</h3>}

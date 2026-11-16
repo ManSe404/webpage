@@ -34,7 +34,7 @@ every other number on the home dashboard is computed from the collections (`src/
 | `featured` | positive integer | none | Position in the Projects panel of the home dashboard (the Projects cell), 1 first; a project without it is not in that panel. Set by hand; six today. It does not put a project in a honeycomb |
 | `order` | number | `99` | Sort position everywhere except the home page |
 | `home` | positive integer | none | Position in the home page's Chosen work honeycomb, 1 first; a project without it is not on the home page. Set by hand: strongest first, client work only |
-| `period` | string | none | Closes the popup's Company / client line; a period that runs to the present, with a `Stage` metric, lists the project under In progress |
+| `period` | string | none | Not shown ([ADR 0004](../adr/0004-project-popups-show-no-dates.md)); a period that runs to the present, with a `Stage` metric, lists the project under In progress |
 | `org` | string | none | The employer the work was delivered under; decides the type of work on `/projects/` (`Personal` and `Open source` are own work, `BioIRC` is research, the rest client work), the client and own counts on the Projects cell, and the 404 Solutions projects and partners |
 | `client` | string | none | The partner or end customer, where it can be named publicly; shown as "with client" |
 | `impact` | list of strings | empty | Only the first line is shown, as the project's result when there is no `Result` metric; the other lines are not shown anywhere |

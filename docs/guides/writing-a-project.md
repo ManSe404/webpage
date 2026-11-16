@@ -29,7 +29,7 @@ folder.
 |---|---|---|
 | Home page, Chosen work | the projects with a `home` rank, in that order (eight, strongest first, client work only) | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
 | `/projects/` | every project in one honeycomb, clustered by field (AI, Data & analytics, then Software & research for every other category) and by `order` inside each | the same cell and popup; the field filter (from `category`) and the type-of-work filter (from `org`) hide cells |
-| The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client · period"); "Visit project ↗" when `link` is set |
+| The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client", no dates: [ADR 0004](../adr/0004-project-popups-show-no-dates.md)); "Visit project ↗" when `link` is set |
 | Home dashboard, Projects panel | the projects with a `featured` position, in that order (six) | a numbered row with the title and "org · with client · category" that opens in place to the same five lines as the popup |
 | Home dashboard, Roadmap panel | projects whose `period` runs to the present and that have a `Stage` metric | the title and the `Stage` value, under Building |
 
