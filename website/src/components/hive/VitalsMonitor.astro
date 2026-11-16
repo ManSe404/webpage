@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { overlay = false } = Astro.props;
-const H = overlay ? 80 : 56;
+const H = overlay ? 64 : 56;
 const peaks = rPeaks();
 const d = tracePath(firstWindow(peaks), H);
 const first = vitalsAt(peaks, START_SECONDS);
@@ -175,13 +175,14 @@ const first = vitalsAt(peaks, START_SECONDS);
   .vitals-note { grid-column: 1 / -1; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--text-faint); }
   .vitals:hover .vitals-note { color: var(--bio); }
 
-  /* Overlay: the trace runs behind the honeycomb and threads through the gaps
-     between its cells; the readout sits in a bar below. */
+  /* Overlay: the trace runs in a channel between two rows of the honeycomb;
+     the readout sits in a bar below. */
   .vitals-hive { width: 100%; }
   .vitals-stage { position: relative; }
   .vitals-stage > :global(:not(svg)) { position: relative; z-index: 1; }
   .vitals-trace-overlay {
-    position: absolute; z-index: 0; left: -8%; width: 116%; top: calc(50% - 40px); height: 80px;
+    /* In the channel the host opens between two rows (--pulse-top, --pulse-gap). */
+    position: absolute; z-index: 0; left: -4%; width: 108%; top: var(--pulse-top, calc(50% - 32px)); height: var(--pulse-gap, 64px);
     pointer-events: none;
     mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);

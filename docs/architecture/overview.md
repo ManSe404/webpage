@@ -68,7 +68,7 @@ the pages and components that need them.
   fonts, navigation, footer and the scroll-reveal script.
 - `src/components/hive/`: `HiveDashboard` (the dashboard and its cells), `HivePanels` (the panel each cell
   opens, the career timeline among them), `ProjectDetails` (one project's five-line description), `VitalsMonitor` (the sweeping synthetic ECG with
-  heart rate and HRV through the dashboard's honeycomb, from `src/lib/vitals.ts`) and `ProjectHive` (a honeycomb of projects with
+  heart rate and HRV in a channel between two rows of the dashboard's honeycomb, from `src/lib/vitals.ts`) and `ProjectHive` (a honeycomb of projects with
   a popup per project, used by the home page and `/projects/`).
 - `src/components/`: `Section`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
   `NodeField`. See the [codebase map](../reference/codebase.md).

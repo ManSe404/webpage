@@ -34,7 +34,7 @@ website/                      the Astro project
     components/
       hive/HiveDashboard.astro home dashboard: portrait, name, tagline and actions; the honeycomb wrapped in the vitals monitor's overlay; seven honeycomb cells with count-up numbers, deep links that open a panel
       hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (four figures, the most cited as ranked cards), skills, in progress, contact
-      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a strip, or (`overlay`, used on the dashboard) a trace through the honeycomb that lights the cell under each beat, readout below
+      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a strip, or (`overlay`, used on the dashboard) a trace in a channel between two rows of the honeycomb that lights the cells by each beat, readout below
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too

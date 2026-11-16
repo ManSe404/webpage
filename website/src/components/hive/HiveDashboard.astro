@@ -236,12 +236,14 @@ const panelData = {
   .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 
   /* Honeycomb: cells span two half-columns, rows overlap by a quarter hex. */
-  .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); }
+  /* --pulse-gap opens a channel between two rows of cells for the heartbeat
+     (VitalsMonitor overlay); --pulse-top is where that channel starts. */
+  .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); --pulse-gap: 64px; --pulse-top: var(--h); }
   .hive {
     list-style: none; margin: 0; padding: 0;
     display: grid;
     grid-template-columns: repeat(9, calc(var(--w) / 2));
-    grid-template-rows: calc(var(--h) * 0.75) var(--h);
+    grid-template-rows: calc(var(--h) + var(--pulse-gap)) var(--h);
   }
   .cell { grid-column: var(--cd) / span 2; grid-row: var(--rd); height: var(--h); }
 
@@ -288,10 +290,11 @@ const panelData = {
   }
 
   @media (max-width: 640px) {
-    .hive-wrap { --w: min(150px, calc((100vw - 2 * var(--gutter)) / 2.5)); }
+    .hive-wrap { --w: min(150px, calc((100vw - 2 * var(--gutter)) / 2.5)); --pulse-top: calc(var(--h) * 1.75); }
     .hive {
       grid-template-columns: repeat(5, calc(var(--w) / 2));
-      grid-template-rows: repeat(3, calc(var(--h) * 0.75)) var(--h);
+      /* Rows 1-2 and 3-4 interlock; the heartbeat runs between rows 2 and 3. */
+      grid-template-rows: calc(var(--h) * 0.75) calc(var(--h) + var(--pulse-gap)) calc(var(--h) * 0.75) var(--h);
     }
     .cell { grid-column: var(--cp) / span 2; grid-row: var(--rp); }
     .hex-value { font-size: 1.6rem; }
