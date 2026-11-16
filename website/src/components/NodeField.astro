@@ -2,7 +2,10 @@
 /**
  * Drifting node-and-edge field behind the hero. Reads as a neural graph
  * without being literal about it. Density scales with viewport area and the
- * whole thing goes static under prefers-reduced-motion.
+ * whole thing goes static under prefers-reduced-motion. It covers at most one
+ * screen at the top of its section, draws at 1x resolution and 30 frames a
+ * second: it is faint decoration, and a full-section canvas at 60 frames kept
+ * the main thread busy while nothing moved.
  */
 ---
 
@@ -31,7 +34,7 @@
 
     const build = () => {
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = 1;
 
       width = Math.max(1, rect.width);
       height = Math.max(1, rect.height);
@@ -88,10 +91,15 @@
       }
     };
 
-    const tick = () => {
+    let last = 0;
+    const tick = (t: number) => {
+      raf = requestAnimationFrame(tick);
+      if (t - last < 32) return;
+      last = t;
       for (const node of nodes) {
-        node.x += node.vx;
-        node.y += node.vy;
+        // Two steps per drawn frame keep the drift speed of 60 frames a second.
+        node.x += node.vx * 2;
+        node.y += node.vy * 2;
 
         // Wrap rather than bounce — avoids nodes piling up along the edges.
         if (node.x < -20) node.x = width + 20;
@@ -100,7 +108,6 @@
         if (node.y > height + 20) node.y = -20;
       }
       render();
-      raf = requestAnimationFrame(tick);
     };
 
     const start = () => {
@@ -151,9 +158,9 @@
 <style>
   .node-field {
     position: absolute;
-    inset: 0;
+    inset: 0 0 auto 0;
     width: 100%;
-    height: 100%;
+    height: min(100%, 100vh);
     z-index: 0;
     pointer-events: none;
     mask-image: radial-gradient(ellipse 78% 78% at 50% 45%, #000 35%, transparent 76%);

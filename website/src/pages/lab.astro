@@ -1,0 +1,49 @@
+---
+// The lab: small demos that run in the browser, on a page of their own so the
+// home page stays light. The menu's Lab dropdown links to each demo's tab
+// (/lab/#signal, #data-platform, #ai-system).
+import Base from '../layouts/Base.astro';
+import Lab from '../components/lab/Lab.astro';
+---
+
+<Base
+  title="Lab — Stefan Seman"
+  description="Small demos that run in your browser: a synthetic biosignal cleaned step by step, a data platform and an AI system."
+>
+  <section class="page-head section">
+    <div class="wrap">
+      <p class="eyebrow">Lab</p>
+      <h1 class="page-title">See it work.</h1>
+      <p class="page-lede">
+        Three small demos that run in your browser: a synthetic biosignal cleaned step by step, a
+        data platform and an AI system, each box opening what happens at that step. Every number
+        and row here is synthetic.
+      </p>
+    </div>
+  </section>
+
+  <section class="section lab-section" aria-label="Demos">
+    <div class="wrap">
+      <Lab />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-top: 2.5rem; padding-bottom: 0; }
+  .page-head .eyebrow { font-size: 0.75rem; }
+  .page-title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin-block: 0.6rem 0.85rem;
+    background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .page-lede { color: var(--text-dim); max-width: 62ch; font-size: 1.03rem; }
+  .lab-section { padding-top: clamp(1.5rem, 4vh, 2.75rem); }
+
+  @media (min-width: 720px) {
+    .page-head { padding-top: clamp(3.5rem, 9vh, 6.5rem); }
+  }
+</style>

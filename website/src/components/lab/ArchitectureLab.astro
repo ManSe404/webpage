@@ -1,0 +1,153 @@
+---
+// Two clickable architecture diagrams, a data platform and an AI system, made
+// of table boxes. A switch shows one diagram at a time; choosing a box opens
+// its details below the diagram, and the arrow keys walk along the flow.
+// Without JavaScript the switch stays hidden, both diagrams show and every
+// box's details show as a list under its diagram.
+//
+// Props: `id` (optional, default "arch") prefixes every element id, so the
+// component can appear twice on one page; `bare` keeps the switch hidden, for a
+// page whose own tabs pick the diagram (the lab's tabs click the hidden switch). The page wraps it in a section;
+// the component renders a small heading per diagram.
+// Content: data/architectures.json.
+import architectures from '../../data/architectures.json';
+import ArchDiagram from './ArchDiagram.astro';
+
+interface Props {
+  id?: string;
+  bare?: boolean;
+}
+
+const { id = 'arch', bare = false } = Astro.props;
+const { diagrams } = architectures;
+---
+
+<div class="alab" id={id} data-alab data-alab-bare={bare ? '' : undefined}>
+  <div class="alab-switch" role="tablist" aria-label="Choose a diagram" data-alab-switch hidden>
+    {diagrams.map((d, i) => (
+      <button
+        class={`alab-tab tone-${d.tone}`}
+        type="button"
+        role="tab"
+        id={`${id}-tab-${d.id}`}
+        aria-controls={`${id}-${d.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        data-tab={d.id}
+      >
+        <span class="alab-dot" aria-hidden="true"></span>{d.label}
+      </button>
+    ))}
+  </div>
+
+  {diagrams.map((d) => <ArchDiagram prefix={id} diagram={d} />)}
+</div>
+
+<script>
+  const KEYS_NEXT = ['ArrowRight', 'ArrowDown'];
+  const KEYS_PREV = ['ArrowLeft', 'ArrowUp'];
+
+  // Index after a key press, or null when the key is not a move.
+  const step = (key: string, i: number, last: number) =>
+    KEYS_NEXT.includes(key) ? Math.min(i + 1, last)
+    : KEYS_PREV.includes(key) ? Math.max(i - 1, 0)
+    : key === 'Home' ? 0
+    : key === 'End' ? last
+    : null;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-alab]').forEach((lab) => {
+    const tabs = [...lab.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const panels = [...lab.querySelectorAll<HTMLElement>('[data-ad]')];
+    const switcher = lab.querySelector<HTMLElement>('[data-alab-switch]');
+
+    const showPanel = (key: string, focus = false) => {
+      for (const t of tabs) {
+        const on = t.dataset.tab === key;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      }
+      for (const p of panels) p.hidden = p.dataset.ad !== key;
+    };
+
+    for (const panel of panels) {
+      panel.setAttribute('role', 'tabpanel');
+      const boxes = [...panel.querySelectorAll<HTMLButtonElement>('[data-box]')];
+      const steps = [...panel.querySelectorAll<HTMLElement>('[data-step]')];
+      const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
+
+      const choose = (i: number, how: 'init' | 'click' | 'key') => {
+        const key = boxes[i].dataset.box;
+        boxes.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+        // Light the arrows the flow has passed on its way to the chosen step.
+        const at = steps.findIndex((s) => s.contains(boxes[i]));
+        steps.forEach((s, j) => {
+          s.classList.toggle('is-on', j === at);
+          s.classList.toggle('is-past', at >= 0 && j < at);
+        });
+        let shown: HTMLElement | undefined;
+        for (const d of details) {
+          d.hidden = d.dataset.detail !== key;
+          if (!d.hidden) shown = d;
+        }
+        if (how === 'key') boxes[i].focus();
+        // On a phone the details sit far below the boxes: bring them into view.
+        if (how === 'click' && shown && shown.getBoundingClientRect().top > window.innerHeight - 64) {
+          shown.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
+        }
+      };
+
+      boxes.forEach((b, i) => {
+        b.disabled = false;
+        b.addEventListener('click', () => choose(i, 'click'));
+        b.addEventListener('keydown', (e) => {
+          const next = step(e.key, i, boxes.length - 1);
+          if (next === null) return;
+          e.preventDefault();
+          choose(next, 'key');
+        });
+      });
+      choose(0, 'init');
+    }
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => showPanel(t.dataset.tab ?? ''));
+      t.addEventListener('keydown', (e) => {
+        const next = step(e.key, i, tabs.length - 1);
+        if (next === null) return;
+        e.preventDefault();
+        showPanel(tabs[next].dataset.tab ?? '', true);
+      });
+    });
+
+    // From here on one diagram and one details entry show at a time.
+    lab.classList.add('is-enhanced');
+    if (switcher && !lab.hasAttribute('data-alab-bare')) switcher.hidden = false;
+    showPanel(tabs.find((t) => t.getAttribute('aria-selected') === 'true')?.dataset.tab ?? tabs[0]?.dataset.tab ?? '');
+  });
+</script>
+
+<style>
+  .alab { container: alab / inline-size; }
+
+  .alab-switch {
+    display: inline-flex; gap: 0.3rem; max-width: 100%; margin-bottom: 1.8rem; padding: 0.3rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  }
+  .alab-switch[hidden] { display: none; }
+  .alab-tab {
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 40px; padding: 0.35rem 1.1rem;
+    border-radius: 999px; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.03em;
+    color: var(--text-dim); transition: background 0.25s var(--ease), color 0.25s var(--ease);
+  }
+  .alab-tab:hover { color: var(--text); background: var(--surface-hover); }
+  .alab-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+  .alab-tab.tone-bio .alab-dot { color: var(--bio); }
+  .alab-tab.tone-ai .alab-dot { color: var(--ai); }
+  .alab-tab[aria-selected='true'] { color: var(--on-accent); }
+  .alab-tab[aria-selected='true'] .alab-dot { color: var(--on-accent); opacity: 1; }
+  .alab-tab.tone-bio[aria-selected='true'] { background: var(--bio); }
+  .alab-tab.tone-ai[aria-selected='true'] { background: var(--ai); }
+  .alab-tab.tone-ai:focus-visible { outline-color: var(--ai); }
+</style>

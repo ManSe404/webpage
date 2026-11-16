@@ -1,0 +1,206 @@
+{
+  "_about": "Content of the two clickable diagrams in components/lab/ArchitectureLab.astro. They show how such systems are built in general, drawn from the project files in content/projects: tools are named only when they appear in a stack there. Sample rows are synthetic and labelled so on the page.",
+  "diagrams": [
+    {
+      "id": "data",
+      "label": "Data platform",
+      "tone": "bio",
+      "lede": "Every source lands raw first, then moves through bronze, silver and gold before a report reads it.",
+      "flow": [
+        {
+          "id": "sources",
+          "name": "Sources",
+          "rows": ["business systems, exports", "documents of any shape", "read, never written to"],
+          "text": "Each source is read where it lives, on a schedule, and nothing changes on its side. Business systems, file exports and documents of every shape come in through the same intake.",
+          "tools": ["Azure Data Factory", "Python"]
+        },
+        {
+          "id": "raw",
+          "name": "Raw landing",
+          "rows": ["as delivered, append-only", "one folder per source and day", "never edited"],
+          "text": "Every delivery is stored exactly as it came, in its own format, and never edited. When a rule later turns out wrong, the layers above are rebuilt from here instead of asking the source again.",
+          "tools": ["Azure Data Lake", "Microsoft Fabric"],
+          "sample": {
+            "columns": ["file", "line as delivered"],
+            "rows": [
+              ["sales_0203.json", "{\"OrderNo\":\"SO-10482\",\"Date\":\"03.02.2026\",\"Cust\":\" c-0417 \",\"Sku\":\"P-220\",\"Qty\":\"12\",\"Price\":\"4,50\"}"],
+              ["sales_0204.json", "{\"OrderNo\":\"SO-10482\",\"Date\":\"03.02.2026\",\"Cust\":\" c-0417 \",\"Sku\":\"P-220\",\"Qty\":\"12\",\"Price\":\"4,50\"}"]
+            ],
+            "note": "The same order arrived in two deliveries, as text. Both lines are kept."
+          }
+        },
+        {
+          "id": "bronze",
+          "name": "Bronze",
+          "rows": ["typed columns", "file and load time kept", "still append-only"],
+          "text": "Raw lines are parsed into columns with real types: dates as dates, quantities and prices as numbers. Each row keeps the file it came from, so any figure can be traced back to its delivery.",
+          "tools": ["PySpark", "Microsoft Fabric"],
+          "sample": {
+            "columns": ["order_no", "order_date", "customer", "sku", "qty", "unit_price", "_file"],
+            "rows": [
+              ["SO-10482", "2026-02-03", "\" c-0417 \"", "P-220", "12", "4.50", "sales_0203.json"],
+              ["SO-10482", "2026-02-03", "\" c-0417 \"", "P-220", "12", "4.50", "sales_0204.json"]
+            ],
+            "note": "Typed now: a date, an integer, a decimal. Both copies and the source's spelling are still here."
+          }
+        },
+        {
+          "id": "silver",
+          "name": "Silver",
+          "rows": ["cleaned, deduplicated", "keys conformed", "one row per order line"],
+          "text": "Duplicates are removed, keys are trimmed and conformed, and each product is mapped to its group. Business rules run here once, so every table above uses the same cleaned rows.",
+          "tools": ["PySpark", "Python"],
+          "sample": {
+            "columns": ["order_no", "order_date", "customer_id", "product_group", "qty", "amount"],
+            "rows": [["SO-10482", "2026-02-03", "C-0417", "Snacks", "12", "54.00"]],
+            "note": "One row: the second delivery is gone, the customer key is clean and the amount is computed once."
+          }
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "rows": ["aggregated to the read grain", "facts and dimensions", "feeds reports and forecasts"],
+          "text": "Silver rows are aggregated to the grain the business reads at, such as product group by month. The same tables feed the reports and a monthly demand forecast per product group.",
+          "tools": ["PySpark", "Microsoft Fabric", "Synapse", "XGBoost", "MLflow"],
+          "sample": {
+            "columns": ["product_group", "month", "orders", "units", "amount"],
+            "rows": [
+              ["Snacks", "2026-02", "318", "4,106", "18,477.00"],
+              ["Drinks", "2026-02", "247", "3,580", "9,012.40"]
+            ],
+            "note": "Product group by month. The sample order is one of the 318 in the first row."
+          }
+        },
+        {
+          "id": "semantic",
+          "name": "Semantic model",
+          "rows": ["measures defined once", "reads gold directly", "names stay stable"],
+          "text": "One model sits on the gold tables and defines each measure once. Reports keep their names and measures, so a change underneath asks nothing new of the people reading them.",
+          "tools": ["Power BI", "Microsoft Fabric"],
+          "sample": {
+            "columns": ["measure", "definition", "Snacks · Feb 2026"],
+            "rows": [
+              ["Sales amount", "SUM(gold_sales[amount])", "18,477.00"],
+              ["Units", "SUM(gold_sales[units])", "4,106"],
+              ["Avg order value", "DIVIDE([Sales amount], SUM(gold_sales[orders]))", "58.10"]
+            ],
+            "note": "The sample order now lives inside a measure, evaluated for one product group and month."
+          }
+        },
+        {
+          "id": "reports",
+          "name": "Reports",
+          "rows": ["one model, many reports", "self-serve for business", "same numbers everywhere"],
+          "text": "Reports read the semantic model, never the tables directly, so two reports show the same number for the same measure. Business users build their own views on those measures.",
+          "tools": ["Power BI"]
+        }
+      ],
+      "side": [
+        {
+          "id": "quality",
+          "name": "Data quality checks",
+          "rows": ["between every two layers", "counts, keys, duplicates", "monitor beside the reports"],
+          "text": "Checks run as data moves from one layer to the next: row counts against the delivery, required keys present, no duplicates at the declared grain. An operations monitor beside the reports shows what loaded and which checks failed.",
+          "tools": ["Python", "PySpark", "Microsoft Fabric"]
+        },
+        {
+          "id": "deploy",
+          "name": "Git + DEV → PROD",
+          "rows": ["every change in Git", "reviewed in a pull request", "promoted DEV → PROD"],
+          "text": "Notebooks, pipelines, models and reports live in Git. A change is reviewed in a pull request, runs in DEV first and reaches production through a deployment pipeline.",
+          "tools": ["Azure DevOps", "Microsoft Fabric"]
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "AI system",
+      "tone": "ai",
+      "lede": "Answers come from retrieved passages and point back to them. The model plans and explains; code computes every number.",
+      "flow": [
+        {
+          "id": "documents",
+          "name": "Documents",
+          "rows": ["PDFs, workbooks, decks", "synced as they change", "access kept per file"],
+          "text": "Documents are synced from where people keep them, and every edit becomes an event on a queue. The index follows the document set as it changes instead of waiting for a nightly rebuild.",
+          "risk": "A stale copy: the bot answers from last month's version of a document.",
+          "tools": ["Microsoft Graph", "RabbitMQ"]
+        },
+        {
+          "id": "parse",
+          "name": "Parse & OCR",
+          "rows": ["text, tables, layout", "scans through OCR", "page, sheet, cell kept"],
+          "text": "Each file becomes text and tables with its structure intact. Scanned pages go through OCR, and every piece keeps where it came from: page, sheet and cell.",
+          "risk": "A table read as loose text loses which number belonged to which row.",
+          "tools": ["pypdf", "Python"]
+        },
+        {
+          "id": "chunk",
+          "name": "Chunk",
+          "rows": ["split along structure", "a plan per document", "source on every chunk"],
+          "text": "Documents are split along their own structure, such as articles, sections or sheets, not at a fixed length. Each kind of document gets its own plan, and every chunk carries its source location.",
+          "risk": "A rule split from its exception, so the retrieved passage says the opposite of the document.",
+          "tools": ["Python", "Pydantic"]
+        },
+        {
+          "id": "embed",
+          "name": "Embed",
+          "rows": ["one model per index", "across languages", "changed files only"],
+          "text": "Each chunk becomes a vector from one embedding model, chosen to work across the languages of the documents. A changed document is embedded again on its own, without rebuilding the rest.",
+          "risk": "Vectors from two models in one index make every similarity score meaningless.",
+          "tools": ["Azure OpenAI", "Azure AI Foundry", "RabbitMQ"]
+        },
+        {
+          "id": "index",
+          "name": "Hybrid index",
+          "rows": ["vectors + keywords", "metadata for filters", "updated in place"],
+          "text": "A vector index and a keyword index sit side by side, so exact names and codes are found as well as paraphrases. Source, language and access groups live on each chunk; document records sit in a relational store beside it.",
+          "risk": "Vector search alone misses an exact article number or product code that keywords find at once.",
+          "tools": ["Qdrant", "PostgreSQL", "SQLite"]
+        },
+        {
+          "id": "retrieve",
+          "name": "Retrieve",
+          "rows": ["a plan per question", "filter, then rank", "best passages only"],
+          "text": "Each question gets its own plan: a lookup, a structure question and a catalog question are searched differently. Candidates are filtered by access and metadata first, then ranked, and only the best passages go on.",
+          "risk": "The right passage ranks eleventh and the model never sees it.",
+          "tools": ["Qdrant", "LangChain"]
+        },
+        {
+          "id": "generate",
+          "name": "Generate",
+          "rows": ["model plans and explains", "code computes numbers", "chat, slide or sheet"],
+          "text": "The model writes from the retrieved passages only. When a figure is needed it plans the calculation and code computes it; one answer can come out as chat text, an editable slide or a spreadsheet.",
+          "risk": "The model does the arithmetic or fills a gap from memory, and the number looks right.",
+          "tools": ["Anthropic API", "Azure OpenAI", "Azure AI Foundry", "LangChain", "python-pptx"]
+        },
+        {
+          "id": "cite",
+          "name": "Cite & verify",
+          "rows": ["every claim to a passage", "numbers to their cell", "declines if unsupported"],
+          "text": "Every statement points to the passage behind it, and every number to its workbook, sheet and cell. When the sources do not hold the answer up, the system declines rather than guesses.",
+          "risk": "A citation to a real passage that does not say what the answer claims.",
+          "tools": ["Python", "Pydantic"]
+        }
+      ],
+      "side": [
+        {
+          "id": "evaluation",
+          "name": "Evaluation",
+          "rows": ["one golden-set format", "retrieval scored by doc ID", "judge checked by people"],
+          "text": "Every chatbot is measured on a golden set of questions with known sources. Retrieval is scored by document ID before any LLM judge, a new retrieval step stays only if it beats plain BM25, and a change ships on the number rather than on a demo.",
+          "risk": "A generous LLM judge; the local judge model is checked against human labels first.",
+          "tools": ["DeepEval", "Ollama", "Pydantic", "Azure DevOps"]
+        },
+        {
+          "id": "permissions",
+          "name": "Permissions",
+          "rows": ["who is asking", "filtered before ranking", "never left to the prompt"],
+          "text": "The API knows who is asking, and every chunk carries the access groups of its document. Retrieval filters on them before ranking, so a passage the user may not open never reaches the model.",
+          "risk": "Filtering after generation, or asking the model to hold back, leaks text the user may not see.",
+          "tools": ["FastAPI", "Qdrant"]
+        }
+      ]
+    }
+  ]
+}

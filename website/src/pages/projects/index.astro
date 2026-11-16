@@ -1,19 +1,42 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectHive from '../../components/hive/ProjectHive.astro';
+import { workType } from '../../lib/dashboard';
 
-const projects = (await getCollection('projects')).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const total = projects.length;
 
-const categories = ['All', ...new Set(projects.map((p) => p.data.category))];
+// One big honeycomb, the projects of one field next to each other so the
+// colours cluster: AI first, then data and analytics, then the rest; by order
+// inside each field.
+const FIELDS = [
+  ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'],
+  ['Data Engineering', 'Machine Learning'],
+];
+const fieldRank = (category: string) => {
+  const i = FIELDS.findIndex((f) => f.includes(category));
+  return i === -1 ? FIELDS.length : i;
+};
+const ordered = [...projects].sort((a, b) => fieldRank(a.data.category) - fieldRank(b.data.category) || a.data.order - b.data.order);
 
-// The three most recent lead the page as full case-study cards; everything after
-// is a compact grid, so eighteen projects stay scannable instead of becoming a
-// wall of equally-weighted blocks.
-const lead = projects.slice(0, 3);
-const rest = projects.slice(3);
+// Type of work follows who the work was for: own projects, the research
+// institute, and everything delivered for an employer or a client.
+const TYPES = [
+  { id: 'all', label: 'All' },
+  { id: 'client', label: 'Client work' },
+  { id: 'research', label: 'Research' },
+  { id: 'personal', label: 'Personal & open source' },
+].map((t) => ({ ...t, count: t.id === 'all' ? total : projects.filter((p) => workType(p.data.org) === t.id).length }));
+
+// Field follows the category, in the same three groups as the honeycomb's colours.
+const fieldOf = (category: string) => ['ai', 'data'][fieldRank(category)] ?? 'software';
+const FIELD_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'ai', label: 'AI systems' },
+  { id: 'data', label: 'Data & analytics' },
+  { id: 'software', label: 'Software & research' },
+].map((f) => ({ ...f, count: f.id === 'all' ? total : projects.filter((p) => fieldOf(p.data.category) === f.id).length }));
 ---
 
 <Base
@@ -25,183 +48,122 @@ const rest = projects.slice(3);
       <p class="eyebrow">Portfolio</p>
       <h1 class="page-title">Projects</h1>
       <p class="page-lede">
-        {projects.length} systems across generative AI, document intelligence, data
-        engineering, and biomedical research — the client work built to run in
-        production, the personal projects honest about where they stand.
+        {total} systems across generative AI, document intelligence, data engineering, and
+        biomedical research. Pick a cell to read what it is, what it achieved, my role, the
+        tools and who it was for.
       </p>
-
-      <div class="filters" role="group" aria-label="Filter projects by category">
-        {categories.map((category, index) => (
-          <button
-            class={`filter mono ${index === 0 ? 'is-active' : ''}`}
-            data-filter={category}
-            type="button"
-            aria-pressed={index === 0 ? 'true' : 'false'}
-          >
-            {category}
-            <span class="filter-count">
-              {category === 'All'
-                ? projects.length
-                : projects.filter((p) => p.data.category === category).length}
-            </span>
-          </button>
-        ))}
-      </div>
     </div>
   </section>
 
-  <section class="section projects-section">
+  <section class="section projects-section" aria-label="Projects by field" data-projects>
     <div class="wrap">
-      {/* Both grids use .project-slot, so the category filter below is one pass
-          over everything and does not need to know about the split. */}
-      <div class="lead-grid" data-grid>
-        {lead.map((project) => (
-          <div class="project-slot" data-category={project.data.category}>
-            <ProjectCard project={project} featured />
-          </div>
-        ))}
+      <div class="filters" data-filters hidden>
+        <div class="types" role="group" aria-label="Filter by field">
+          <span class="filter-label mono">Field</span>
+          {FIELD_FILTERS.map((f, i) => (
+            <button class="type mono" type="button" data-filter="field" data-value={f.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {f.label} <span class="type-count" data-count>{f.count}</span>
+            </button>
+          ))}
+        </div>
+        <div class="types" role="group" aria-label="Filter by type of work">
+          <span class="filter-label mono">Type of work</span>
+          {TYPES.map((t, i) => (
+            <button class="type mono" type="button" data-filter="type" data-value={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {t.label} <span class="type-count" data-count>{t.count}</span>
+            </button>
+          ))}
+        </div>
       </div>
+      <p class="status mono" aria-live="polite" data-status></p>
 
-      <div class="projects-grid" data-grid>
-        {rest.map((project) => (
-          <div class="project-slot" data-category={project.data.category}>
-            <ProjectCard project={project} compact />
-          </div>
-        ))}
-      </div>
-
-      <p class="empty mono" data-empty hidden>No projects in this category.</p>
+      <p class="legend mono"><span class="dot dot-ai"></span>AI systems <span class="dot dot-data"></span>Data &amp; analytics <span class="dot dot-sw"></span>Software &amp; research</p>
+      <ProjectHive id="p" projects={ordered} wide />
     </div>
   </section>
 </Base>
 
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
-  const slots = document.querySelectorAll<HTMLElement>('.project-slot');
-  const grids = document.querySelectorAll<HTMLElement>('[data-grid]');
-  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  // Two filters that combine: field and type of work. Each button shows how many
+  // projects it would leave with the other filter as it is.
+  const root = document.querySelector<HTMLElement>('[data-projects]');
+  const panel = root?.querySelector<HTMLElement>('[data-filters]');
+  if (root && panel) {
+    const buttons = [...panel.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const hive = root.querySelector<HTMLElement>('[data-phive]');
+    const cells = [...root.querySelectorAll<HTMLElement>('li[data-type]')];
+    const state: Record<string, string> = { field: 'all', type: 'all' };
+    const fits = (li: HTMLElement, field: string, type: string) =>
+      (field === 'all' || li.dataset.field === field) && (type === 'all' || li.dataset.type === type);
+    panel.hidden = false;
 
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const selected = button.dataset.filter;
+    const apply = () => {
+      let shown = 0;
+      for (const li of cells) {
+        li.hidden = !fits(li, state.field, state.type);
+        if (!li.hidden) shown++;
+      }
+      hive?.dispatchEvent(new Event('phive:relayout'));
+      for (const b of buttons) {
+        const kind = b.dataset.filter === 'field' ? 'field' : 'type';
+        const value = b.dataset.value ?? 'all';
+        b.setAttribute('aria-pressed', String(state[kind] === value));
+        const n = cells.filter((li) => fits(li, kind === 'field' ? value : state.field, kind === 'type' ? value : state.type)).length;
+        const count = b.querySelector('[data-count]');
+        if (count) count.textContent = String(n);
+        b.classList.toggle('is-empty', n === 0);
+      }
+      if (status) {
+        status.textContent = shown === cells.length ? `Showing all ${cells.length} projects`
+          : shown === 0 ? 'No project matches both filters' : `Showing ${shown} of ${cells.length} projects`;
+      }
+    };
 
-      buttons.forEach((other) => {
-        const active = other === button;
-        other.classList.toggle('is-active', active);
-        other.setAttribute('aria-pressed', String(active));
-      });
-
-      let visible = 0;
-      slots.forEach((slot) => {
-        const match = selected === 'All' || slot.dataset.category === selected;
-        slot.hidden = !match;
-        if (match) visible++;
-      });
-
-      // A grid whose slots are all hidden still contributes its own margin, so
-      // filtering to a category with no lead projects would leave a gap on top.
-      grids.forEach((grid) => {
-        grid.hidden = !grid.querySelector('.project-slot:not([hidden])');
-      });
-
-      if (empty) empty.hidden = visible > 0;
-    });
-  });
+    for (const b of buttons) {
+      b.addEventListener('click', () => { state[b.dataset.filter === 'field' ? 'field' : 'type'] = b.dataset.value ?? 'all'; apply(); });
+    }
+    apply();
+  }
 </script>
 
 <style>
-  .page-head {
-    padding-bottom: 0;
-  }
-
+  .page-head { padding-top: 2.5rem; padding-bottom: 0; }
+  /* The global eyebrow is 0.72rem; this page keeps every text at 12px or more. */
+  .page-head .eyebrow { font-size: 0.75rem; }
   .page-title {
     font-size: clamp(2.4rem, 6vw, 4rem);
-    margin-block: 0.75rem 1rem;
+    margin-block: 0.6rem 0.85rem;
     background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
+  .page-lede { color: var(--text-dim); max-width: 62ch; font-size: 1.03rem; }
 
-  .page-lede {
-    color: var(--text-dim);
-    max-width: 62ch;
-    font-size: 1.03rem;
+  .projects-section { padding-top: clamp(1.5rem, 4vh, 2.75rem); }
+
+  .filters { display: grid; gap: 0.7rem; }
+  .filters[hidden] { display: none; }
+  .types { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+  .filter-label { min-width: 7.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .type.is-empty:not([aria-pressed='true']) { opacity: 0.45; }
+  .type {
+    min-height: 36px; padding: 0 0.9rem; font-size: 0.8rem; color: var(--text-dim);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
   }
+  .type[aria-pressed='true'] { color: var(--on-accent); background: var(--bio); border-color: var(--bio); }
+  .type-count { margin-left: 0.3rem; opacity: 0.75; }
+  @media (hover: hover) { .type:hover { border-color: var(--bio); color: var(--text); } .type[aria-pressed='true']:hover { color: var(--on-accent); } }
+  .status { margin: 0.8rem 0 0; font-size: 0.75rem; color: var(--text-faint); }
 
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 2rem;
-  }
+  .legend { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin: 1.6rem 0 1.2rem; font-size: 0.75rem; color: var(--text-dim); }
+  .dot { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; border-radius: 50%; vertical-align: middle; }
+  .dot-ai { background: var(--ai); }
+  .dot-data { background: var(--bio); }
+  .dot-sw { background: var(--border-strong); border: 1px solid var(--text-dim); }
 
-  .filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.79rem;
-    letter-spacing: 0.04em;
-    padding: 0.42rem 0.9rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text-dim);
-    transition: all 0.28s var(--ease);
-  }
-
-  .filter:hover {
-    color: var(--text);
-    border-color: var(--border-strong);
-  }
-
-  .filter.is-active {
-    color: var(--bio);
-    border-color: rgba(var(--bio-rgb), 0.5);
-    background: rgba(var(--bio-rgb), 0.09);
-    box-shadow: 0 0 20px -8px var(--glow-bio);
-  }
-
-  .filter-count {
-    font-size: 0.68rem;
-    color: var(--text-faint);
-  }
-
-  .filter.is-active .filter-count {
-    color: var(--bio);
-  }
-
-  .projects-section {
-    padding-top: clamp(2rem, 5vh, 3rem);
-  }
-
-  /* Three across at desktop width — the lead row is the page's opening statement. */
-  .lead-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 1.15rem;
-    margin-bottom: 1.15rem;
-  }
-
-  /* Denser than the lead row: compact cards carry summary only, so they tile
-     smaller without feeling cramped. */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-    gap: 1.15rem;
-  }
-
-  [data-grid][hidden] {
-    display: none;
-  }
-
-  .project-slot[hidden] {
-    display: none;
-  }
-
-  .empty {
-    text-align: center;
-    color: var(--text-faint);
-    font-size: 0.88rem;
-    padding-block: 3rem;
+  @media (min-width: 720px) {
+    .page-head { padding-top: clamp(3.5rem, 9vh, 6.5rem); }
   }
 </style>

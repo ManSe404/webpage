@@ -21,13 +21,12 @@ change what the site says.
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Name, bio, links, hero stats | `src/data/profile.json` | Drives hero, footer, contact, JSON-LD; the hero stats are typed in, not computed |
-| Career timeline | `src/data/experience.json` | Sorted newest-first automatically |
-| Collaborations | `src/data/collaborations.json` | `needsReview: true` is meant to mark unconfirmed copy; nothing reads it yet, so the card is still published |
-| Skills | `src/data/skills.json` | Grouped chips in the Stack section |
-| Education, certs, memberships | `src/data/education.json` | |
+| Name, bio, links, years of experience | `src/data/profile.json` | Drives the home dashboard, footer, contact, JSON-LD; only the years are typed in, the dashboard computes the rest |
+| Career | `src/data/experience.json` | The career timeline in the dashboard's Career panel, newest first |
+| Skills | `src/data/skills.json` | Skill groups in the dashboard's Tools panel |
+| Education, certs, memberships | `src/data/education.json` | Degrees and certifications in the Career panel, memberships on the research page |
 | Publications | `src/data/publications.csv` | Also generates the "output by year" bars |
-| Project case studies | `src/content/projects/*.md` | Frontmatter + markdown body |
+| Projects | `src/content/projects/*.md` | Frontmatter only: the popup is the whole project, with no body and no page of its own |
 
 ### Adding a project
 
@@ -36,26 +35,26 @@ Drop a new `.md` file into `src/content/projects/`:
 ```markdown
 ---
 title: Thing I Built
-category: Generative AI      # becomes a filter on /projects
-summary: One sentence for the card.
-featured: false              # true -> larger card on the home page
+category: Generative AI      # picks the field on the home page and the honeycomb on /projects
+summary: One sentence for the popup.
+# featured: 1                # position in the dashboard's Projects panel; omit for most projects
 order: 12                    # controls sort position
 impact:
-  - What changed as a result
+  - What changed as a result # the first line stands in when there is no Result metric
 stack:
   - Python
-metrics:                     # optional, shown on the detail page
-  - label: Scope
-    value: Enterprise
+metrics:                     # optional, found by label: Role and Result show in the popup
+  - label: Role
+    value: Lead engineer
 ---
-
-## The problem
-...
 ```
 
-The route, the card, the filter counts, and the prev/next links all update
-automatically. Frontmatter is schema-validated in `src/content.config.ts` — a
-typo fails the build rather than silently rendering an empty page.
+The file has no body: the honeycomb cell, its popup and the filter counts
+update automatically, and there is no page per project. Start from a template
+in `../docs/guides/templates/`; `../docs/guides/writing-a-project.md` says
+where each field shows. Frontmatter is schema-validated in
+`src/content.config.ts` — a typo fails the build rather than silently
+rendering an empty block.
 
 ### Adding a publication
 
@@ -91,7 +90,9 @@ repo is renamed or moved to a custom domain, update `site` and `base` there.
 ## Notes
 
 - No UI framework and no client-side router — the only JavaScript is the ECG
-  canvas, the node field, scroll reveals, the stat counters, and the nav/filter
-  toggles. All of it degrades gracefully without JS.
+  canvas, the node field, scroll reveals, the dashboard's cells, panels and
+  counters, the project honeycomb popups, and the nav and filter toggles.
+  Without JS the pages still read, except the dashboard panels, which stay
+  closed while their cells link to a page instead.
 - Every animation respects `prefers-reduced-motion`, and the canvases stop
   rendering when off-screen or when the tab is hidden.

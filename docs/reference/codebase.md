@@ -21,29 +21,37 @@ website/                      the Astro project
     images/                   favicon and the Open Graph image
   src/
     content.config.ts         the four content collections and their schemas
-    content/projects/         one Markdown case study per project
-    data/                     profile, experience, collaborations, skills, education (JSON); publications (CSV)
+    content/projects/         one Markdown file per project, frontmatter only
+    data/                     profile, experience, skills, education (JSON); publications (CSV)
     assets/                   images optimised at build time (the portrait)
     layouts/Base.astro        HTML shell: meta tags, JSON-LD, fonts, navigation, footer, scroll reveal
     pages/
-      index.astro             home page
-      projects/index.astro    all projects with the category filter
-      projects/[...slug].astro one page per case study
+      index.astro             home page: dashboard, the Chosen work honeycomb, contact
+      projects/index.astro    every project in one big honeycomb, with field and type-of-work filters
       research.astro          publications and the numbers derived from them
+      contact.astro           the contact page: email card (send, copy, CV), profiles, what to write about
+      lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
-      Hero.astro              intro, portrait, stat counters, both animations
+      hive/HiveDashboard.astro home dashboard: portrait, name, tagline and actions, the honeycomb, the panels, and the vitals monitor as a full-width line at the bottom; seven honeycomb cells with count-up numbers, deep links that open a panel
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (four figures, the most cited as ranked cards), skills, in progress, contact
+      hive/VitalsMonitor.astro a sweeping synthetic ECG with heart rate and HRV computed from its beats, linking to the lab; a small `strip` or a full-width `line` under a one-line header (the dashboard); with `pulse`, each beat lights one or two random on-screen cells marked `data-beat` (dashboard and Chosen work)
+      hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
+      hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
+      lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too
+      lab/SignalLab.astro     synthetic ECG-like signal, filter and peak detection with sliders, live numbers, donut
+      lab/ArchitectureLab.astro data platform and AI system diagrams with a switch (hidden with `bare`, where the lab's tabs drive it); draws each with lab/ArchDiagram.astro
       Section.astro           section wrapper with eyebrow, title and lede
-      ProjectCard.astro       project card: featured, regular or compact
-      Collaborations.astro    collaboration cards
-      Timeline.astro          career timeline; warns about unconfirmed dates
-      SkillGrid.astro         grouped skill chips
-      Contact.astro           contact channels
-      Nav.astro               menu (Projects, Collaborations, Career, Research, Contact), CV download, mobile toggle
+      Nav.astro               menu (Projects, Research, Lab with a dropdown of the demos, Contact), CV download, mobile toggle
       Footer.astro            footer links
-      EcgTrace.astro          animated ECG trace on a canvas
-      NodeField.astro         animated node-and-edge field behind the hero
+      EcgTrace.astro          animated ECG trace on a canvas (the contact page's card)
+      NodeField.astro         animated node-and-edge field behind the top of the dashboard: at most one screen high, 1x resolution, 30 frames a second
     lib/
+      honeycomb.ts            honeycomb placement (cell position, row tracks, columns), shared by the dashboard and the project honeycombs, server and browser
+      vitals.ts               the monitor's synthetic heart: R-peak times, signal value, heart rate and HRV, the sweep sizes (strip, line), the first window and the SVG path
+      lab.ts                  the lab's demos in tab order (address, label, panel, diagram), read by the lab tabs and the menu
+      signal.ts               pure functions behind the signal lab: generation, filtering, peak detection, scoring, plot paths
       url.ts                  withBase(): prefixes paths with the configured base
+      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, a role's length, what is in progress, a project's result and attribution); also used by research.astro, HivePanels, ProjectHive, ProjectDetails and projects/index.astro
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation
@@ -59,5 +67,4 @@ docs/                         this documentation
 
 Generated and not committed: `website/node_modules/`, `website/dist/`, `website/.astro/`.
 
-Entry points: the four files under `website/src/pages/`, one route each (the case-study file makes one route per
-project).
+Entry points: the three files under `website/src/pages/`, one route each: `/`, `/projects/` and `/research/`.

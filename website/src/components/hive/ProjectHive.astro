@@ -1,0 +1,228 @@
+---
+// A honeycomb where every cell is one project. Choosing a cell opens a popup
+// below the honeycomb that answers the same five questions for every project:
+// what it is, what it achieved, the role, the tools and for whom. The popup
+// is the project's whole description; there is no separate project page.
+// Without JavaScript the popups show as a plain list under the honeycomb and
+// each cell links to its entry. A page can hide cells (li[hidden]) and send
+// the `phive:relayout` event; the honeycomb then closes its gaps.
+import type { CollectionEntry } from 'astro:content';
+import { workType } from '../../lib/dashboard';
+import ProjectDetails from './ProjectDetails.astro';
+import { cols, place, tracks } from '../../lib/honeycomb';
+
+interface Props {
+  id: string;
+  projects: CollectionEntry<'projects'>[];
+  /** Six cells per row on wide screens (one big honeycomb), instead of four. */
+  wide?: boolean;
+  /** Put the open project's address in the bar and open it from a link (off inside a dashboard panel). */
+  linkable?: boolean;
+}
+
+const { id, projects, wide = false, linkable = true } = Astro.props;
+
+// "Mosaic — Document AI Bricks" -> "Mosaic"; titles without a dash stay whole.
+const shortTitle = (title: string) => title.split(' — ')[0];
+
+// Four cells per row on wide screens, two on phones (lib/honeycomb.ts).
+const items = projects.map((p) => ({
+  key: `${id}-${p.id}`,
+  project: p,
+  short: shortTitle(p.data.title),
+  field: p.data.category,
+  type: workType(p.data.org),
+  tone: /AI|Vision/.test(p.data.category) ? 'ai' : /Data|Machine/.test(p.data.category) ? 'bio' : 'sw',
+}));
+---
+
+<div class={`phive ${wide ? 'is-wide' : ''}`} data-phive data-linkable={linkable ? 'true' : 'false'} style={`--tracks-w:${tracks(items.length, 6)};--tracks-d:${tracks(items.length, 4)};--tracks-p:${tracks(items.length, 2)};--cols-w:${cols(items.length, 6)};--cols-d:${cols(items.length, 4)};--cols-p:${cols(items.length, 2)}`}>
+  <ul class="phive-grid" aria-label="Projects">
+    {items.map((item, i) => {
+      const w = place(i, 6);
+      const d = place(i, 4);
+      const m = place(i, 2);
+      return (
+        <li class={`pcell tone-${item.tone}`} data-beat data-type={item.type} data-field={{ ai: 'ai', bio: 'data', sw: 'software' }[item.tone]} style={`--rw:${w.row};--cw:${w.col};--rd:${d.row};--cd:${d.col};--rp:${m.row};--cp:${m.col}`}>
+          <a class="phex" href={`#${item.key}`} data-pcell={item.key}>
+            <span class="phex-title">{item.short}</span>
+            <span class="phex-field mono">{item.field}</span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <div class="pop" data-pop>
+    <button class="pop-close mono" type="button" data-pop-close hidden aria-label="Close project">Close ✕</button>
+    {items.map((item) => (
+      <article class="pop-item" id={item.key} data-pop-item>
+        <ProjectDetails project={item.project} />
+      </article>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { cols, place, tracks } from '../../lib/honeycomb';
+
+  document.querySelectorAll<HTMLElement>('[data-phive]').forEach((hive) => {
+    const pop = hive.querySelector<HTMLElement>('[data-pop]');
+    const close = hive.querySelector<HTMLButtonElement>('[data-pop-close]');
+    const cells = [...hive.querySelectorAll<HTMLAnchorElement>('[data-pcell]')];
+    const items = [...hive.querySelectorAll<HTMLElement>('[data-pop-item]')];
+    let open: string | null = null;
+
+    const show = (key: string | null) => {
+      open = key;
+      for (const c of cells) {
+        const on = c.dataset.pcell === open;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-expanded', String(on));
+      }
+      for (const it of items) it.hidden = it.id !== open;
+      if (pop) pop.classList.toggle('is-open', open !== null);
+      // In a tall honeycomb the popup can sit below the screen: bring it into view.
+      if (open && pop) {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        pop.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      }
+    };
+
+    // From here on the popups open one at a time instead of showing as a list.
+    hive.classList.add('is-enhanced');
+    if (close) close.hidden = false;
+    show(null);
+
+    for (const c of cells) {
+      c.setAttribute('role', 'button');
+      c.setAttribute('aria-controls', c.dataset.pcell ?? '');
+      c.addEventListener('click', (e) => {
+        e.preventDefault();
+        show(open === c.dataset.pcell ? null : c.dataset.pcell ?? null);
+      });
+      c.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); c.click(); } });
+    }
+    close?.addEventListener('click', () => show(null));
+
+    // One project can be linked: /#work-mosaic or /projects/#ai-mosaic opens its
+    // popup; opening a popup puts its address in the bar (without a history entry).
+    const fromHash = () => {
+      const key = location.hash.slice(1);
+      if (!cells.some((c) => c.dataset.pcell === key)) return;
+      show(key);
+      hive.scrollIntoView({ block: 'start' });
+    };
+    if (hive.dataset.linkable === 'true') {
+      for (const c of cells) {
+        c.addEventListener('click', () => {
+          history.replaceState(null, '', open ? `#${open}` : location.pathname + location.search);
+        });
+      }
+      window.addEventListener('hashchange', fromHash);
+      fromHash();
+    }
+    hive.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) show(null); });
+
+    // After a page hides cells: pack the visible ones and close a popup whose cell is gone.
+    hive.addEventListener('phive:relayout', () => {
+      const visible = cells.map((c) => c.parentElement as HTMLElement).filter((li) => !li.hidden);
+      visible.forEach((li, i) => {
+        const w = place(i, 6);
+        const d = place(i, 4);
+        const m = place(i, 2);
+        li.style.setProperty('--rw', String(w.row));
+        li.style.setProperty('--cw', String(w.col));
+        li.style.setProperty('--rd', String(d.row));
+        li.style.setProperty('--cd', String(d.col));
+        li.style.setProperty('--rp', String(m.row));
+        li.style.setProperty('--cp', String(m.col));
+      });
+      hive.style.setProperty('--tracks-w', tracks(visible.length, 6));
+      hive.style.setProperty('--cols-w', String(cols(visible.length, 6)));
+      hive.style.setProperty('--tracks-d', tracks(visible.length, 4));
+      hive.style.setProperty('--tracks-p', tracks(visible.length, 2));
+      hive.style.setProperty('--cols-d', String(cols(visible.length, 4)));
+      hive.style.setProperty('--cols-p', String(cols(visible.length, 2)));
+      if (open && !visible.some((li) => li.querySelector(`[data-pcell="${open}"]`))) show(null);
+    });
+  });
+</script>
+
+<style>
+  .phive { --w: 150px; --h: calc(var(--w) * 1.1547); }
+  .phive-grid {
+    list-style: none; margin: 0 auto; padding: 0; width: max-content; max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--cols-d), calc(var(--w) / 2));
+    grid-template-rows: var(--tracks-d);
+  }
+  .pcell { grid-column: var(--cd) / span 2; grid-row: var(--rd); height: var(--h); }
+  .pcell[hidden] { display: none; }
+
+  .phex {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;
+    width: 100%; height: 100%; padding: 0 1rem; text-align: center; text-decoration: none;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--border-strong);
+    transform: scale(0.95);
+    transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .phex::before {
+    content: ''; position: absolute; inset: 1.5px; z-index: 0;
+    clip-path: inherit; background: var(--bg-raised);
+  }
+  .phex > * { position: relative; z-index: 1; }
+  .phex-title { font-size: 0.9rem; font-weight: 600; line-height: 1.25; color: var(--text); }
+  .phex-field { font-size: 0.75rem; }
+  .tone-ai .phex-field { color: var(--ai); }
+  .tone-bio .phex-field { color: var(--bio); }
+  /* The ring and a faint fill carry the colour: ember for AI, honey for data. */
+  .tone-ai .phex { background: rgba(var(--ai-rgb), 0.5); }
+  .tone-bio .phex { background: rgba(var(--bio-rgb), 0.45); }
+  .tone-ai .phex::before { background: linear-gradient(rgba(var(--ai-rgb), 0.07), rgba(var(--ai-rgb), 0.07)), var(--bg-raised); }
+  .tone-bio .phex::before { background: linear-gradient(rgba(var(--bio-rgb), 0.06), rgba(var(--bio-rgb), 0.06)), var(--bg-raised); }
+  .tone-sw .phex-field { color: var(--text-dim); }
+  .pcell .phex:hover, .pcell .phex:focus-visible, .pcell .phex.is-active { background: var(--bio); transform: scale(1); }
+  .tone-ai .phex:hover, .tone-ai .phex:focus-visible, .tone-ai .phex.is-active { background: var(--ai); }
+  .phex.is-active::before { background: #2b2214; }
+  .phex:focus-visible { outline: none; }
+  .pcell:has(.phex:hover), .pcell:has(.phex.is-active), .pcell:has(.phex:focus-visible) { filter: drop-shadow(0 0 12px var(--glow-bio)); }
+  /* On the home page a heartbeat lights a random cell for a moment (VitalsMonitor with pulse). */
+  .pcell { transition: filter 0.45s var(--ease); }
+  .pcell.is-pulse { filter: drop-shadow(0 0 10px var(--glow-bio)); }
+  .pcell.is-pulse .phex { background: var(--bio); }
+
+  /* Without JavaScript: every popup shows, as a list under the honeycomb. */
+  .pop { display: grid; gap: 1rem; margin-top: 1.4rem; }
+  .pop-item { padding: clamp(1.1rem, 2.5vw, 1.6rem); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  /* With JavaScript: one popup at a time, only when a cell is chosen. */
+  .is-enhanced .pop { display: none; position: relative; }
+  .is-enhanced .pop.is-open { display: block; }
+  .pop-item[hidden] { display: none; }
+
+  .pop-close {
+    position: absolute; top: 0.8rem; right: 0.8rem; z-index: 1; min-height: 32px; padding: 0 0.7rem;
+    font-size: 0.75rem; color: var(--text-dim); background: transparent;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .pop-close:hover { color: var(--text); border-color: var(--border-strong); }
+
+  @media (max-width: 640px) {
+    .phive { --w: min(160px, calc((100vw - 2 * var(--gutter)) / 2.5)); }
+    .phive-grid {
+      grid-template-columns: repeat(var(--cols-p), calc(var(--w) / 2));
+      grid-template-rows: var(--tracks-p);
+    }
+    .pcell { grid-column: var(--cp) / span 2; grid-row: var(--rp); }
+    .phex-title { font-size: 0.85rem; }
+  }
+
+  /* One big honeycomb: six cells per row where the page is wide enough. */
+  @media (min-width: 1100px) {
+    .phive.is-wide .phive-grid { grid-template-columns: repeat(var(--cols-w), calc(var(--w) / 2)); grid-template-rows: var(--tracks-w); }
+    .phive.is-wide .pcell { grid-column: var(--cw) / span 2; grid-row: var(--rw); }
+  }
+
+  @media (prefers-reduced-motion: reduce) { .phex { transition: none; } }
+</style>

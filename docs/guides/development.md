@@ -11,31 +11,32 @@ Before a commit, run what CI runs on every pull request:
 cd website && npm run check && npm run build
 ```
 
-Watch the build output for `[timeline] UNCONFIRMED DATE` warnings: they name roles in `experience.json` whose
-start date is still a placeholder.
+Watch the build output for `[timeline] UNCONFIRMED DATE` warnings: the career timeline
+(`website/src/components/hive/HivePanels.astro`) prints one for every role in `experience.json` whose start
+date is still a placeholder.
 
 ## Add a project
 
-Copy one of the two templates into `website/src/content/projects/<id>.md`: the lead card for the three lowest
-`order` values and for `featured: true` projects, the project card for the rest.
-[Writing a project](writing-a-project.md) says which card shows which field and how many characters each one
-holds. The frontmatter follows the `projects` schema in `website/src/content.config.ts` (fields in the
-[content model](../reference/data-model.md#projects)); the body is the case study. The route, the card, the
-filter counts and the previous and next links follow from it.
+Copy one of the two templates into `website/src/content/projects/<id>.md`: the lead card for a
+project with a `featured` position, the project card for the rest (they no longer stand for different cards).
+[Writing a project](writing-a-project.md) says where each field shows. The frontmatter follows the `projects`
+schema in `website/src/content.config.ts` (fields in the [content model](../reference/data-model.md#projects))
+and is the whole project: the file has no body and the site has no page per project. The honeycomb cell and its
+popup, on the home page when the category and `order` place it there and always on `/projects/`, and the
+filter counts follow from it.
 
 ## Add a publication
 
 Append a row to `website/src/data/publications.csv` with the columns
 `year,title,venue,type,topic,role,citations,url`. Wrap any field that contains a comma in double quotes. Set
 `role` to `First author` for the highlight chip. Refresh the `citations` column now and then; the research page
-recomputes every number from the file. The hero stats in `website/src/data/profile.json` and the counts in the
-root `README.md` are typed in, so update them by hand until
-[roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list) is done.
+recomputes every number from the file, and so does the home dashboard. The counts in the root `README.md` are
+typed in, so update them by hand.
 
 ## The CV
 
 `files/cv/stefan-seman-cv.html` is the source and mirrors the site data, so a change in `website/src/data/` or in
-a case study usually needs the same change there. The comment at the top of the file gives the commands, run from
+a project file usually needs the same change there. The comment at the top of the file gives the commands, run from
 the repository root:
 
 ```bash
@@ -51,7 +52,8 @@ changing them.
 
 - Internal links and asset paths go through `withBase()` from `website/src/lib/url.ts`.
 - No UI framework and no client-side router; a script stays small and inline in its component, works without
-  JavaScript and respects `prefers-reduced-motion`.
+  JavaScript (the dashboard panels are the exception: they stay closed and their cells link to a page) and
+  respects `prefers-reduced-motion`.
 - The repository is the public site and nothing else: `.gitignore` keeps agent and editor tooling, secrets and
   local environment files out.
 

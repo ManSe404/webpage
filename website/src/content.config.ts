@@ -8,9 +8,13 @@ const projects = defineCollection({
     title: z.string(),
     category: z.string(),
     summary: z.string(),
-    // Featured projects get a full case-study treatment on the home page.
-    featured: z.boolean().default(false),
+    // Position in the dashboard's Projects panel (the "Projects" cell), 1 first;
+    // projects without it are not in that panel. Set by hand.
+    featured: z.number().int().positive().optional(),
     order: z.number().default(99),
+    // Position in the home page's Chosen work honeycomb (1 = first cell); projects
+    // without it are not on the home page. Set by hand, strongest first.
+    home: z.number().int().positive().optional(),
     period: z.string().optional(),
     // org = the employer the work was delivered under.
     // client = the partner or end customer, where it can be named publicly.
@@ -33,28 +37,12 @@ const experience = defineCollection({
     start: z.string(),
     end: z.string().nullable(),
     current: z.boolean().default(false),
-    // Set when a date is a placeholder awaiting confirmation. Timeline.astro
+    // Set when a date is a placeholder awaiting confirmation. hive/HivePanels.astro
     // warns on every build while any entry still has this set.
     dateUnconfirmed: z.boolean().default(false),
     summary: z.string(),
     highlights: z.array(z.string()).default([]),
     stack: z.array(z.string()).default([]),
-  }),
-});
-
-const collaborations = defineCollection({
-  loader: file('src/data/collaborations.json'),
-  schema: z.object({
-    name: z.string(),
-    // Omitted when the engagement was direct rather than routed through an
-    // employer — nothing is asserted about the relationship by default.
-    via: z.string().optional(),
-    location: z.string().optional(),
-    kind: z.string(),
-    description: z.string(),
-    tags: z.array(z.string()).default([]),
-    // Flags copy that still needs Stefan's sign-off before going live.
-    needsReview: z.boolean().default(false),
   }),
 });
 
@@ -94,4 +82,4 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-export const collections = { projects, experience, collaborations, publications };
+export const collections = { projects, experience, publications };

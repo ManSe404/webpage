@@ -1,0 +1,307 @@
+---
+// The home page's first screen: who this is, eight honeycomb cells with one
+// number each, and a panel that opens in place when a cell is chosen.
+// Every number and every panel is reduced from the collections at build
+// time (lib/dashboard.ts), so nothing here is typed in by hand except the
+// years of experience in profile.json.
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import profile from '../../data/profile.json';
+import education from '../../data/education.json';
+import portrait from '../../assets/portrait.jpg';
+import { withBase } from '../../lib/url';
+import {
+  hIndex, inProgress, isOwnWork, rolesNewestFirst, topCited,
+} from '../../lib/dashboard';
+import { place } from '../../lib/honeycomb';
+import NodeField from '../NodeField.astro';
+import HivePanels from './HivePanels.astro';
+import VitalsMonitor from './VitalsMonitor.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const roles = rolesNewestFirst(await getCollection('experience'));
+const publications = await getCollection('publications');
+
+const citations = publications.reduce((sum, p) => sum + p.data.citations, 0);
+const now = inProgress(roles, projects, education.degrees);
+const years = profile.stats.find((s) => /years/i.test(s.label)) ?? { value: 10, suffix: '+' };
+const clientWork = projects.filter((p) => !isOwnWork(p.data.org)).length;
+
+type Cell = {
+  id: string; label: string; caption: string; href: string; tone: 'ai' | 'bio';
+  value?: number; suffix?: string; text?: string;
+  /** A small picture instead of a number. */
+  visual?: 'bubbles';
+  /** A plain link to a section of the page instead of a panel. */
+  jump?: boolean;
+};
+
+const cells: Cell[] = [
+  { id: 'projects', label: 'Projects', value: projects.length, caption: `${clientWork} client · ${projects.length - clientWork} own`, href: '/#work', tone: 'ai' },
+  { id: 'experience', label: 'Career', value: years.value, suffix: years.suffix, caption: `years · ${roles.length} roles`, href: profile.cv, tone: 'bio' },
+  { id: 'research', label: 'Papers', value: publications.length, caption: `${citations} citations`, href: '/research/', tone: 'bio' },
+  { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/lab/', tone: 'bio', jump: true },
+  { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },
+  { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
+  { id: 'contact', label: 'Contact', text: 'Hi', caption: 'get in touch', href: '/contact/', tone: 'bio', jump: true },
+];
+
+// Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
+
+const panelData = {
+  projectCount: projects.length,
+  research: {
+    works: publications.length, citations,
+    h: hIndex(publications.map((p) => p.data.citations)),
+    firstAuthor: publications.filter((p) => p.data.role === 'First author').length,
+    top: topCited(publications).map((p) => ({ year: p.data.year, title: p.data.title, venue: p.data.venue, citations: p.data.citations, url: p.data.url })),
+  },
+  education,
+  now,
+  profile,
+};
+---
+
+<section class="dash" id="home" data-hive>
+  <NodeField />
+
+  <div class="dash-inner wrap">
+    <div class="dash-copy">
+      <div class="dash-id">
+        <div class="dash-portrait">
+          <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[176, 352]} sizes="160px" format="webp" quality={78} loading="eager" />
+        </div>
+        <p class="eyebrow">{profile.headline}</p>
+      </div>
+      <h1 class="dash-name">{profile.name}</h1>
+      <p class="dash-tagline">{profile.tagline}</p>
+      <div class="dash-actions">
+        <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
+      </div>
+    </div>
+
+    <div class="hive-wrap">
+      <ul class="hive" aria-label="Explore by area">
+        {cells.map((cell, i) => {
+          const d = place(i, 4);
+          const p = place(i, 2);
+          return (
+            <li class={`cell tone-${cell.tone}`} data-beat style={`--rd:${d.row};--cd:${d.col};--rp:${p.row};--cp:${p.col}`}>
+              <a class="hex" href={withBase(cell.href)} data-cell={cell.id} data-jump={cell.jump ? '' : undefined}>
+                <span class="hex-value mono">
+                  {cell.visual === 'bubbles' ? (
+                    <svg class="hex-bubbles" viewBox="0 0 64 40" aria-hidden="true">
+                      <circle cx="22" cy="22" r="15" class="b-ai" /><circle cx="44" cy="16" r="10" class="b-data" /><circle cx="47" cy="32" r="6" class="b-other" /><circle cx="9" cy="9" r="4" class="b-data" />
+                    </svg>
+                  ) : cell.text ?? <><span data-count={cell.value}>{cell.value}</span>{cell.suffix}</>}
+                </span>
+                <span class="hex-label">{cell.label}</span>
+                <span class="hex-caption">{cell.caption}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="hive-hint mono" data-hive-hint hidden>Pick a cell to explore</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <HivePanels data={panelData} />
+  </div>
+
+  <div class="dash-ecg wrap">
+    <VitalsMonitor variant="line" pulse />
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-hive]');
+  if (root) {
+    const wrap = root.querySelector<HTMLElement>('[data-hive-panels]');
+    const cells = [...root.querySelectorAll<HTMLAnchorElement>('[data-cell]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    let open: string | null = null;
+
+    const show = (id: string | null) => {
+      open = id;
+      for (const c of cells) {
+        const on = c.dataset.cell === open;
+        c.setAttribute('aria-expanded', String(on));
+        c.classList.toggle('is-active', on);
+      }
+      for (const p of panels) p.hidden = p.dataset.panel !== open;
+      if (wrap) wrap.hidden = open === null;
+    };
+
+    root.classList.add('is-enhanced');
+    show(null);
+    root.querySelector<HTMLElement>('[data-close]')?.removeAttribute('hidden');
+    root.querySelector<HTMLElement>('[data-hive-hint]')?.removeAttribute('hidden');
+    for (const c of cells) {
+      // A jump cell (the lab) stays a plain link to its section.
+      if (c.hasAttribute('data-jump')) continue;
+      c.setAttribute('role', 'button');
+      c.setAttribute('aria-controls', `hive-${c.dataset.cell}`);
+      c.setAttribute('aria-expanded', 'false');
+      c.addEventListener('click', (e) => {
+        e.preventDefault();
+        show(open === c.dataset.cell ? null : c.dataset.cell ?? null);
+      });
+      c.addEventListener('keydown', (e) => {
+        if (e.key === ' ') { e.preventDefault(); c.click(); }
+      });
+    }
+    root.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => show(null)));
+
+    // Deep links: /#experience, /#toolkit … open that cell's panel, from the
+    // menu, from another page, or by typing the address. No element carries
+    // these ids, so the browser does not jump on its own.
+    const ids = new Set(cells.filter((c) => !c.hasAttribute('data-jump')).map((c) => c.dataset.cell));
+    // A cell that is a page of its own (the lab, contact): its old in-page
+    // address (/#lab, /#contact) goes to that page.
+    const pages = new Map(cells.filter((c) => c.hasAttribute('data-jump')).map((c) => [c.dataset.cell, c.href]));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const openFromHash = (hash: string) => {
+      const id = hash.replace('#', '');
+      if (pages.has(id) && !document.getElementById(id)) { location.replace(pages.get(id)!); return true; }
+      // A real section with that id (such as #work) wins: the browser scrolls to it.
+      if (!ids.has(id) || document.getElementById(id)) return false;
+      show(id);
+      // The dashboard opens the page: go to the top, so its first row is not
+      // left under the sticky menu.
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      return true;
+    };
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest?.('a');
+      if (!a || a.dataset.cell || a.pathname !== location.pathname || !a.hash) return;
+      if (openFromHash(a.hash)) { e.preventDefault(); history.replaceState(null, '', a.hash); }
+    });
+    window.addEventListener('hashchange', () => openFromHash(location.hash));
+    if (location.hash) openFromHash(location.hash);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) show(null); });
+
+    // The real numbers are in the HTML; with motion allowed they count up once.
+    const counters = [...root.querySelectorAll<HTMLElement>('[data-count]')];
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && counters.length) {
+      const run = (el: HTMLElement) => {
+        const target = Number(el.dataset.count ?? 0);
+        const start = performance.now();
+        const tick = (t: number) => {
+          const k = Math.min((t - start) / 1200, 1);
+          el.textContent = String(Math.round(target * (1 - Math.pow(2, -10 * k))));
+          if (k < 1) requestAnimationFrame(tick);
+          else el.textContent = String(target);
+        };
+        requestAnimationFrame(tick);
+      };
+      const io = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) { run(entry.target as HTMLElement); io.unobserve(entry.target); }
+        }
+      }, { threshold: 0.6 });
+      counters.forEach((el) => io.observe(el));
+    }
+  }
+</script>
+
+<style>
+  .dash-ecg { margin-top: 1.5rem; }
+
+  .dash {
+    position: relative;
+    padding-top: clamp(2.5rem, 7vh, 5rem);
+    padding-bottom: 2.5rem;
+    overflow: hidden;
+  }
+
+  .dash-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .dash-id { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
+
+  .dash-portrait {
+    width: 160px; height: 185px; flex: none;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--border-strong);
+  }
+  .dash-portrait :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.25); }
+  @media (max-width: 640px) { .dash-portrait { width: 112px; height: 129px; } }
+
+  .dash-name { font-size: clamp(2.4rem, 5.4vw, 4.2rem); line-height: 1.02; margin: 0 0 0.9rem; }
+  .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 30rem; margin: 0 0 1.4rem; }
+  .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+  /* Honeycomb: cells span two half-columns, rows overlap by a quarter hex. */
+  .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); }
+  .hive {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(9, calc(var(--w) / 2));
+    grid-template-rows: calc(var(--h) * 0.75) var(--h);
+  }
+  .cell { grid-column: var(--cd) / span 2; grid-row: var(--rd); height: var(--h); }
+
+  .hex {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 100%; height: 100%; padding: 0 0.7rem; text-align: center; text-decoration: none;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--border-strong);
+    transform: scale(0.95);
+    transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .hex::before {
+    content: ''; position: absolute; inset: 1.5px; z-index: 0;
+    clip-path: inherit; background: var(--bg-raised);
+    transition: background 0.25s var(--ease);
+  }
+  .hex > * { position: relative; z-index: 1; }
+  .hex-value { font-size: 1.85rem; line-height: 1; font-weight: 500; }
+  .hex-bubbles { display: block; width: 3.2rem; height: 2rem; }
+  .hex-bubbles .b-ai { fill: rgba(var(--ai-rgb), 0.75); }
+  .hex-bubbles .b-data { fill: rgba(var(--bio-rgb), 0.8); }
+  .hex-bubbles .b-other { fill: var(--text-dim); }
+  .tone-ai .hex-value { color: var(--ai); }
+  .tone-bio .hex-value { color: var(--bio); }
+  .hex-label { margin-top: 0.4rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+  .hex-caption { margin-top: 0.2rem; font-size: 0.75rem; line-height: 1.3; color: var(--text-dim); }
+
+  .hex:hover, .hex:focus-visible, .hex.is-active { background: var(--bio); transform: scale(1); }
+  .hex:hover::before, .hex:focus-visible::before { background: #241d12; }
+  .hex.is-active::before { background: #2b2214; }
+  .hex:focus-visible { outline: none; }
+  .cell:has(.hex:hover), .cell:has(.hex.is-active), .cell:has(.hex:focus-visible) { filter: drop-shadow(0 0 12px var(--glow-bio)); }
+  /* A heartbeat lights a random cell for a moment (VitalsMonitor with pulse). */
+  .cell { transition: filter 0.45s var(--ease); }
+  .cell.is-pulse { filter: drop-shadow(0 0 10px var(--glow-bio)); }
+  .cell.is-pulse .hex { background: rgba(var(--bio-rgb), 0.75); }
+
+  .hive-hint { margin: 0.6rem 0 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
+
+
+  @media (max-width: 1080px) {
+    .dash-inner { grid-template-columns: 1fr; }
+    .hive-wrap { justify-self: center; }
+  }
+
+  @media (max-width: 640px) {
+    .hive-wrap { --w: min(150px, calc((100vw - 2 * var(--gutter)) / 2.5)); }
+    .hive {
+      grid-template-columns: repeat(5, calc(var(--w) / 2));
+      grid-template-rows: repeat(3, calc(var(--h) * 0.75)) var(--h);
+    }
+    .cell { grid-column: var(--cp) / span 2; grid-row: var(--rp); }
+    .hex-value { font-size: 1.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hex, .hex::before { transition: none; }
+  }
+</style>

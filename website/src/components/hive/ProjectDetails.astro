@@ -1,0 +1,40 @@
+---
+// One project's short description, the same everywhere it appears: the popup
+// under a honeycomb and the rows of the dashboard's Projects panel. Five lines
+// (what it is, what it achieved, the role, the tools, for whom) and the
+// project's outside link when it has one.
+import type { CollectionEntry } from 'astro:content';
+import { attribution, projectResult } from '../../lib/dashboard';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  /** The "Field: Title" heading; off where a row already shows the title. */
+  showTitle?: boolean;
+}
+
+const { project: p, showTitle = true } = Astro.props;
+const result = projectResult(p);
+const role = p.data.metrics.find((m) => m.label === 'Role')?.value;
+const company = [attribution(p), p.data.period].filter(Boolean).join(' · ');
+---
+
+{showTitle && <h3 class="pop-title"><span class="pop-field">{p.data.category}:</span>{' '}{p.data.title}</h3>}
+<ul class="pop-lines">
+  <li><strong>Project description:</strong>{' '}{p.data.summary}</li>
+  {result && <li><strong>Achieved result:</strong>{' '}{result}</li>}
+  {role && <li><strong>Role &amp; responsibilities:</strong>{' '}{role}</li>}
+  <li><strong>Tech stack:</strong>{' '}{p.data.stack.join(', ')}</li>
+  <li><strong>Company / client:</strong>{' '}{company}</li>
+</ul>
+{p.data.link && <a class="pop-link mono" href={p.data.link} target="_blank" rel="noopener">Visit project ↗</a>}
+
+<style>
+  .pop-title { margin: 0 0 1rem; padding-right: 5.5rem; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.25; }
+  .pop-field { color: var(--bio); }
+  .pop-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 62rem; }
+  .pop-lines li { position: relative; padding-left: 1.5rem; color: var(--text-dim); line-height: 1.55; }
+  .pop-lines li::before { content: '→'; position: absolute; left: 0; color: var(--bio); }
+  .pop-lines strong { color: var(--text); font-weight: 600; }
+  .pop-link { display: inline-block; margin-top: 1.1rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
+  .pop-link:hover { text-decoration: underline; }
+</style>

@@ -1,0 +1,237 @@
+---
+// The panels behind the honeycomb cells. With JavaScript one is shown at a
+// time (the script in HiveDashboard opens and closes them); without it every
+// panel shows, one under the other, so nothing is out of reach.
+import { getCollection } from 'astro:content';
+import { withBase } from '../../lib/url';
+import skills from '../../data/skills.json';
+import type { NowItem } from '../../lib/dashboard';
+import ProjectDetails from './ProjectDetails.astro';
+import { attribution, formatMonth, rolesNewestFirst, tenure } from '../../lib/dashboard';
+
+interface Props {
+  data: {
+    projectCount: number;
+    research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
+    education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
+    now: NowItem[];
+    profile: { email: string; cv: string; links: Record<string, string> };
+  };
+}
+
+const { data } = Astro.props;
+const groups = (['Leading', 'Studying', 'Building'] as const)
+  .map((kind) => ({ kind, items: data.now.filter((n) => n.kind === kind) }))
+  .filter((g) => g.items.length);
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+// Career, newest first. Loud during dev and CI builds so a placeholder date
+// cannot quietly ship.
+const roles = rolesNewestFirst(await getCollection('experience'));
+for (const r of roles.filter((e) => e.data.dateUnconfirmed)) {
+  console.warn(
+    `[timeline] UNCONFIRMED DATE: "${r.data.role} @ ${r.data.company}" starts ${r.data.start} ` +
+      `- placeholder, confirm before publishing (src/data/experience.json)`,
+  );
+}
+// The Projects panel: projects with a `featured` position, in that order.
+const featured = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0));
+---
+
+<div class="hive-panels card" data-hive-panels>
+  <button class="panel-close mono" type="button" data-close hidden aria-label="Close panel">Close ✕</button>
+
+  <section class="panel" id="hive-projects" data-panel="projects" aria-label="Featured projects">
+    <p class="panel-title">Featured projects</p>
+    <ol class="items">
+      {featured.map((p, i) => (
+        <li>
+          <details class="item" name="hive-projects">
+            <summary>
+              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="item-head"><span class="item-title">{p.data.title}</span><span class="item-meta">{attribution(p)} · {p.data.category}</span></span>
+            </summary>
+            <div class="item-body"><ProjectDetails project={p} showTitle={false} /></div>
+          </details>
+        </li>
+      ))}
+    </ol>
+    <a class="panel-more mono" href={withBase('/projects/')}>All {data.projectCount} projects →</a>
+  </section>
+
+  <section class="panel" id="hive-experience" data-panel="experience" aria-label="Career">
+    <p class="panel-title">Career, newest first</p>
+    <ol class="items">
+      {roles.map((r, i) => (
+        <li>
+          <details class="item" name="hive-roles">
+            <summary>
+              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="item-head"><span class="item-title">{r.data.role}</span><span class="item-meta">{r.data.company} · {formatMonth(r.data.start)} — {formatMonth(r.data.end)}</span></span>
+            </summary>
+            <div class="item-body role">
+              <p class="role-summary">{r.data.summary}<span class="role-tenure mono">{tenure(r.data.start, r.data.end)}</span></p>
+              <ul class="role-points">{r.data.highlights.map((h) => <li>{h}</li>)}</ul>
+              <div class="role-stack"><span class="role-stack-label mono">Stack</span><div class="chips">{r.data.stack.map((t) => <span class="chip">{t}</span>)}</div></div>
+            </div>
+          </details>
+        </li>
+      ))}
+    </ol>
+    <p class="panel-sub">Education</p>
+    <ul class="rows">
+      {data.education.degrees.map((d) => (
+        <li><strong>{d.degree}</strong><span>{d.institution}{d.period && ` · ${d.period}`}</span></li>
+      ))}
+    </ul>
+    <p class="panel-sub">Certifications</p>
+    <div class="chips">{data.education.certifications.map((c) => <span class="chip">{c.name}</span>)}</div>
+    <a class="panel-more mono" href={withBase(data.profile.cv)} download>Full CV (PDF) →</a>
+  </section>
+
+  <section class="panel" id="hive-research" data-panel="research" aria-label="Research">
+    <p class="panel-title">Research</p>
+    <dl class="figures">
+      <div><dt>Works</dt><dd class="mono">{data.research.works}</dd></div>
+      <div><dt>Citations</dt><dd class="mono">{data.research.citations}</dd></div>
+      <div><dt>h-index</dt><dd class="mono">{data.research.h}</dd></div>
+      <div><dt>First author</dt><dd class="mono">{data.research.firstAuthor}</dd></div>
+    </dl>
+    <p class="panel-sub">Most cited</p>
+    <ol class="papers">
+      {data.research.top.map((p, i) => (
+        <li class="paper">
+          <span class="paper-rank mono">{i + 1}</span>
+          <div class="paper-body">
+            {p.url ? <a class="paper-title" href={p.url} target="_blank" rel="noopener">{p.title}</a> : <span class="paper-title">{p.title}</span>}
+            <span class="paper-venue">{p.venue} · {p.year}</span>
+          </div>
+          <span class="paper-cites mono">{plural(p.citations, 'citation')}</span>
+        </li>
+      ))}
+    </ol>
+    <a class="panel-more mono" href={withBase('/research/')}>All publications →</a>
+  </section>
+
+  <section class="panel" id="hive-toolkit" data-panel="toolkit" aria-label="Skills">
+    <p class="panel-title">Skills</p>
+    <dl class="skills">
+      {skills.map((g) => (<div><dt>{g.group}</dt><dd>{g.items.join(' · ')}</dd></div>))}
+    </dl>
+  </section>
+
+  <section class="panel" id="hive-roadmap" data-panel="roadmap" aria-label="In progress now">
+    <p class="panel-title">In progress now</p>
+    <div class="groups">
+      {groups.map((g) => (
+        <div>
+          <p class="panel-sub">{g.kind}</p>
+          <ul class="rows">{g.items.map((n) => <li><strong>{n.title}</strong><span>{n.detail}</span></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+
+</div>
+
+<style>
+  .hive-panels { position: relative; margin-top: 1.4rem; padding: clamp(1.1rem, 2.5vw, 1.6rem); }
+  /* Without JavaScript the panels stack: a divider between two visible ones. */
+  .panel:not([hidden]) ~ .panel:not([hidden]) { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px solid var(--border); }
+  .panel[hidden], .hive-panels[hidden] { display: none; }
+  .panel-close {
+    position: absolute; top: 0.8rem; right: 0.8rem; min-height: 32px; padding: 0 0.7rem;
+    font-size: 0.75rem; color: var(--text-dim); background: transparent;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .panel-close:hover { color: var(--text); border-color: var(--border-strong); }
+
+  .panel-title { margin: 0 0 0.9rem; padding-right: 5.5rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bio); }
+  .panel-sub { margin: 1.1rem 0 0.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .panel-note { margin: 0.8rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
+  .panel-more { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
+  .panel-more:hover { text-decoration: underline; }
+
+  .items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+  .items > li { border-bottom: 1px solid var(--border); }
+  .item summary {
+    display: flex; align-items: baseline; gap: 0.9rem; padding: 0.75rem 2.2rem 0.75rem 0.2rem;
+    position: relative; cursor: pointer; list-style: none;
+  }
+  .item summary::-webkit-details-marker { display: none; }
+  .item summary::after {
+    content: '+'; position: absolute; right: 0.4rem; top: 0.7rem;
+    font-family: var(--font-mono); font-size: 1rem; color: var(--text-faint);
+  }
+  .item[open] summary::after { content: '−'; color: var(--bio); }
+  .item summary:hover .item-title, .item[open] .item-title { color: var(--bio); }
+  .item summary:focus-visible { outline: 1px dashed var(--border-strong); outline-offset: 2px; }
+  .item-no { flex: none; font-size: 0.75rem; color: var(--bio); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.9rem; }
+  .item-title { font-weight: 600; transition: color 0.2s var(--ease); }
+  .item-meta { font-size: 0.85rem; color: var(--text-dim); }
+  .item-body { padding: 0 0.2rem 1rem 2.3rem; }
+
+  .step-meta { margin: 0 0 0.35rem; font-size: 0.75rem; color: var(--bio); letter-spacing: 0.04em; }
+  .step-title { margin: 0 0 0.4rem; font-size: clamp(1.25rem, 2.2vw, 1.55rem); line-height: 1.2; }
+  .step-org { margin: 0 0 0.6rem; color: var(--text-dim); }
+  .step-result {
+    display: flex; gap: 0.7rem; align-items: baseline; margin: 0.6rem 0; padding: 0.6rem 0.8rem;
+    border-left: 2px solid var(--bio); background: var(--surface); color: var(--text);
+  }
+  .step-result .mono { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bio); flex: none; }
+  .step-text { margin: 0 0 0.8rem; color: var(--text-dim); max-width: 62rem; }
+  .step-list { margin: 0 0 0.8rem; padding-left: 1.1rem; color: var(--text-dim); }
+  .step-list li + li { margin-top: 0.3rem; }
+  .step-link { display: inline-block; margin-top: 0.8rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
+
+
+
+  .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+  .rows li { display: grid; gap: 0.1rem; }
+  .rows span { font-size: 0.85rem; color: var(--text-dim); }
+  .skills { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); gap: 0.7rem 1.6rem; }
+  .skills dt { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+  .skills dd { margin: 0.15rem 0 0; font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+  .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 0 1.6rem; }
+  .groups .panel-sub:first-child { margin-top: 0; }
+
+  /* An opened role: a one-line summary with its length, the highlights hung on a
+     honey rail with small hexagon markers, then the stack. */
+  .role { display: grid; gap: 0.9rem; padding-top: 0.2rem; }
+  .role-summary { margin: 0; color: var(--text); font-style: italic; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.8rem; }
+  .role-tenure { font-style: normal; font-size: 0.75rem; padding: 0.1rem 0.55rem; border-radius: 999px; color: var(--on-accent); background: var(--bio); }
+  .role-points { list-style: none; margin: 0; padding: 0 0 0 1.4rem; display: grid; gap: 0.55rem; position: relative; }
+  .role-points::before { content: ''; position: absolute; left: 0.32rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: linear-gradient(var(--bio), rgba(var(--bio-rgb), 0.15)); }
+  .role-points li { position: relative; color: var(--text-dim); line-height: 1.55; }
+  .role-points li::before {
+    content: ''; position: absolute; left: -1.38rem; top: 0.42em; width: 0.68rem; height: 0.78rem;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--bio); box-shadow: 0 0 8px var(--glow-bio);
+  }
+  .role-stack { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
+  .role-stack-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+
+  .figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin: 0; }
+  .figures div { padding: 0.7rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .figures dt { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+  .figures dd { margin: 0.2rem 0 0; font-size: 1.5rem; color: var(--bio); }
+
+  /* The most cited, as ranked cards. */
+  .papers { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .paper { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.9rem; padding: 0.75rem 0.9rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .paper-rank { font-size: 1.6rem; line-height: 1; color: var(--bio); min-width: 1.4rem; text-align: center; }
+  .paper-body { display: grid; gap: 0.15rem; }
+  .paper-title { color: var(--text); font-weight: 600; text-decoration: none; line-height: 1.35; }
+  a.paper-title:hover { color: var(--bio); }
+  .paper-venue { font-size: 0.85rem; color: var(--text-dim); }
+  .paper-cites { font-size: 0.75rem; white-space: nowrap; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid rgba(var(--bio-rgb), 0.5); color: var(--bio); }
+  @media (max-width: 640px) { .paper { grid-template-columns: auto 1fr; } .paper-cites { grid-column: 2; justify-self: start; } }
+
+
+  @media (max-width: 640px) {
+    .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .item-body { padding-left: 0.2rem; }
+  }
+</style>

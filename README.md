@@ -91,8 +91,8 @@ docs/       how the site is built and maintained — start at docs/README.md
 What the site offers, feature by feature: [docs/product/features/README.md](docs/product/features/README.md).
 What comes next: [docs/roadmap.md](docs/roadmap.md).
 
-Content is data-driven: markdown case studies in `website/src/content/projects/`,
-plus JSON and CSV in `website/src/data/`. The research page derives its counts —
+Content is data-driven: one Markdown file of frontmatter per project in
+`website/src/content/projects/`, plus JSON and CSV in `website/src/data/`. The research page derives its counts —
 publications, citations, h-index — from `publications.csv`, so the numbers can
 never drift from the list underneath them.
 
