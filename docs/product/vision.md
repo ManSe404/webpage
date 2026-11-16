@@ -14,8 +14,8 @@ They read it in a browser, often on a phone, often once.
 ## What it promises
 
 - **Content that cannot drift.** Projects, records and publications are files; pages are generated from them. The
-  research page computes its numbers from the publication list. The hero stats on the home page are still
-  typed in ([roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list)).
+  research page computes its numbers from the publication list, and so does the home dashboard, which also
+  counts the projects, tools and career; only the years of experience are typed in.
 - **A typo fails the build.** Every collection has a schema, so a broken frontmatter field never ships as an empty
   page.
 - **Readable everywhere.** Static pages that work without JavaScript, respect reduced motion and keep the

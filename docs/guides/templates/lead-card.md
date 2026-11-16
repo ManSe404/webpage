@@ -1,31 +1,32 @@
 ---
-# LEAD CARD: the big card. A project gets it when it is one of the three lowest `order` values (the first
-# row on /projects/) or when `featured: true` (the Selected work grid on the home page).
-# Copy this file to website/src/content/projects/<id>.md, fill it in and delete these comments.
-# Limits are characters, measured on the real card; docs/guides/writing-a-project.md says what breaks past each.
-title: Name of the System                    # ≤ 38: two lines; ≤ 29 unless featured (it then also sits in the home page row)
-category: Generative AI                      # reuse a category from the filter row on /projects/
-summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 150–200; 150–180 unless featured
-featured: false                              # true: also a big card on the home page
-order: 1                                     # 1–3: the first row on /projects/
-org: ExpertGroup                             # the employer; "org · with client" ≤ 40
+# LEAD CARD: the big card in the Selected work grid on the home page, for a project with `featured: true`.
+# It shows the category, a line "role · org · with client", the title, a Result box, the summary and the
+# first four stack items. Copy this file to website/src/content/projects/<id>.md, fill it in and delete
+# these comments. The big card's character limits are to be re-measured on the new card: the numbers below
+# were measured on the earlier one, and docs/guides/writing-a-project.md says what breaks past each.
+title: Name of the System                    # ≤ 38 on the earlier card, to be re-measured; ≤ 29 when featured is false (the home page row)
+category: Generative AI                      # the chip at the top; reuse a category from the filter row on /projects/
+summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 150–200 on the earlier card, to be re-measured
+featured: false                              # true: a big card in Selected work on the home page; false: no big card anywhere
+order: 1                                     # sorts the project in every list, Selected work included
+org: ExpertGroup                             # the employer; on the card after the role: "role · org · with client"
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2026 — Present"                     # quoted, so a bare year stays text
-impact:                                      # 3–4 results a reader can check, not tools; the card shows the first three
-  - First outcome, a fact a reader can check         # ≤ 65 each: two lines on the card
+impact:                                      # 3–4 results a reader can check, not tools; the card shows no list, but without a Result metric the first line is its Result box
+  - First outcome, a fact a reader can check         # the strongest first: it stands in for the result
   - Second outcome, what changed for its users
   - Third outcome, the rule the system keeps
-  - An optional fourth, shown on the case study page only   # ≤ 120
-stack:                                       # 6–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the card shows eight
+  - An optional fourth, shown on the case study page only   # ≤ 120 each on the case study page
+stack:                                       # 6–8 tools you could look up, not concepts (no RAG, AI Agents, LLMs); most telling first; the card shows four, then +N
   - Python
   - FastAPI
   - PostgreSQL
   - Docker
-metrics:                                     # 2–3; the first value is the tag beside the category chip; a Result only if it happened
+metrics:                                     # 2–3, found by label; all of them are listed on the case study page
   - label: Role
-    value: Architect & builder               # category + this value ≤ 37: one line beside the chip
+    value: Architect & builder               # opens the line above the title; leave it out and the line shows only org and client
   - label: Result
-    value: Review time cut by half             # measured, or what happened; never an estimate
+    value: Review time cut by half             # the card's Result box; measured, or what happened, never an estimate; only if it happened
 # link: https://example.com                  # public URL only
 ---
 

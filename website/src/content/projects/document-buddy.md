@@ -5,7 +5,6 @@ summary: A self-hosted chatbot over your own PDFs, Word files and folders, with 
 order: 22
 org: Personal
 period: 2025 — 2026
-link: https://manse404.github.io/document-buddy/demo/
 impact:
   - Scans, broken fonts and empty text layers caught by a quality gate before they poison the index
   - Vision OCR applied only to the pages that need it, not to the whole estate
@@ -61,9 +60,9 @@ ingestion worker and a React front end:
 
 ## The outcome
 
-Everything in the architecture plan is built, and the
-[interactive demo](https://manse404.github.io/document-buddy/demo/) runs in the browser
-with no server and no keys: it adds a folder of five sample documents, shows the triage,
+Everything in the architecture plan is built, including a browser demo, kept in the
+private repository, that runs with no server and no keys: it adds a folder of five sample
+documents, shows the triage,
 the document map and the OCR of a scanned and a broken page, then chats with sources.
 
 What it is not yet: proven live with cloud models. Claude and OpenAI are exercised only

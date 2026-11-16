@@ -1,19 +1,50 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const total = projects.length;
 
-const categories = ['All', ...new Set(projects.map((p) => p.data.category))];
+// Type of work follows who the work was for: own projects, the research
+// institute, and everything delivered for an employer or a client.
+const kindOf = (org?: string) =>
+  org === 'Personal' || org === 'Open source' ? 'personal' : org === 'BioIRC' ? 'research' : 'client';
 
-// The three most recent lead the page as full case-study cards; everything after
-// is a compact grid, so eighteen projects stay scannable instead of becoming a
-// wall of equally-weighted blocks.
-const lead = projects.slice(0, 3);
-const rest = projects.slice(3);
+const rows = projects.map((project) => ({
+  project,
+  kind: kindOf(project.data.org),
+  topic: project.data.category,
+}));
+const count = (key: 'kind' | 'topic', value: string) =>
+  rows.filter((row) => row[key] === value).length;
+
+// Every topic in use, the largest first, so the long tail sits at the end of
+// the chip row that scrolls sideways on a phone.
+const topics = [...new Set(rows.map((row) => row.topic))].sort(
+  (a, b) => count('topic', b) - count('topic', a) || a.localeCompare(b),
+);
+
+// The rendered counts are those of "All + All"; the script recomputes them for
+// every other combination.
+const groups = (
+  [
+    {
+      id: 'kind',
+      label: 'Type of work',
+      options: [['client', 'Client work'], ['research', 'Research'], ['personal', 'Personal & open source']],
+    },
+    { id: 'topic', label: 'Topic', options: topics.map((topic) => [topic, topic]) },
+  ] as const
+).map((group) => ({
+  ...group,
+  options: [
+    { value: 'all', label: 'All', count: total },
+    ...group.options.map(([value, label]) => ({ value, label, count: count(group.id, value) })),
+  ],
+}));
 ---
 
 <Base
@@ -25,98 +56,154 @@ const rest = projects.slice(3);
       <p class="eyebrow">Portfolio</p>
       <h1 class="page-title">Projects</h1>
       <p class="page-lede">
-        {projects.length} systems across generative AI, document intelligence, data
+        {total} systems across generative AI, document intelligence, data
         engineering, and biomedical research — the client work built to run in
         production, the personal projects honest about where they stand.
       </p>
-
-      <div class="filters" role="group" aria-label="Filter projects by category">
-        {categories.map((category, index) => (
-          <button
-            class={`filter mono ${index === 0 ? 'is-active' : ''}`}
-            data-filter={category}
-            type="button"
-            aria-pressed={index === 0 ? 'true' : 'false'}
-          >
-            {category}
-            <span class="filter-count">
-              {category === 'All'
-                ? projects.length
-                : projects.filter((p) => p.data.category === category).length}
-            </span>
-          </button>
-        ))}
-      </div>
     </div>
   </section>
 
-  <section class="section projects-section">
+  <section class="section projects-section" aria-label="Project list">
     <div class="wrap">
-      {/* Both grids use .project-slot, so the category filter below is one pass
-          over everything and does not need to know about the split. */}
-      <div class="lead-grid" data-grid>
-        {lead.map((project) => (
-          <div class="project-slot" data-category={project.data.category}>
-            <ProjectCard project={project} featured />
+      {/* Hidden until the script runs: without JavaScript every row shows and
+          the buttons would have nothing to do. */}
+      <div class="filter-panel" data-filters hidden>
+        {groups.map((group) => (
+          <div class="filter-group">
+            <span class="filter-label mono" id={`filter-${group.id}`}>{group.label}</span>
+            <div class="filter-scroll">
+              <div class="filter-chips" role="group" aria-labelledby={`filter-${group.id}`}>
+                {group.options.map((option, index) => (
+                  <button
+                    class="filter mono"
+                    type="button"
+                    data-group={group.id}
+                    data-value={option.value}
+                    aria-pressed={index === 0 ? 'true' : 'false'}
+                  >
+                    {option.label}
+                    <span class="filter-count" data-count>{option.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      <div class="projects-grid" data-grid>
-        {rest.map((project) => (
-          <div class="project-slot" data-category={project.data.category}>
-            <ProjectCard project={project} compact />
-          </div>
-        ))}
+      <div class="list-bar">
+        <p class="list-status mono" aria-live="polite" data-status>
+          Showing all {total} projects
+        </p>
+        <button class="list-reset mono" type="button" data-reset hidden>Clear filters</button>
       </div>
 
-      <p class="empty mono" data-empty hidden>No projects in this category.</p>
+      <ul class="project-list" role="list">
+        {rows.map(({ project, kind, topic }) => (
+          <li data-row data-kind={kind} data-topic={topic}>
+            <ProjectRow project={project} />
+          </li>
+        ))}
+      </ul>
+
+      <div class="empty" data-empty hidden>
+        <p class="empty-title">No project matches both filters.</p>
+        <button class="btn" type="button" data-reset>Show all {total} projects</button>
+      </div>
     </div>
   </section>
 </Base>
 
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
-  const slots = document.querySelectorAll<HTMLElement>('.project-slot');
-  const grids = document.querySelectorAll<HTMLElement>('[data-grid]');
+  type Group = 'kind' | 'topic';
+
+  const panel = document.querySelector<HTMLElement>('[data-filters]');
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-row]')];
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-group]')];
+  const status = document.querySelector<HTMLElement>('[data-status]');
   const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const clear = document.querySelector<HTMLButtonElement>('.list-bar [data-reset]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const selected = button.dataset.filter;
+  const state: Record<Group, string> = { kind: 'all', topic: 'all' };
+  const total = rows.length;
 
-      buttons.forEach((other) => {
-        const active = other === button;
-        other.classList.toggle('is-active', active);
-        other.setAttribute('aria-pressed', String(active));
+  const matches = (row: HTMLElement, kind: string, topic: string) =>
+    (kind === 'all' || row.dataset.kind === kind) &&
+    (topic === 'all' || row.dataset.topic === topic);
+
+  function render() {
+    // Each button counts what the list would show if it were picked, with the
+    // other group left as it is.
+    for (const button of buttons) {
+      const group = button.dataset.group as Group;
+      const value = button.dataset.value ?? 'all';
+      const n = rows.filter((row) =>
+        matches(row, group === 'kind' ? value : state.kind, group === 'topic' ? value : state.topic),
+      ).length;
+      button.setAttribute('aria-pressed', String(state[group] === value));
+      button.classList.toggle('is-zero', n === 0);
+      const counter = button.querySelector<HTMLElement>('[data-count]');
+      if (counter) counter.textContent = String(n);
+    }
+
+    let shown = 0;
+    for (const row of rows) {
+      row.hidden = !matches(row, state.kind, state.topic);
+      if (!row.hidden) shown++;
+    }
+
+    if (status) {
+      status.textContent =
+        shown === total ? `Showing all ${total} projects` : `Showing ${shown} of ${total} projects`;
+    }
+    if (empty) empty.hidden = shown > 0;
+    if (clear) clear.hidden = state.kind === 'all' && state.topic === 'all';
+  }
+
+  if (panel) {
+    panel.hidden = false;
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        state[button.dataset.group as Group] = button.dataset.value ?? 'all';
+        render();
+        // On a phone the chip rows scroll sideways; keep the picked chip in view.
+        button.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
       });
+    }
 
-      let visible = 0;
-      slots.forEach((slot) => {
-        const match = selected === 'All' || slot.dataset.category === selected;
-        slot.hidden = !match;
-        if (match) visible++;
+    // Both reset buttons hide themselves once clicked, so focus moves to the
+    // first "All" chip instead of falling back to the top of the page.
+    for (const reset of document.querySelectorAll<HTMLButtonElement>('[data-reset]')) {
+      reset.addEventListener('click', () => {
+        state.kind = 'all';
+        state.topic = 'all';
+        render();
+        buttons[0]?.focus();
       });
+    }
 
-      // A grid whose slots are all hidden still contributes its own margin, so
-      // filtering to a category with no lead projects would leave a gap on top.
-      grids.forEach((grid) => {
-        grid.hidden = !grid.querySelector('.project-slot:not([hidden])');
-      });
-
-      if (empty) empty.hidden = visible > 0;
-    });
-  });
+    render();
+  }
 </script>
 
 <style>
+  /* Tighter than other pages on a phone, so the first project row still fits
+     on the first screen under the head and the two chip rows. */
   .page-head {
+    padding-top: 2.5rem;
     padding-bottom: 0;
+  }
+
+  /* The global eyebrow is 0.72rem; this page keeps every text at 12px or more. */
+  .page-head .eyebrow {
+    font-size: 0.75rem;
   }
 
   .page-title {
     font-size: clamp(2.4rem, 6vw, 4rem);
-    margin-block: 0.75rem 1rem;
+    margin-block: 0.6rem 0.85rem;
     background: linear-gradient(120deg, var(--text) 25%, var(--bio) 85%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -129,79 +216,188 @@ const rest = projects.slice(3);
     font-size: 1.03rem;
   }
 
-  .filters {
+  .projects-section {
+    padding-top: clamp(1.5rem, 4vh, 2.75rem);
+  }
+
+  .filter-panel[hidden],
+  .list-reset[hidden],
+  .empty[hidden],
+  .project-list > li[hidden] {
+    display: none;
+  }
+
+  .filter-panel,
+  .filter-group {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 2rem;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .filter-group {
+    gap: 0.3rem;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* Phone: each group is one row of chips that scrolls sideways, bleeding to
+     the screen edges and fading there, so the clipped chip reads as "more". */
+  .filter-scroll {
+    --fade: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+    margin-inline: calc(var(--gutter) * -1);
+    overflow-x: auto;
+    /* A picked chip scrolls clear of the fade, with a peek at the next one. */
+    scroll-padding-inline: calc(var(--gutter) * 2);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-mask-image: var(--fade);
+    mask-image: var(--fade);
+  }
+
+  .filter-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chips {
+    display: flex;
+    gap: 0.45rem;
+    width: max-content;
+    padding-inline: var(--gutter);
+    /* Room for the focus ring, which the scroller would otherwise clip. */
+    padding-block: 4px;
+  }
+
+  .filter,
+  .list-reset {
+    min-height: 2.5rem;
+    padding: 0.4rem 0.95rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    color: var(--text-dim);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: color 0.25s var(--ease), border-color 0.25s var(--ease),
+      background 0.25s var(--ease);
   }
 
   .filter {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.79rem;
-    letter-spacing: 0.04em;
-    padding: 0.42rem 0.9rem;
-    border: 1px solid var(--border);
     border-radius: 999px;
-    color: var(--text-dim);
-    transition: all 0.28s var(--ease);
   }
 
-  .filter:hover {
-    color: var(--text);
-    border-color: var(--border-strong);
-  }
-
-  .filter.is-active {
-    color: var(--bio);
-    border-color: rgba(var(--bio-rgb), 0.5);
-    background: rgba(var(--bio-rgb), 0.09);
-    box-shadow: 0 0 20px -8px var(--glow-bio);
+  .filter:focus-visible {
+    outline-offset: 1px;
   }
 
   .filter-count {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: var(--text-faint);
   }
 
-  .filter.is-active .filter-count {
-    color: var(--bio);
+  /* Still clickable, so the empty state stays reachable, but visibly a dead end. */
+  .filter.is-zero {
+    color: var(--text-faint);
+    border-color: var(--border);
   }
 
-  .projects-section {
-    padding-top: clamp(2rem, 5vh, 3rem);
+  @media (hover: hover) {
+    .filter:hover {
+      color: var(--text);
+      border-color: var(--text-dim);
+    }
+
+    .list-reset:hover {
+      color: var(--bio);
+      border-color: rgba(var(--bio-rgb), 0.5);
+    }
   }
 
-  /* Three across at desktop width — the lead row is the page's opening statement. */
-  .lead-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 1.15rem;
-    margin-bottom: 1.15rem;
+  /* After the hover rules, so hovering the picked chip keeps dark ink on honey. */
+  .filter[aria-pressed='true'],
+  .filter[aria-pressed='true'] .filter-count {
+    color: var(--on-accent);
+    background: var(--bio);
+    border-color: var(--bio);
   }
 
-  /* Denser than the lead row: compact cards carry summary only, so they tile
-     smaller without feeling cramped. */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-    gap: 1.15rem;
+  .list-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    min-height: 2.5rem;
+    margin-top: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
-  [data-grid][hidden] {
-    display: none;
-  }
-
-  .project-slot[hidden] {
-    display: none;
+  .list-status {
+    font-size: 0.8rem;
+    color: var(--text-dim);
   }
 
   .empty {
-    text-align: center;
-    color: var(--text-faint);
-    font-size: 0.88rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
     padding-block: 3rem;
+  }
+
+  .empty-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  /* Desktop: the filters sit in one panel, each label beside its chips, and
+     the chips wrap instead of scrolling. */
+  @media (min-width: 720px) {
+    .page-head {
+      padding-top: clamp(3.5rem, 9vh, 6.5rem);
+    }
+
+    .filter-panel {
+      gap: 0.9rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .filter-group {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1.25rem;
+    }
+
+    .filter-label {
+      flex: 0 0 7.5rem;
+    }
+
+    .filter-scroll {
+      margin-inline: 0;
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .filter-chips {
+      flex-wrap: wrap;
+      width: auto;
+      padding: 0;
+    }
+
+    .list-bar {
+      margin-top: 1.5rem;
+    }
   }
 </style>

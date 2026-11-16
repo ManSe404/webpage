@@ -14,10 +14,7 @@
     "researchgate": "https://www.researchgate.net/profile/Stefan-Seman"
   },
   "stats": [
-    { "label": "Years in ML & data", "value": 10, "suffix": "+" },
-    { "label": "Peer-reviewed works", "value": 14, "suffix": "" },
-    { "label": "Citations", "value": 138, "suffix": "+" },
-    { "label": "Systems delivered", "value": 18, "suffix": "" }
+    { "label": "Years in ML & data", "value": 10, "suffix": "+" }
   ],
   "languages": [
     { "name": "Serbian", "level": "Native" },

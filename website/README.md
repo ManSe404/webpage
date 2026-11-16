@@ -21,7 +21,7 @@ change what the site says.
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Name, bio, links, hero stats | `src/data/profile.json` | Drives hero, footer, contact, JSON-LD; the hero stats are typed in, not computed |
+| Name, bio, links, years of experience | `src/data/profile.json` | Drives the home dashboard, footer, contact, JSON-LD; only the years are typed in, the dashboard computes the rest |
 | Career timeline | `src/data/experience.json` | Sorted newest-first automatically |
 | Collaborations | `src/data/collaborations.json` | `needsReview: true` is meant to mark unconfirmed copy; nothing reads it yet, so the card is still published |
 | Skills | `src/data/skills.json` | Grouped chips in the Stack section |

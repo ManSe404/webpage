@@ -57,11 +57,12 @@ conversation history people actually prefer, measured by their votes rather than
 
 ## The outcome
 
-The application works and the
-[interactive demo](https://manse404.github.io/pdf_assistant/demo/) runs in the browser
-with pre-written answers over sample documents, including an "under the hood" panel that
-shows each backend step — the draw and its probabilities, the rewritten follow-up, the
-chunks found, the prompt budget and the trace.
+The application works, and the
+[repository](https://github.com/ManSe404/pdf_assistant) holds an interactive demo that runs
+in the browser with pre-written answers over sample documents, including an "under the hood"
+panel that shows each backend step — the draw and its probabilities, the rewritten
+follow-up, the chunks found, the prompt budget and the trace. Its hosted copy is switched
+off since the project was frozen.
 
 As of 2026-11-10 the project is frozen as a demo. The experiment never ran in front of
 real users, so there is no result saying which component wins; there is no OCR, so a

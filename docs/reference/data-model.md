@@ -7,20 +7,20 @@ Everything the site says comes from files under `website/src/`. The collections 
 
 | What | Where | Read by |
 |---|---|---|
-| Name, headline, summary, contact, links, hero stats, CV path | `src/data/profile.json` | `Base.astro`, `Hero`, `Nav`, `Footer`, `Contact`, `research.astro` |
+| Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard`, `Nav`, `Footer`, `Contact`, `research.astro` |
 | Career timeline | `src/data/experience.json` (collection `experience`) | `Timeline`, newest first |
 | Collaborations | `src/data/collaborations.json` (collection `collaborations`) | `Collaborations` |
+| 404 Solutions section | `src/data/consultancy.json` (no schema): section head, services with the partners each was delivered with | `Consultancy`, `index.astro` |
 | Skills | `src/data/skills.json` | `SkillGrid` |
 | Degrees, certifications, memberships | `src/data/education.json` | `index.astro`, `research.astro` |
 | Publications | `src/data/publications.csv` (collection `publications`) | `index.astro`, `research.astro` |
 | Project case studies | `src/content/projects/*.md` (collection `projects`) | `index.astro`, `projects/index.astro`, `projects/[...slug].astro` |
-| Portrait | `src/assets/portrait.jpg` | `Hero`, optimised by `astro:assets` |
+| Portrait | `src/assets/portrait.jpg` | `hive/HiveDashboard`, optimised by `astro:assets` |
 | CV PDF, favicon, social image | `public/files/`, `public/images/` | copied as is into the build |
 
 `profile.json`, `skills.json` and `education.json` have no schema; they are imported as JSON and TypeScript
-infers their shape. The hero stats in `profile.json` (`stats`: label, value, suffix) are typed in, so the
-works and citations there do not follow `publications.csv`
-([roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list)). `phone` and `languages` in
+infers their shape. `stats` in `profile.json` holds one typed number, the years of experience; every other number
+on the home dashboard is computed from the collections (`src/lib/dashboard.ts`). `phone` and `languages` in
 `profile.json` are not read by any page or component.
 
 ## Collections

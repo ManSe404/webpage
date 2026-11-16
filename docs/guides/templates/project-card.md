@@ -1,14 +1,14 @@
 ---
-# PROJECT CARD: every project outside the first row of /projects/ that is not featured. On /projects/ the
-# compact card shows category, title, org and summary; on the home page the first four projects that are not
-# featured get a card with five stack chips as well. The case study page shows every field.
+# PROJECT CARD: every project that is not featured. On /projects/ it is a list row (category, title, summary,
+# org and period); the four with the lowest order on the home page get a regular card with five stack chips
+# as well. The case study page shows every field.
 # Copy this file to website/src/content/projects/<id>.md, fill it in and delete these comments.
 # Limits are characters, measured on the real card; docs/guides/writing-a-project.md says what breaks past each.
-title: Name of the System                    # ≤ 42: two lines on /projects/; ≤ 29 for the four in the home page row
+title: Name of the System                    # ≤ 29 for the four in the home page row; the /projects/ list has room for more
 category: Data Engineering                   # reuse a category from the filter row on /projects/
 summary: One sentence with the problem solved and the value it brought, then what was built — the card and the page description both use it.   # 130–180
 featured: false                              # true makes it a big card on the home page: use lead-card.md
-order: 10                                    # 4 and up; projects are grouped by employer, personal ones last
+order: 10                                    # sorts every list; projects are grouped by employer, personal ones last
 org: 404 Solutions                           # the employer; "org · with client" ≤ 29
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2025"                               # quoted, so a bare year stays text

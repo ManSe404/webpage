@@ -1,0 +1,150 @@
+---
+import consultancy from '../data/consultancy.json';
+import { withBase } from '../lib/url';
+
+// The section head (eyebrow, title, lede) lives in the same data file under
+// `section` and goes to the wrapping <Section> on the page. This component
+// renders the service cards and the partner line only.
+const { services, partners, links } = consultancy;
+
+// consultancy.json is imported without a schema, so a mistyped accent would
+// silently render a plain chip. Fail the build instead.
+const accents: Record<string, string> = { ai: 'chip-ai', bio: 'chip-bio' };
+for (const service of services) {
+  if (!(service.accent in accents)) {
+    throw new Error(
+      `consultancy.json: service "${service.id}" has accent "${service.accent}"; use "ai" or "bio".`,
+    );
+  }
+}
+---
+
+<div class="consult-grid">
+  {services.map((service, index) => (
+    <article class="consult card" data-reveal style={`--reveal-delay:${index * 90}ms`}>
+      <div class="consult-meta">
+        <span class={`chip ${accents[service.accent]}`}>{service.area}</span>
+        {service.deliveredWith.length > 0 && (
+          <span class="consult-with mono">with {service.deliveredWith.join(' · ')}</span>
+        )}
+      </div>
+      <h3 class="consult-title">{service.title}</h3>
+      <p class="consult-desc">{service.description}</p>
+    </article>
+  ))}
+</div>
+
+<div class="consult-foot" data-reveal>
+  <p class="consult-partners">
+    <span class="consult-label mono">{partners.label}</span>
+    <span class="consult-names">
+      {partners.names.map((name, index) => (
+        <span class="consult-name">{name}{index < partners.names.length - 1 && ' ·'}</span>
+      ))}
+    </span>
+  </p>
+  <div class="consult-actions">
+    <a class="btn btn-ghost" href={withBase('/#collaborations')}>
+      {links.collaborations}
+      <span aria-hidden="true">→</span>
+    </a>
+    <a class="btn" href={withBase('/#contact')}>
+      {links.contact}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .consult-grid {
+    display: grid;
+    /* Two columns from tablet width up: four services read as a 2 x 2 block,
+       where auto-fit would give 3 + 1 on desktop. One column on phones. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+
+  @media (max-width: 680px) {
+    .consult-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .consult {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .consult-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* The global chip is 0.71rem; this section keeps all text at 12px or more. */
+  .consult .chip {
+    font-size: 0.75rem;
+  }
+
+  .consult-with {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+
+  .consult-title {
+    font-size: clamp(1.1rem, 2vw, 1.32rem);
+  }
+
+  .consult-desc {
+    color: var(--text-dim);
+    font-size: 0.93rem;
+  }
+
+  .consult-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .consult-partners {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.9rem;
+  }
+
+  .consult-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bio);
+  }
+
+  /* Each name keeps its separator, so a line never starts with a dot. */
+  .consult-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.35rem;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+  }
+
+  .consult-name {
+    white-space: nowrap;
+  }
+
+  .consult-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

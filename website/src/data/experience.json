@@ -74,7 +74,7 @@
     "start": "2021-10",
     "end": "2022-04",
     "current": false,
-    "summary": "Model evaluation and tuning for ML classification systems.",
+    "summary": "Invoice data extraction with ML text classification, and evaluation and tuning of the models.",
     "highlights": [
       "Extracted data from invoices with ML text classification, so every field landed in its place in the database.",
       "Performed model evaluation, hyperparameter tuning, testing and validation of the classification models."

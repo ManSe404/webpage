@@ -7,6 +7,7 @@ import { withBase } from '../lib/url';
 // are on it (or below it, as on a case study under /projects).
 const links = [
   { label: 'Projects', href: withBase('/projects'), page: true },
+  { label: '404 Solutions', href: withBase('/#consultancy'), page: false },
   { label: 'Collaborations', href: withBase('/#collaborations'), page: false },
   { label: 'Career', href: withBase('/#journey'), page: false },
   { label: 'Research', href: withBase('/research'), page: true },
@@ -158,6 +159,7 @@ const social = [
 
   .nav-links a {
     font-size: 0.9rem;
+    white-space: nowrap;
     color: var(--text-dim);
     position: relative;
     transition: color 0.25s var(--ease);
@@ -256,7 +258,7 @@ const social = [
     transform: translateY(-3.25px) rotate(-45deg);
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 1040px) {
     .nav-toggle {
       display: flex;
     }

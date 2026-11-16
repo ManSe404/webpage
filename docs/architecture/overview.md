@@ -19,8 +19,9 @@ offers is listed in the [feature catalogue](../product/features/README.md).
 
 - Content changes without touching a component: case studies are Markdown files, records are JSON and CSV
   ([ADR 0001](../adr/0001-content-as-data-files.md)).
-- Numbers on the research page are computed from the publication list, so they cannot drift from it. The hero
-  stats on the home page are not: they are typed into `profile.json` ([roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list)).
+- Numbers are computed from the data, so they cannot drift from it: the research page counts the publication
+  list, and the home dashboard reduces the projects, career, education and publication files in
+  `src/lib/dashboard.ts`. Only the years of experience are typed into `profile.json`.
 - A typo in content fails the build instead of rendering an empty page: every collection has a Zod schema.
 - Works without JavaScript; animations respect `prefers-reduced-motion`.
 
@@ -55,8 +56,8 @@ components that need them.
 
 | Route | File | What it renders |
 |---|---|---|
-| `/` | `index.astro` | Hero, selected work (featured projects and four more), collaborations, career timeline, the three latest publications, skills with education and certifications, contact |
-| `/projects/` | `projects/index.astro` | Every project by `order`, the first three as full cards and the rest compact, with a category filter that runs in the browser |
+| `/` | `index.astro` | The dashboard (eight honeycomb cells, each opening a panel), selected work (featured projects and four more), collaborations, career timeline, the three latest publications, skills with education and certifications, contact |
+| `/projects/` | `projects/index.astro` | Every project by `order` as one list of rows, with type-of-work and topic filters that combine and run in the browser |
 | `/projects/<id>/` | `projects/[...slug].astro` | One case study per Markdown file, with previous and next by `order` |
 | `/research/` | `research.astro` | The publication list, works per year, research areas, and headline numbers computed from the list: works, total citations, h-index, first-author count |
 
@@ -65,15 +66,15 @@ components that need them.
 - `src/layouts/Base.astro`: the HTML shell for every page: title and description (from `profile.json` unless a
   page passes its own), canonical URL, Open Graph and Twitter card tags, a schema.org `Person` in JSON-LD, the
   fonts, navigation, footer and the scroll-reveal script.
-- `src/components/`: `Hero`, `Section`, `ProjectCard`, `Collaborations`, `Timeline`, `SkillGrid`, `Contact`,
+- `src/components/`: `hive/HiveDashboard` and `hive/HivePanels`, `Section`, `ProjectCard`, `Collaborations`, `Timeline`, `SkillGrid`, `Contact`,
   `Nav`, `Footer`, and two canvas animations, `EcgTrace` and `NodeField`. See the [codebase map](../reference/codebase.md).
 - `src/styles/global.css`: the shared styles and design tokens.
 
 ### Scripts in the browser
 
-The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the hero's stat
-counters, the navigation toggle and sticky state, and the project filter. Without JavaScript every element still
-renders. The canvases stop drawing when off screen or when the tab is hidden.
+The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the dashboard's
+cells, panels and count-up numbers, the navigation toggle and sticky state, and the project filter. Without
+JavaScript every element still renders: the dashboard's numbers are in the HTML and each cell links to its section. The canvases stop drawing when off screen or when the tab is hidden.
 
 ## Runtime
 
@@ -122,4 +123,5 @@ The hand-written site this replaced is not in the working tree; it is kept at th
 - There are no tests: CI type-checks and builds, nothing more. The only logic worth a test is the CSV parser in
   `src/lib/csv.ts` and the counting in `src/pages/research.astro`.
 - `body` has `overflow-x: hidden` in `global.css`, so content wider than the screen is cut off instead of
-  scrolling, which hides layout mistakes on narrow screens ([roadmap F1](../roadmap.md#f1-featured-cards-cut-off-on-phones)).
+  scrolling, which hides layout mistakes on narrow screens; grids use `minmax(min(…, 100%), 1fr)` so they fit
+  ([roadmap F1](../roadmap.md#f1-featured-cards-cut-off-on-phones)).

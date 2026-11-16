@@ -28,9 +28,8 @@ filter counts and the previous and next links follow from it.
 Append a row to `website/src/data/publications.csv` with the columns
 `year,title,venue,type,topic,role,citations,url`. Wrap any field that contains a comma in double quotes. Set
 `role` to `First author` for the highlight chip. Refresh the `citations` column now and then; the research page
-recomputes every number from the file. The hero stats in `website/src/data/profile.json` and the counts in the
-root `README.md` are typed in, so update them by hand until
-[roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list) is done.
+recomputes every number from the file, and so does the home dashboard. The counts in the root `README.md` are
+typed in, so update them by hand.
 
 ## The CV
 

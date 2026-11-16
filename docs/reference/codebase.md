@@ -22,28 +22,32 @@ website/                      the Astro project
   src/
     content.config.ts         the four content collections and their schemas
     content/projects/         one Markdown case study per project
-    data/                     profile, experience, collaborations, skills, education (JSON); publications (CSV)
+    data/                     profile, experience, collaborations, consultancy, skills, education (JSON); publications (CSV)
     assets/                   images optimised at build time (the portrait)
     layouts/Base.astro        HTML shell: meta tags, JSON-LD, fonts, navigation, footer, scroll reveal
     pages/
       index.astro             home page
-      projects/index.astro    all projects with the category filter
+      projects/index.astro    all projects as one list with type-of-work and topic filters
       projects/[...slug].astro one page per case study
       research.astro          publications and the numbers derived from them
     components/
-      Hero.astro              intro, portrait, stat counters, both animations
+      hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, the ECG trace
+      hive/HivePanels.astro   the panel each cell opens: steppers through featured projects and roles, research, education, tools, in progress, 404 Solutions, contact
       Section.astro           section wrapper with eyebrow, title and lede
-      ProjectCard.astro       project card: featured, regular or compact
+      ProjectCard.astro       project card: big (Selected work) or regular (the row below it); a compact variant is kept but unused
+      ProjectRow.astro        one row of the /projects/ list
       Collaborations.astro    collaboration cards
+      Consultancy.astro       the 404 Solutions services, from data/consultancy.json
       Timeline.astro          career timeline; warns about unconfirmed dates
       SkillGrid.astro         grouped skill chips
       Contact.astro           contact channels
       Nav.astro               menu (Projects, Collaborations, Career, Research, Contact), CV download, mobile toggle
       Footer.astro            footer links
       EcgTrace.astro          animated ECG trace on a canvas
-      NodeField.astro         animated node-and-edge field behind the hero
+      NodeField.astro         animated node-and-edge field behind the dashboard
     lib/
       url.ts                  withBase(): prefixes paths with the configured base
+      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, tool use, what is in progress); also used by research.astro
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation

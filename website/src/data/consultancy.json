@@ -1,0 +1,49 @@
+{
+  "section": {
+    "eyebrow": "B2B consultancy",
+    "title": "What 404 Solutions delivers.",
+    "lede": "AI and software work for delivery partners in Europe and the US."
+  },
+  "services": [
+    {
+      "id": "document-intelligence",
+      "title": "Document intelligence",
+      "area": "Generative AI",
+      "accent": "ai",
+      "deliveredWith": ["Provectus"],
+      "description": "Extraction, classification, summarization and risk analysis over large multi-document sets."
+    },
+    {
+      "id": "agentic-ai-systems",
+      "title": "Agentic AI systems",
+      "area": "Agentic AI",
+      "accent": "ai",
+      "deliveredWith": ["WiserTech", "Q Agency"],
+      "description": "Agent graphs over RAG retrieval for research, summarization and long-form generation."
+    },
+    {
+      "id": "cloud-data-pipelines",
+      "title": "Cloud data pipelines",
+      "area": "Cloud / AWS",
+      "accent": "bio",
+      "deliveredWith": ["Provectus"],
+      "description": "Serverless ingestion and transformation at scale on S3, Lambda, Step Functions and Bedrock."
+    },
+    {
+      "id": "backend-rebuilds",
+      "title": "Backend rebuilds",
+      "area": "Software Engineering",
+      "accent": "bio",
+      "deliveredWith": ["Q Agency"],
+      "description": "System discovery on undocumented systems, a written specification of what they do, and a new backend built to it."
+    }
+  ],
+  "partners": {
+    "label": "Delivery partners",
+    "names": ["WiserTech", "Q Agency", "Provectus", "ExpertGroup"]
+  },
+  "links": {
+    "collaborations": "Who I build with",
+    "contact": "Get in touch"
+  }
+}

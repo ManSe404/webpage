@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import profile from '../data/profile.json';
 import education from '../data/education.json';
+import { hIndex as computeHIndex } from '../lib/dashboard';
 
 const publications = (await getCollection('publications'))
   .map((entry) => entry.data)
@@ -29,12 +30,9 @@ const topics = [...new Set(publications.map((p) => p.topic))]
 const totalCitations = publications.reduce((sum, p) => sum + p.citations, 0);
 const firstAuthorCount = publications.filter((p) => p.role === 'First author').length;
 
-// h-index: the largest h where h papers each have >= h citations.
-const descending = [...publications].map((p) => p.citations).sort((a, b) => b - a);
-const hIndex = descending.reduce(
-  (h, citations, i) => (citations >= i + 1 ? i + 1 : h),
-  0,
-);
+// h-index: the largest h where h papers each have >= h citations. The same
+// helper feeds the home dashboard, so both pages always agree.
+const hIndex = computeHIndex(publications.map((p) => p.citations));
 
 ---
 
@@ -119,7 +117,7 @@ const hIndex = descending.reduce(
                 <span class="pub-journal">{pub.venue}</span>
                 <span class="text-dim"> · {pub.type}</span>
                 {pub.citations > 0 && (
-                  <span class="pub-cites mono">{pub.citations} citations</span>
+                  <span class="pub-cites mono">{pub.citations} {pub.citations === 1 ? 'citation' : 'citations'}</span>
                 )}
               </p>
             </li>

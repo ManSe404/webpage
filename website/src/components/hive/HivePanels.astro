@@ -1,0 +1,223 @@
+---
+// The panels behind the honeycomb cells. One is shown at a time; the page
+// script in HiveDashboard opens and closes them. Without JavaScript the
+// wrapper stays hidden and each cell links to its section further down.
+import { withBase } from '../../lib/url';
+import type { NowItem } from '../../lib/dashboard';
+
+interface Props {
+  data: {
+    featured: { id: string; title: string; category: string; org: string; summary: string; result?: string; stack: string[] }[];
+    projectCount: number;
+    roles: { role: string; company: string; period: string; highlights: string[]; stack: string[] }[];
+    research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
+    education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
+    tools: { name: string; count: number }[];
+    now: NowItem[];
+    consultancy: { projects: number; partners: { name: string; count: number }[]; summary?: string };
+    profile: { email: string; cv: string; links: Record<string, string> };
+  };
+}
+
+const { data } = Astro.props;
+const maxTool = data.tools[0]?.count ?? 1;
+const groups = (['Leading', 'Studying', 'Building'] as const)
+  .map((kind) => ({ kind, items: data.now.filter((n) => n.kind === kind) }))
+  .filter((g) => g.items.length);
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+---
+
+<div class="hive-panels card" data-hive-panels hidden>
+  <button class="panel-close mono" type="button" data-close aria-label="Close panel">Close ✕</button>
+
+  <section class="panel" id="hive-projects" data-panel="projects" hidden aria-label="Featured projects">
+    <div class="steps" data-steps tabindex="0" aria-label="Featured projects, use the arrow keys to step">
+      <div class="steps-bar">
+        <p class="panel-title">Featured projects</p>
+        <div class="steps-nav mono"><button type="button" data-prev aria-label="Previous">←</button><span data-counter aria-live="polite"></span><button type="button" data-next aria-label="Next">→</button></div>
+      </div>
+      {data.featured.map((p) => (
+        <article class="step" data-step>
+          <p class="step-meta mono">{p.category} · {p.org}</p>
+          <h3 class="step-title">{p.title}</h3>
+          {p.result && <p class="step-result"><span class="mono">Result</span>{p.result}</p>}
+          <p class="step-text">{p.summary}</p>
+          <div class="chips">{p.stack.slice(0, 4).map((t) => <span class="chip">{t}</span>)}{p.stack.length > 4 && <span class="chip">+{p.stack.length - 4}</span>}</div>
+          <a class="step-link mono" href={withBase(`/projects/${p.id}/`)}>Read case study →</a>
+        </article>
+      ))}
+    </div>
+    <a class="panel-more mono" href={withBase('/projects/')}>All {data.projectCount} projects →</a>
+  </section>
+
+  <section class="panel" id="hive-experience" data-panel="experience" hidden aria-label="Career">
+    <div class="steps" data-steps tabindex="0" aria-label="Career, newest first, use the arrow keys to step">
+      <div class="steps-bar">
+        <p class="panel-title">Career, newest first</p>
+        <div class="steps-nav mono"><button type="button" data-prev aria-label="Previous">←</button><span data-counter aria-live="polite"></span><button type="button" data-next aria-label="Next">→</button></div>
+      </div>
+      {data.roles.map((r) => (
+        <article class="step" data-step>
+          <p class="step-meta mono">{r.period}</p>
+          <h3 class="step-title">{r.role}</h3>
+          <p class="step-org">{r.company}</p>
+          <ul class="step-list">{r.highlights.map((h) => <li>{h}</li>)}</ul>
+          <div class="chips">{r.stack.map((t) => <span class="chip">{t}</span>)}</div>
+        </article>
+      ))}
+    </div>
+    <a class="panel-more mono" href={withBase('/#journey')}>Full career →</a>
+  </section>
+
+  <section class="panel" id="hive-research" data-panel="research" hidden aria-label="Research">
+    <p class="panel-title">Research</p>
+    <dl class="figures">
+      <div><dt>Works</dt><dd class="mono">{data.research.works}</dd></div>
+      <div><dt>Citations</dt><dd class="mono">{data.research.citations}</dd></div>
+      <div><dt>h-index</dt><dd class="mono">{data.research.h}</dd></div>
+      <div><dt>First author</dt><dd class="mono">{data.research.firstAuthor}</dd></div>
+    </dl>
+    <p class="panel-sub">Most cited</p>
+    <ol class="papers">
+      {data.research.top.map((p) => (
+        <li>
+          <span class="mono paper-meta">{p.year} · {plural(p.citations, 'citation')}</span>
+          {p.url ? <a href={p.url} target="_blank" rel="noopener">{p.title}</a> : <span>{p.title}</span>}
+          <span class="paper-venue">{p.venue}</span>
+        </li>
+      ))}
+    </ol>
+    <a class="panel-more mono" href={withBase('/research/')}>All publications →</a>
+  </section>
+
+  <section class="panel" id="hive-education" data-panel="education" hidden aria-label="Education">
+    <p class="panel-title">Education</p>
+    <ul class="rows">
+      {data.education.degrees.map((d) => (
+        <li><strong>{d.degree}</strong><span>{d.institution}{d.period && ` · ${d.period}`}</span></li>
+      ))}
+    </ul>
+    <p class="panel-sub">Certifications</p>
+    <div class="chips">{data.education.certifications.map((c) => <span class="chip">{c.name}</span>)}</div>
+    <p class="panel-note">{plural(data.education.memberships.length, 'professional membership')}</p>
+    <a class="panel-more mono" href={withBase('/#stack')}>Toolkit and education →</a>
+  </section>
+
+  <section class="panel" id="hive-toolkit" data-panel="toolkit" hidden aria-label="Tools">
+    <p class="panel-title">Most used tools, counted from the projects</p>
+    <ul class="bars">
+      {data.tools.map((t) => (
+        <li>
+          <span class="bar-name">{t.name}</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style={`width:${Math.round((t.count / maxTool) * 100)}%`}></span></span>
+          <span class="bar-count mono">{plural(t.count, 'project')}</span>
+        </li>
+      ))}
+    </ul>
+    <a class="panel-more mono" href={withBase('/#stack')}>Full toolkit →</a>
+  </section>
+
+  <section class="panel" id="hive-roadmap" data-panel="roadmap" hidden aria-label="In progress now">
+    <p class="panel-title">In progress now</p>
+    <div class="groups">
+      {groups.map((g) => (
+        <div>
+          <p class="panel-sub">{g.kind}</p>
+          <ul class="rows">{g.items.map((n) => <li><strong>{n.title}</strong><span>{n.detail}</span></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="panel" id="hive-consultancy" data-panel="consultancy" hidden aria-label="404 Solutions">
+    <p class="panel-title">404 Solutions</p>
+    {data.consultancy.summary && <p class="step-text">{data.consultancy.summary}</p>}
+    <p class="panel-sub">{plural(data.consultancy.projects, 'project')} with</p>
+    <div class="chips">{data.consultancy.partners.map((p) => <span class="chip chip-bio">{p.name} · {p.count}</span>)}</div>
+    <div class="panel-links">
+      <a class="panel-more mono" href={withBase('/#consultancy')}>What I take on →</a>
+      <a class="panel-more mono" href={withBase('/#collaborations')}>Partners →</a>
+    </div>
+  </section>
+
+  <section class="panel" id="hive-contact" data-panel="contact" hidden aria-label="Contact">
+    <p class="panel-title">Get in touch</p>
+    <div class="panel-links">
+      <a class="btn" href={`mailto:${data.profile.email}`}>Email</a>
+      <a class="btn btn-ghost" href={data.profile.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-ghost" href={data.profile.links.github} target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-ghost" href={withBase(data.profile.cv)} download>CV (PDF)</a>
+    </div>
+  </section>
+</div>
+
+<style>
+  .hive-panels { position: relative; margin-top: 1.4rem; padding: clamp(1.1rem, 2.5vw, 1.6rem); }
+  .panel-close {
+    position: absolute; top: 0.8rem; right: 0.8rem; min-height: 32px; padding: 0 0.7rem;
+    font-size: 0.75rem; color: var(--text-dim); background: transparent;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .panel-close:hover { color: var(--text); border-color: var(--border-strong); }
+
+  .panel-title { margin: 0 0 0.9rem; padding-right: 5.5rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bio); }
+  .panel-sub { margin: 1.1rem 0 0.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .panel-note { margin: 0.8rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
+  .panel-more { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
+  .panel-more:hover { text-decoration: underline; }
+  .panel-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; align-items: center; }
+
+  .steps:focus-visible { outline: 1px dashed var(--border-strong); outline-offset: 6px; }
+  .steps-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-right: 5.5rem; }
+  .steps-bar .panel-title { padding-right: 0; }
+  .steps-nav { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; font-size: 0.8rem; color: var(--text-dim); }
+  .steps-nav button {
+    min-width: 36px; min-height: 32px; font: inherit; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .steps-nav button:hover { border-color: var(--bio); }
+
+  .step-meta { margin: 0 0 0.35rem; font-size: 0.75rem; color: var(--bio); letter-spacing: 0.04em; }
+  .step-title { margin: 0 0 0.4rem; font-size: clamp(1.25rem, 2.2vw, 1.55rem); line-height: 1.2; }
+  .step-org { margin: 0 0 0.6rem; color: var(--text-dim); }
+  .step-result {
+    display: flex; gap: 0.7rem; align-items: baseline; margin: 0.6rem 0; padding: 0.6rem 0.8rem;
+    border-left: 2px solid var(--bio); background: var(--surface); color: var(--text);
+  }
+  .step-result .mono { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bio); flex: none; }
+  .step-text { margin: 0 0 0.8rem; color: var(--text-dim); max-width: 62rem; }
+  .step-list { margin: 0 0 0.8rem; padding-left: 1.1rem; color: var(--text-dim); }
+  .step-list li + li { margin-top: 0.3rem; }
+  .step-link { display: inline-block; margin-top: 0.8rem; font-size: 0.8rem; color: var(--bio); text-decoration: none; }
+
+  .figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin: 0; }
+  .figures div { padding: 0.7rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .figures dt { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+  .figures dd { margin: 0.2rem 0 0; font-size: 1.5rem; color: var(--bio); }
+
+  .papers { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.7rem; }
+  .papers li { display: grid; gap: 0.15rem; }
+  .papers a, .papers span { color: var(--text); }
+  .paper-meta { font-size: 0.75rem; color: var(--bio) !important; }
+  .paper-venue { font-size: 0.85rem; color: var(--text-dim) !important; }
+
+  .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+  .rows li { display: grid; gap: 0.1rem; }
+  .rows span { font-size: 0.85rem; color: var(--text-dim); }
+  .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 0 1.6rem; }
+  .groups .panel-sub:first-child { margin-top: 0; }
+
+  .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+  .bars li { display: grid; grid-template-columns: minmax(7rem, 11rem) 1fr auto; gap: 0.8rem; align-items: center; }
+  .bar-name { font-size: 0.9rem; }
+  .bar-track { height: 8px; background: var(--surface-hover); border-radius: 4px; overflow: hidden; }
+  .bar-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--bio-dim), var(--bio)); border-radius: 4px; }
+  .bar-count { font-size: 0.75rem; color: var(--text-faint); }
+
+  @media (max-width: 640px) {
+    .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bars li { grid-template-columns: 1fr auto; }
+    .bar-track { grid-column: 1 / -1; grid-row: 2; }
+    .steps-bar { flex-direction: column; align-items: flex-start; gap: 0; }
+  }
+</style>

@@ -8,8 +8,8 @@ wrong. The numbered items after them are the planned work.
 
 | # | Fix | Status |
 |---|---|---|
-| F1 | [Featured cards cut off on phones](#f1-featured-cards-cut-off-on-phones) | planned |
-| F2 | [Hero numbers from the publication list](#f2-hero-numbers-from-the-publication-list) | planned |
+| F1 | [Featured cards cut off on phones](#f1-featured-cards-cut-off-on-phones) | done |
+| F2 | [Hero numbers from the publication list](#f2-hero-numbers-from-the-publication-list) | done |
 | F3 | [Make the review flag do something](#f3-make-the-review-flag-do-something) | planned |
 | F4 | [Upgrade Astro](#f4-upgrade-astro) | planned |
 
@@ -21,10 +21,9 @@ screen narrower than about 460 px the column is wider than the page, and `overfl
 `website/src/styles/global.css` hides the overflow instead of letting it scroll: the right edge of every large
 card, its text and its chips, is cut off.
 
-- **Fix:** `minmax(min(420px, 100%), 1fr)`. The lead grid on `/projects/` (330 px in
-  `website/src/pages/projects/index.astro`) needs the same guard: at 360 px it is 10 px wider than the page and
-  its right margin shrinks to half the left. The other grids have smaller minimums and fit.
-- **Check:** widths from 360 to 430 px, as item 2 asks.
+- **Done:** the featured grid uses `minmax(min(420px, 100%), 1fr)`, the collaborations grid got the same guard,
+  and the lead grid on `/projects/` is gone with the list (item 3). Measured with no horizontal overflow at 360,
+  390, 768, 1024 and 1440 px on the home page, `/projects/`, a case study and `/research/`.
 
 ## F2. Hero numbers from the publication list
 
@@ -33,10 +32,10 @@ research page computes the same numbers from `website/src/data/publications.csv`
 refresh changes the research page and leaves the home page behind. The counts in the root `README.md` are
 typed in as well.
 
-- **Fix:** move the counting in `website/src/pages/research.astro` into a helper in `website/src/lib/` and let
-  `Hero.astro` use it for those two stats; keep the years and the systems count in `profile.json`.
-- **Open:** what "Systems delivered" counts. It is a typed number, and the project list also holds personal
-  prototypes that were not delivered to anyone.
+- **Done:** the hero gave way to the home dashboard, which counts works and citations from the publication
+  list with the same helper as the research page (`website/src/lib/dashboard.ts`), and counts projects as client
+  work and own work instead of a typed "Systems delivered". Only the years stay in `profile.json`.
+- **Still typed:** the counts in the root `README.md`.
 
 ## F3. Make the review flag do something
 
@@ -65,7 +64,7 @@ advisory is about `define:vars`, which the site does not use.
 |---|---|---|
 | 1 | [Section rail on the home page](#1-section-rail-on-the-home-page) | planned |
 | 2 | [A mobile design of its own](#2-a-mobile-design-of-its-own) | planned |
-| 3 | [Projects redesigned, the CV follows](#3-projects-redesigned-the-cv-follows) | planned |
+| 3 | [Projects redesigned, the CV follows](#3-projects-redesigned-the-cv-follows) | in progress |
 | 4 | [One template for a project](#4-one-template-for-a-project) | done |
 | 5 | [CV and LinkedIn brought in line](#5-cv-and-linkedin-brought-in-line) | later, as needed |
 
@@ -90,7 +89,7 @@ On a phone the site is the desktop layout stacked into one column. The goal is a
 a phone in its own right, in the same hive palette, not only one that fits.
 
 - **Open:** what the section rail from item 1 becomes on a narrow screen (for example a thin bar with the
-  section markers along the top or bottom edge); how the hero, with the ECG trace and the node field, behaves on
+  section markers along the top or bottom edge); how the dashboard, with the ECG trace and the node field, behaves on
   a small screen; how the project cards read with one hand.
 - **Check:** widths from 360 to 430 px, no horizontal scrolling, touch targets large enough to hit.
 
@@ -101,7 +100,11 @@ Rework how projects look: the cards on the home page and on `/projects`, and the
 design needs it. The CV source `files/cv/stefan-seman-cv.html` mirrors the site data, so it takes the same
 structure and wording.
 
-- **Open:** the design itself. Layout changes are shown as before-and-after screenshots before they merge.
+- **Done:** `/projects/` is one list with type-of-work and topic filters (`components/ProjectRow.astro`), and the
+  big card in Selected work follows the redesign concept: role and employer, a Result box, four tools
+  (`components/ProjectCard.astro`).
+- **Open:** the case-study page; re-measuring the big card's character limits; a measured `Result` metric for
+  each featured project (all six fall back to their first impact line today).
 - **Check the numbers that describe other repositories** while the files are rewritten: a case study that
   counts something in another project (packs, skills, tests) is typed in and goes stale when that project
   moves on. The code comments that count projects (`pages/index.astro`, `pages/projects/index.astro`,
