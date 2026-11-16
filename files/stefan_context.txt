@@ -55,7 +55,7 @@ physiology. Analytical, pragmatic, and comfortable owning work from presales thr
 production.
 
 EXPERIENCE
-Apr 2026 - Present | Head of AI | ExpertGroup (Belgrade, Serbia)
+May 2026 - Present | Head of AI | ExpertGroup (Belgrade, Serbia)
 - Lead the AI and Data team — organisation, people management, hiring and mentoring.
 - Own AI initiatives end to end: originating projects, presales, architecture, and engineering
   standards.
