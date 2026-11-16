@@ -12,11 +12,11 @@
       "Own AI initiatives end to end: originating projects, presales, architecture, and engineering standards.",
       "Stay hands-on — building demo pitches, proofs of concept and MVPs alongside the team.",
       "Set technical direction and make delivery decisions across the AI portfolio.",
-      "Delivered RAG chatbots over live document collections — multilingual retrieval with answer lineage, and multilingual document QA.",
+      "Built a document chatbot that talks to data — every number computed in code and traced to its source cell, never by the model — and delivered multilingual document QA.",
       "Built gradient-boosted time series models for supply chain and sales forecasting.",
-      "Architecting crowd movement prediction and venue analytics for large-scale events."
+      "Lead the evaluation framework for the team's LLM chatbots and agents, and data analytics and reporting on Microsoft Fabric, where capacity cost was cut by half."
     ],
-    "stack": ["Python", "FastAPI", "LangChain", "Qdrant", "RabbitMQ", "Azure AI Foundry", "Microsoft Fabric", "Azure DevOps", "Docker", "XGBoost", "Computer Vision"]
+    "stack": ["Python", "FastAPI", "LangChain", "Qdrant", "RabbitMQ", "Azure AI Foundry", "Microsoft Fabric", "Power BI", "Azure DevOps", "Docker", "XGBoost", "DeepEval"]
   },
   {
     "id": "404-solutions",
@@ -30,10 +30,12 @@
       "Run an independent practice delivering AI systems for partner organisations across several countries.",
       "Designed and operated multi-tenant AI systems for enterprise clients.",
       "Delivered document intelligence solutions for automated extraction, classification, and summarization.",
+      "Delivered a multilingual document chatbot with live answer lineage over a living document set.",
+      "Architecting crowd movement prediction and venue analytics for a large-scale event.",
       "Built scalable AWS workflows using S3, Step Functions, Bedrock, and APIs for multiple organizations.",
       "Deployed, monitored, and maintained production systems across distributed client environments."
     ],
-    "stack": ["Python", "AI Agents", "FastAPI", "RAG", "AWS", "Bedrock"]
+    "stack": ["Python", "AI Agents", "FastAPI", "RAG", "AWS", "Bedrock", "Computer Vision"]
   },
   {
     "id": "publicis-sapient",
@@ -61,7 +63,7 @@
     "highlights": [
       "Led and mentored a team of 6 engineers.",
       "Owned design of document processing microservices.",
-      "Built data extraction and document classification services from scratch."
+      "Built a document processing platform from scratch — ETL on Azure Data Factory and Synapse, ML classification on a trained embedding layer, Power BI reporting."
     ],
     "stack": ["Python", "Azure DevOps", "Azure Data Factory", "Synapse", "Data Lake", "Docker"]
   },
@@ -74,8 +76,8 @@
     "current": false,
     "summary": "Model evaluation and tuning for ML classification systems.",
     "highlights": [
-      "Performed model evaluation and hyperparameter tuning for ML classification.",
-      "Produced data-driven insights and testing/validation for ML systems."
+      "Extracted data from invoices with ML text classification, so every field landed in its place in the database.",
+      "Performed model evaluation, hyperparameter tuning, testing and validation of the classification models."
     ],
     "stack": ["Python", "Docker", "Machine Learning", "Azure"]
   },

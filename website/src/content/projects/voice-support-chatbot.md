@@ -1,12 +1,12 @@
 ---
-title: Voice-Enabled Support Chatbot
+title: Telephone Voice Assistant
 category: Conversational AI
-summary: A telephone-based voice support system covering the full conversational loop — speech-to-text, intent recognition, dialogue state, and speech back — architected around availability from the start.
-order: 15
+summary: Callers reach a support line once every other channel has failed them — a voice assistant now handles those calls around the clock, taking support load off the team.
+order: 17
 org: Valcon Netherlands
 period: 2022 — 2023
 impact:
-  - The complete conversational loop handled over telephony, not a partial demo
+  - Support calls handled by the assistant around the clock, taking load off the team
   - Dialogue state held across turns rather than restarting every utterance
   - High availability treated as a design constraint, not a deployment concern
 stack:
@@ -14,13 +14,15 @@ stack:
   - Azure Speech Services
   - Azure LUIS
   - Azure Bot Service
-  - Telephony
+  - Azure Cognitive Services
   - Docker
 metrics:
   - label: Channel
     value: Telephony
   - label: Scope
     value: Full conversational loop
+  - label: Result
+    value: Support load down
 ---
 
 ## The problem
@@ -49,6 +51,7 @@ Built the system end to end, across every stage of the loop:
 
 ## The outcome
 
-A working end-to-end voice interaction over the phone, built from the beginning around the
+The assistant handled support calls end to end over the phone, around the clock, taking
+load off the support team — built from the beginning around the
 assumption that availability was the requirement everything else had to fit around rather
 than something to add once the conversation worked.

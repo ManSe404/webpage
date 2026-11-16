@@ -1,8 +1,8 @@
 ---
 title: Mission Control
 category: Agentic AI
-summary: A local dashboard for long Claude Code runs — every step, subagent, error and compaction, live, across all sessions on the machine — and missions, where "done" is decided by checks that run on every commit outside the session.
-order: 23
+summary: A local dashboard for long Claude Code runs — every step, subagent and error, live across all sessions — with missions whose checks, run outside the session, decide what is done.
+order: 24
 org: Personal
 period: 2026 — Present
 impact:
@@ -13,11 +13,12 @@ impact:
 stack:
   - Python
   - FastAPI
-  - SQLite
-  - Svelte
+  - SvelteKit
   - TypeScript
-  - Git
+  - SQLite
   - Claude Code
+  - Codex CLI
+  - Git
 metrics:
   - label: Stage
     value: Works locally, not published

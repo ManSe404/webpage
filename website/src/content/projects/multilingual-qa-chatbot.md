@@ -2,11 +2,11 @@
 title: Multilingual Document QA Chatbot
 category: Generative AI
 summary: A retrieval-augmented assistant answering questions over a document set in the user's own language — deliberately contained in scope, led and delivered end to end by the team.
-order: 3
+order: 2
 org: ExpertGroup
 period: 2025 — Present
 impact:
-  - Questions answered directly against the documents instead of read-and-search
+  - Answers straight from the documents, no more read-and-search
   - Answers grounded in the source material rather than model recall
   - Built, delivered, and deployed end to end by the team I led
 stack:

@@ -1,22 +1,22 @@
 ---
 title: RAG Document Chatbot
 category: Generative AI
-summary: An enterprise RAG chatbot built end to end — optimized ingestion feeding retrieval over the document estate, evaluated for accuracy and consistency rather than fluency.
-order: 12
+summary: The same internal questions kept absorbing support time — an enterprise RAG chatbot now answers them from the document estate, faster than asking around, the same way every time.
+order: 14
 org: Publicis Sapient
 period: 2023 — 2024
 impact:
   - Answers grounded in the document estate rather than in model recall
   - Consistency treated as a target — the same question answered the same way twice
-  - Repetitive internal support load reduced rather than redirected
+  - Answers people trust, faster than asking a colleague
 stack:
   - Python
-  - FastAPI
+  - Azure OpenAI
   - Azure AI Search
   - Azure Functions
-  - Azure OpenAI
-  - Azure Pipelines
+  - FastAPI
   - Data Lake
+  - Azure Pipelines
   - Docker
 metrics:
   - label: Scope
@@ -50,5 +50,5 @@ actually decided:
 
 ## The outcome
 
-Faster access to answers people could actually rely on, and a reduction in the repetitive
-support load that had been quietly absorbing internal teams' time.
+Faster access to answers people could actually rely on, given the same way every time the
+same question is asked.

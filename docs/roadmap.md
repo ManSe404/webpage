@@ -66,7 +66,7 @@ advisory is about `define:vars`, which the site does not use.
 | 1 | [Section rail on the home page](#1-section-rail-on-the-home-page) | planned |
 | 2 | [A mobile design of its own](#2-a-mobile-design-of-its-own) | planned |
 | 3 | [Projects redesigned, the CV follows](#3-projects-redesigned-the-cv-follows) | planned |
-| 4 | [One template for a project](#4-one-template-for-a-project) | planned |
+| 4 | [One template for a project](#4-one-template-for-a-project) | done |
 | 5 | [CV and LinkedIn brought in line](#5-cv-and-linkedin-brought-in-line) | later, as needed |
 
 ## 1. Section rail on the home page
@@ -109,15 +109,18 @@ structure and wording.
 
 ## 4. One template for a project
 
-One template file with every field of the `projects` collection in `website/src/content.config.ts` (title,
-category, summary, featured, order, period, org, client, impact, stack, metrics, link) and the three sections
-every case study already has (The problem, The approach, The outcome), each with a line on what belongs there.
-A new project starts as a copy of the template and is filled in.
+Done as two templates, one per card type: `docs/guides/templates/lead-card.md` for the big cards and
+`docs/guides/templates/project-card.md` for the rest. Each carries every field of the `projects` collection and
+the three case study sections, with the character limits measured on the real cards.
+[Writing a project](guides/writing-a-project.md) explains which card shows which field and what breaks past
+each limit.
 
-- **Where:** outside `website/src/content/projects/`, because the collection loads every `.md` file in that
-  folder.
-- **Order:** together with item 3, so the template carries the new design; the existing projects are then
-  checked against it.
+- **Open:** every project fits its card, with two exceptions kept by choice: three titles in the home page row
+  take three lines there (Document Chatbot That Talks to Data, Multilingual Document QA Chatbot, Supply Chain &
+  Sales Forecasting), and the partner lines "404 Solutions · with …" wrap on the small cards.
+  They are brought in line as part of item 3, and the limits change if item 3 changes the cards.
+- **Open:** nothing checks the limits. A build warning, in the style of the `[timeline] UNCONFIRMED DATE`
+  warning, would name each field over its limit.
 - **Open:** whether the CV entries get a template of their own as well.
 
 ## 5. CV and LinkedIn brought in line

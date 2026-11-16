@@ -1,8 +1,8 @@
 ---
 title: Marketing Content Manager
 category: Agentic AI
-summary: A content platform built end to end — web search and deep-research agents feeding long-form generation and blog drafting, then publishing straight out to connected channels.
-order: 6
+summary: Writers spent their time finding sources and moving drafts between tools — research agents now feed drafting and publish straight out, so more pieces get out in less time.
+order: 9
 org: 404 Solutions
 client: Q Agency
 impact:
@@ -12,11 +12,11 @@ impact:
   - Finished content pushed out to connected platforms instead of copy-pasted at the end
 stack:
   - Python
+  - LangGraph
+  - OpenAI API
+  - Tavily
   - FastAPI
   - PostgreSQL
-  - AI Agents
-  - LLMs
-  - Search APIs
   - Docker
 metrics:
   - label: Scope
@@ -51,4 +51,5 @@ I built the platform end to end — a working application rather than a prototyp
 One system covering the whole path from research question to published piece. The parts
 that were manual and repetitive — gathering sources, producing a first draft, distributing
 the result — became things the platform does, which leaves the judgement calls to the
-people who should be making them.
+people who should be making them. Each piece takes less time, more of them get published,
+and nothing is copy-pasted at the end.
