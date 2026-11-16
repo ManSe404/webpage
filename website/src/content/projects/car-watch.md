@@ -1,8 +1,8 @@
 ---
-title: Car Watch — Used-Car Price Watch
+title: Car Watch — Used-Car Prices
 category: Machine Learning
-summary: A personal tool that collects used-car ads from a Serbian marketplace into a local SQLite database — through a Chrome extension reading the pages you open yourself, never a scraper — and flags ads priced below what similar cars cost, with an out-of-fold gradient-boosting fair-price model.
-order: 25
+summary: Used-car ads you browse on a Serbian marketplace, saved by a Chrome extension rather than a scraper, with ads flagged when priced below what similar cars cost.
+order: 26
 org: Personal
 period: 2023 — 2026
 link: https://github.com/ManSe404/car_watcher
@@ -14,9 +14,8 @@ impact:
 stack:
   - Python
   - scikit-learn
-  - SQLite
   - FastAPI
-  - Jinja
+  - SQLite
   - TypeScript
   - WXT
   - Zod

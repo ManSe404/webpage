@@ -1,55 +1,67 @@
 ---
-title: Agentic AI Insights Platform
+title: Agentic AI Platform
 category: Agentic AI
-summary: An agentic application for insight synthesis — orchestration graphs coordinating multiple agents across summarization, suggestion, and meeting preparation, surfacing what matters before it is asked for.
+summary: Board-meeting work split across many manual jobs in two languages, now one agent platform — briefings ready sooner, minutes faster, the whole process in one place.
 featured: true
-order: 5
+order: 8
 org: 404 Solutions
 client: WiserTech
 period: 2024 — Present
 impact:
-  - Multi-agent workflows coordinated through explicit orchestration graphs
-  - Insights synthesized across sources rather than retrieved one at a time
-  - Meeting preparation and suggestions generated ahead of the user asking
+  - Meeting preparation done by agents before anyone asks
+  - English and Arabic throughout, translation keeping the layout
+  - Spoken summaries, and minutes drawn from speech-to-text
+  - Each topic read through expert personas — risks, sector impact, international benchmarks and recommendations
 stack:
   - Python
-  - AI Agents
-  - Agent Orchestration
-  - LLMs
+  - LangGraph
+  - Qwen & Gemma
   - FastAPI
+  - Qdrant
+  - RabbitMQ
+  - PostgreSQL
+  - Redis
 metrics:
   - label: Architecture
-    value: Agentic, graph-orchestrated
+    value: Graph-orchestrated agents
+  - label: Languages
+    value: English · Arabic
   - label: Scope
-    value: Insight synthesis
+    value: The whole meeting cycle
 ---
 
 ## The problem
 
-Single-shot prompting falls apart once a task has real structure. Synthesizing insight
-across many sources, deciding what a user needs before they ask, and preparing them for a
-conversation are not one operation — they are sequences of dependent steps, each of which
-can fail or need to branch. That needs an architecture, not a longer prompt.
+Preparing a board meeting means reading a pack of documents in two languages, agreeing an
+agenda, briefing every participant and, afterwards, turning hours of discussion into
+minutes and action items. Each of those is a different job, and single-shot prompting
+falls apart on all of them: they are sequences of dependent steps, each of which can fail
+or need to branch. That needs an architecture, not a longer prompt.
 
 ## The approach
 
-I worked on the agentic layer of the platform — the part that decides what happens next:
+I worked on the agentic backend of a platform for preparing and running board meetings,
+where each job is its own agent or worker:
 
-- **Orchestration graphs** defining how agents hand off, branch, and converge, so
-  multi-step reasoning is explicit and inspectable rather than emergent from a single
-  model call.
-- **Agentic flows** for tasks that need several coordinated steps, each with its own tools
-  and its own success criteria.
-- **Insights summarization**, synthesizing across sources so the output reflects the whole
-  picture instead of restating whichever document was retrieved first.
-- **Suggestion generation**, surfacing what is likely to matter next rather than waiting
-  to be queried.
-- **Pre-meeting summaries**, assembling the relevant context ahead of a conversation so
-  participants arrive prepared.
+- **Chat over the meeting documents**, with citations, in English and Arabic.
+- **Agenda building** from the board pack — items, sub-items and the pages each covers.
+- **Pre-meeting summaries** per topic and per meeting, as text and as a spoken version, in
+  confidential and public variants.
+- **Insights per topic** through expert personas: risks, sector impact, international
+  benchmarks and recommendations.
+- **Reports with charts**, exported to PDF and Word.
+- **Minutes and action items** from the meeting transcript, with participants' names
+  corrected where speech-to-text mixes up Arabic letters.
+- **Translation** between English and Arabic that keeps the layout of Word, PowerPoint,
+  Excel and PDF files.
+
+Orchestration graphs define how the agents hand off, branch and converge; the workers take
+their jobs from a message queue, and every model call is traced.
 
 ## The outcome
 
-The system moved from answering questions to anticipating them. Making orchestration an
-explicit graph rather than an implicit chain is what made that tractable — you can reason
-about where a multi-agent flow went wrong when the flow itself is a structure you can
-look at.
+One platform covering a meeting from the board pack to the minutes, in both languages:
+briefings ready sooner, minutes faster after each meeting, and the whole process in one
+place instead of a set of manual jobs.
+Making orchestration an explicit graph rather than an implicit chain is what kept it
+workable: when a flow goes wrong, the flow itself is a structure you can look at.

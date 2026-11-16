@@ -3,26 +3,27 @@ title: Crowd Analytics & Movement Prediction
 category: Computer Vision
 featured: true
 summary: Crowd movement prediction for a large-scale public event — forecasting where density is about to build so visitors can be routed around congestion instead of into it.
-order: 1
-org: ExpertGroup
+order: 6
+org: 404 Solutions
+client: ExpertGroup
 period: 2026 — Present
 impact:
-  - Congestion forecast before it forms, not reported once it already has
-  - Visitors steered toward quieter routes while there is still time to act
-  - Operations given lead time to open paths, move staff, and stagger entry
+  - Congestion forecast before it forms, not reported after
+  - Visitors steered to quieter routes while there is time to act
+  - Operations get lead time to open paths, move staff, stagger entry
   - Architected for a full event site from the outset, not a single venue
 stack:
   - Python
+  - PyTorch
+  - Azure Machine Learning
   - Azure IoT Hub
   - Azure Event Hubs
   - Microsoft Fabric
   - Azure Data Lake
-  - Computer Vision
-  - Time Series Forecasting
   - Docker
 metrics:
   - label: Role
-    value: Architect & technical lead
+    value: Architect & tech lead
   - label: Stage
     value: In active development
   - label: Scale

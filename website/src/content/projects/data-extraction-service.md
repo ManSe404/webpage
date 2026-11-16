@@ -1,55 +1,47 @@
 ---
-title: Data Extraction Service
-category: Data Engineering
-summary: An Azure extraction and transformation platform orchestrating the whole path — raw ingestion, classification, embedding generation, and self-service Power BI reporting business users could run themselves.
-order: 17
+title: Document Data Extraction & Classification
+category: Machine Learning
+summary: Data extracted from invoices and labeled by ML text classification, so every field lands in its right place in the database — with the classification models evaluated and tuned.
+order: 18
 org: Optimal Systems GmbH
 period: 2021 — 2022
 impact:
-  - One orchestrated path from raw intake to reporting, not a chain of handoffs
-  - Self-service analytics through Power BI, so questions stopped queuing behind the data team
-  - Embedding-based representation supporting similarity, not just exact match
+  - Invoice data placed in its database fields by label, not typed in by hand
+  - Each extracted piece of text labeled by ML classification, so it goes to the right place
+  - Classification models evaluated and tuned before they were trusted with real invoices
 stack:
   - Python
-  - FastAPI
-  - Azure Data Factory
-  - Synapse
-  - Data Lake
-  - Embeddings
-  - ETL
-  - Power BI
+  - scikit-learn
+  - PyTorch
+  - spaCy
+  - Tesseract OCR
+  - Docker
+  - Azure
 metrics:
-  - label: Path
-    value: Ingest → classify → report
-  - label: Consumers
-    value: Business users, self-serve
+  - label: Documents
+    value: Invoices
+  - label: Task
+    value: Extract · classify · store
+  - label: Role
+    value: Data scientist
 ---
 
 ## The problem
 
-Analytics work that stalled in the gap between raw data and a usable answer. Getting from
-ingestion to a report meant a chain of separate steps, each owned by someone technical,
-which turned every business question into a ticket routed through the data team. The
-bottleneck was not capability — it was that nobody outside the team could reach the data
-without help.
+Invoices arrive as documents, but the business needs their contents as data, each value in
+its own place in the database. Reading and retyping them does not scale, and a value put in
+the wrong field is worse than a missing one, because nothing downstream notices.
 
 ## The approach
 
-An Azure-based extraction and transformation platform orchestrating the full path:
-
-- **Raw ingestion** into the data lake as the single entry point, so there was one place
-  where things arrived.
-- **Classification** of incoming content, so downstream processing knew what it was
-  handling rather than inferring it each time.
-- **Embedding generation**, representing content in a form that supported similarity and
-  retrieval rather than exact match alone.
-- **ETL orchestration through Azure Data Factory and Synapse**, making intake to output one
-  managed pipeline instead of a sequence of manual handoffs.
-- **Power BI reporting** on the far end — the piece that turned the platform from an
-  engineering artifact into something business users could serve themselves from.
+- **Extraction** of the data from each invoice.
+- **Text labeling by ML classification**, deciding what each extracted piece of text is, so
+  the system knows where it belongs.
+- **Placement in the database**, every labeled value written to its field.
+- **Model evaluation and hyperparameter tuning**, with testing and validation, so the
+  classifiers were measured before anyone relied on them.
 
 ## The outcome
 
-One orchestrated path from raw intake to reporting, with self-service analytics at the end
-of it. Questions stopped needing to be routed through the data team to get answered, which
-is the only version of this that actually reduces load rather than relocating it.
+Invoice data reaching the database by its labels rather than by hand, with classification
+models whose accuracy had been tested and tuned rather than assumed.

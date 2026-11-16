@@ -1,8 +1,8 @@
 ---
 title: Co-Parenting App
 category: Software Engineering
-summary: A shared space for two separated parents — questions and agreements, a custody and activities calendar, the child's record and documents — where anything that concerns both needs the other parent's consent, and the database enforces it.
-order: 24
+summary: A shared space for separated parents — agreements, a custody calendar, the child's record — where anything concerning both needs the other's consent, enforced in the database.
+order: 25
 org: Open source
 period: 2026 — Present
 link: https://github.com/ManSe404/co-parenting-app
@@ -19,7 +19,7 @@ stack:
   - PostgreSQL
   - pgTAP
   - Vitest
-  - Cloudflare Pages
+  - GitHub Pages
 metrics:
   - label: Stage
     value: Prototype + public demo

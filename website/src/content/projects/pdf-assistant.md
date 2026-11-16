@@ -1,8 +1,8 @@
 ---
 title: PDF Assistant — Chat with One PDF
 category: Generative AI
-summary: Upload a PDF and ask; every answer cites the page it came from, and a click opens it. Underneath, a small experiment — each conversation draws a model, a retrieval depth and a memory size, and thumbs-up votes shift the draw. Frozen as a public demo.
-order: 22
+summary: Ask one PDF questions and every answer cites the page it came from, while thumbs-up votes steer the model and retrieval settings of later chats — frozen as a public demo.
+order: 23
 org: Personal
 period: 2024 — 2026
 link: https://github.com/ManSe404/pdf_assistant
@@ -14,16 +14,12 @@ impact:
 stack:
   - Python
   - FastAPI
-  - SQLAlchemy
-  - Svelte
+  - SvelteKit
   - pdf.js
   - Qdrant
   - Pinecone
   - Supabase
-  - Claude
-  - OpenAI
   - Langfuse
-  - Docker
 metrics:
   - label: Stage
     value: Demo, frozen 2026-11-10
