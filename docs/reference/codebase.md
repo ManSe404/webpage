@@ -22,7 +22,7 @@ website/                      the Astro project
   src/
     content.config.ts         the four content collections and their schemas
     content/projects/         one Markdown file per project, frontmatter only
-    data/                     profile, experience, collaborations, consultancy, skills, education (JSON); publications (CSV)
+    data/                     profile, experience, skills, education (JSON); publications (CSV)
     assets/                   images optimised at build time (the portrait)
     layouts/Base.astro        HTML shell: meta tags, JSON-LD, fonts, navigation, footer, scroll reveal
     pages/
@@ -32,7 +32,7 @@ website/                      the Astro project
       lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
       hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace
-      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (every paper by year, the most cited as ranked cards), skills, in progress, 404 Solutions services and partners, contact
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (every paper by year, the most cited as ranked cards), skills, in progress, contact
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too
@@ -40,7 +40,7 @@ website/                      the Astro project
       lab/ArchitectureLab.astro data platform and AI system diagrams with a switch (hidden with `bare`, where the lab's tabs drive it); draws each with lab/ArchDiagram.astro
       Section.astro           section wrapper with eyebrow, title and lede
       Contact.astro           contact channels
-      Nav.astro               menu (Projects, Research, 404 Solutions, Lab with a dropdown of the demos, Contact), CV download, mobile toggle
+      Nav.astro               menu (Projects, Research, Lab with a dropdown of the demos, Contact), CV download, mobile toggle
       Footer.astro            footer links
       EcgTrace.astro          animated ECG trace on a canvas
       NodeField.astro         animated node-and-edge field behind the top of the dashboard: at most one screen high, 1x resolution, 30 frames a second
@@ -49,7 +49,7 @@ website/                      the Astro project
       lab.ts                  the lab's demos in tab order (address, label, panel, diagram), read by the lab tabs and the menu
       signal.ts               pure functions behind the signal lab: generation, filtering, peak detection, scoring, plot paths
       url.ts                  withBase(): prefixes paths with the configured base
-      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, a role's length, what is in progress, partners, a project's result and attribution); also used by research.astro, HivePanels, ProjectHive, ProjectDetails and projects/index.astro
+      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, a role's length, what is in progress, a project's result and attribution); also used by research.astro, HivePanels, ProjectHive, ProjectDetails and projects/index.astro
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation

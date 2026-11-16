@@ -23,8 +23,6 @@ change what the site says.
 | --- | --- | --- |
 | Name, bio, links, years of experience | `src/data/profile.json` | Drives the home dashboard, footer, contact, JSON-LD; only the years are typed in, the dashboard computes the rest |
 | Career | `src/data/experience.json` | The career timeline in the dashboard's Career panel, newest first |
-| Collaborations | `src/data/collaborations.json` | Partner descriptions in the dashboard's 404 Solutions panel; `needsReview: true` is meant to mark unconfirmed copy; nothing reads it yet, so the description is still published |
-| 404 Solutions services | `src/data/consultancy.json` | The services in the dashboard's 404 Solutions panel |
 | Skills | `src/data/skills.json` | Skill groups in the dashboard's Tools panel |
 | Education, certs, memberships | `src/data/education.json` | Degrees and certifications in the Career panel, memberships on the research page |
 | Publications | `src/data/publications.csv` | Also generates the "output by year" bars |

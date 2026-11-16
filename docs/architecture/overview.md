@@ -40,16 +40,15 @@ offers is listed in the [feature catalogue](../product/features/README.md).
 
 ### Content (`website/src/content.config.ts`)
 
-Four content collections, each with a schema (fields in [data-model](../reference/data-model.md)):
+Three content collections, each with a schema (fields in [data-model](../reference/data-model.md)):
 
 | Collection | Loader | Source |
 |---|---|---|
 | `projects` | `glob` over Markdown | `src/content/projects/*.md`: frontmatter only; the files have no body |
 | `experience` | `file` | `src/data/experience.json` |
-| `collaborations` | `file` | `src/data/collaborations.json` |
 | `publications` | `file` with a CSV parser | `src/data/publications.csv`, parsed by `src/lib/csv.ts`; the id is a slug of year, venue and title |
 
-`profile.json`, `consultancy.json`, `skills.json` and `education.json` in `src/data/` are imported directly by
+`profile.json`, `skills.json` and `education.json` in `src/data/` are imported directly by
 the pages and components that need them.
 
 ### Pages (`website/src/pages/`)
@@ -107,9 +106,7 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 - **Build-time checks.** Schema errors in any collection fail the build. The career timeline
   (`components/hive/HivePanels.astro`) prints a warning for every role marked `dateUnconfirmed` in
-  `experience.json`, so a placeholder date is visible in every build log. `collaborations.json` has a
-  `needsReview` flag for copy that still needs sign-off, but no component reads it: a flagged partner description
-  is published without a warning ([roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).
+  `experience.json`, so a placeholder date is visible in every build log.
 - **Accessibility.** A skip link to the main content, `aria-hidden` on decorative canvases with a text
   alternative for the ECG trace, and reduced motion honoured by every animation.
 - **What is public.** Everything in the repository is published or readable on GitHub. `.gitignore` keeps agent

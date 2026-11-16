@@ -8,7 +8,7 @@ flowchart LR
     subgraph repo["Repository"]
         direction TB
         md["website/src/content/projects/*.md<br/>projects, frontmatter only"]
-        json["website/src/data/*.json<br/>profile, experience, collaborations,<br/>consultancy, skills, education"]
+        json["website/src/data/*.json<br/>profile, experience,<br/>skills, education"]
         csv["website/src/data/publications.csv"]
         src["website/src/pages, components,<br/>layouts, styles, assets"]
         pub["website/public/<br/>CV PDF, favicon, social image"]

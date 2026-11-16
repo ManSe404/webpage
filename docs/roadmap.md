@@ -10,7 +10,7 @@ wrong. The numbered items after them are the planned work.
 |---|---|---|
 | F1 | [Featured cards cut off on phones](#f1-featured-cards-cut-off-on-phones) | done |
 | F2 | [Hero numbers from the publication list](#f2-hero-numbers-from-the-publication-list) | done |
-| F3 | [Make the review flag do something](#f3-make-the-review-flag-do-something) | planned |
+| F3 | [Make the review flag do something](#f3-make-the-review-flag-do-something) | dropped |
 | F4 | [Upgrade Astro](#f4-upgrade-astro) | planned |
 
 ## F1. Featured cards cut off on phones
@@ -42,14 +42,9 @@ typed in as well.
 
 ## F3. Make the review flag do something
 
-`needsReview` in `website/src/data/collaborations.json` is in the schema, but no component reads it: a partner
-description marked for review is published in the 404 Solutions panel like any other, and the build does not
-say so. `dateUnconfirmed` on a role, by contrast, prints a warning on every build.
-
-- **Fix:** warn in `components/hive/HivePanels.astro`, which reads the partner descriptions, the way
-  the same file warns about dates, or leave flagged descriptions out of the build, or
-  drop the field.
-- **Open:** which of the three.
+- **Dropped:** the flag lived in `collaborations.json`, the partner descriptions of the 404 Solutions panel.
+  The panel, `collaborations.json` and `consultancy.json` were removed: the consultancy's pitch belongs to
+  the 404 Solutions site, and a second copy here had already drifted from it. The files are in git history.
 
 ## F4. Upgrade Astro
 
@@ -79,9 +74,8 @@ lights up as the page scrolls; a click on a marker scrolls to its section.
 
 - **Written for a longer page.** The item was planned when the home page had six sections (Work,
   Collaborations, Career, Research, Stack, Contact). Since the hive redesign it has the dashboard and two
-  sections: Chosen work (`#work`) and Contact (`#contact` in `Contact.astro`); 404 Solutions is a
-  dashboard panel the menu opens (`/#consultancy`), the career is the Career cell (`/#experience`) and the
-  lab has its own page (`/lab/`). **Open:** whether a rail
+  sections: Chosen work (`#work`) and Contact (`#contact` in `Contact.astro`); the career is the Career
+  cell (`/#experience`) and the lab has its own page (`/lab/`). **Open:** whether a rail
   still earns its place on a page this short, and if it does, which markers it carries.
 - **Touches:** `website/src/pages/index.astro`, a new component for the rail, `website/src/components/Nav.astro`.
 - **The top menu changes with it.** 404 Solutions and Contact are in-page links today; 404 Solutions

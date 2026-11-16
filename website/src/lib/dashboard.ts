@@ -87,17 +87,6 @@ export function rolesNewestFirst(roles: Role[]): Role[] {
   return [...roles].sort((a, b) => b.data.start.localeCompare(a.data.start));
 }
 
-/** Partners of the consultancy, from the projects delivered through it. */
-export function consultancyPartners(projects: Project[], consultancy = '404 Solutions') {
-  const own = projects.filter((p) => p.data.org === consultancy);
-  const partners = new Map<string, number>();
-  for (const p of own) if (p.data.client) partners.set(p.data.client, (partners.get(p.data.client) ?? 0) + 1);
-  return {
-    projects: own.length,
-    partners: [...partners].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
-  };
-}
-
 export function topCited(publications: Publication[], n = 3): Publication[] {
   return [...publications].sort((a, b) => b.data.citations - a.data.citations || b.data.year - a.data.year).slice(0, n);
 }

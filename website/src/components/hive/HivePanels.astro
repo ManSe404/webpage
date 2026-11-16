@@ -4,7 +4,6 @@
 // panel shows, one under the other, so nothing is out of reach.
 import { getCollection } from 'astro:content';
 import { withBase } from '../../lib/url';
-import consultancy from '../../data/consultancy.json';
 import skills from '../../data/skills.json';
 import type { NowItem } from '../../lib/dashboard';
 import ProjectDetails from './ProjectDetails.astro';
@@ -16,7 +15,6 @@ interface Props {
     research: { works: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[]; byYear: { year: number; papers: { title: string; first: boolean }[] }[] };
     education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
     now: NowItem[];
-    consultancy: { projects: number; partners: { name: string; count: number }[]; summary?: string };
     profile: { email: string; cv: string; links: Record<string, string> };
   };
 }
@@ -26,10 +24,6 @@ const groups = (['Leading', 'Studying', 'Building'] as const)
   .map((kind) => ({ kind, items: data.now.filter((n) => n.kind === kind) }))
   .filter((g) => g.items.length);
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-
-// Partners: the counts come from the projects, the descriptions from
-// collaborations.json where a partner has one ("Provectus" ~ "Provectus Inc").
-const collaborations = (await getCollection('collaborations')).map((c) => c.data);
 
 // Career, newest first. Loud during dev and CI builds so a placeholder date
 // cannot quietly ship.
@@ -42,10 +36,6 @@ for (const r of roles.filter((e) => e.data.dateUnconfirmed)) {
 }
 // The Projects panel: projects with a `featured` position, in that order.
 const featured = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0));
-const partners = data.consultancy.partners.map((p) => ({
-  ...p,
-  about: collaborations.find((c) => c.name.toLowerCase().startsWith(p.name.toLowerCase())),
-}));
 ---
 
 <div class="hive-panels card" data-hive-panels>
@@ -146,38 +136,6 @@ const partners = data.consultancy.partners.map((p) => ({
     </div>
   </section>
 
-  <section class="panel" id="hive-consultancy" data-panel="consultancy" aria-label="404 Solutions">
-    <p class="panel-title">404 Solutions</p>
-    {data.consultancy.summary && <p class="step-text">{data.consultancy.summary}</p>}
-    <p class="panel-sub">What it delivers</p>
-    <ol class="items">
-      {consultancy.services.map((s, i) => (
-        <li>
-          <details class="item" name="hive-services">
-            <summary>
-              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
-              <span class="item-head"><span class="item-title">{s.title}</span><span class="item-meta">{s.area} · with {s.deliveredWith.join(' · ')}</span></span>
-            </summary>
-            <div class="item-body"><p class="step-text">{s.description}</p></div>
-          </details>
-        </li>
-      ))}
-    </ol>
-    <p class="panel-sub">{plural(data.consultancy.projects, 'project')} with</p>
-    <ol class="items">
-      {partners.map((p) => (
-        <li>
-          <details class="item" name="hive-partners">
-            <summary>
-              <span class="item-head"><span class="item-title">{p.about?.name ?? p.name}</span><span class="item-meta">{[p.about?.kind, p.about?.location, plural(p.count, 'project')].filter(Boolean).join(' · ')}</span></span>
-            </summary>
-            {p.about && <div class="item-body"><p class="step-text">{p.about.description}</p></div>}
-          </details>
-        </li>
-      ))}
-    </ol>
-    <a class="panel-more mono" href={withBase('/#contact')}>Work with me →</a>
-  </section>
 
   <section class="panel" id="hive-contact" data-panel="contact" aria-label="Contact">
     <p class="panel-title">Get in touch</p>

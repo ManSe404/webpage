@@ -11,7 +11,7 @@ import education from '../../data/education.json';
 import portrait from '../../assets/portrait.jpg';
 import { withBase } from '../../lib/url';
 import {
-  consultancyPartners, inProgress, isOwnWork, rolesNewestFirst, topCited,
+  inProgress, isOwnWork, rolesNewestFirst, topCited,
 } from '../../lib/dashboard';
 import { place } from '../../lib/honeycomb';
 import EcgTrace from '../EcgTrace.astro';
@@ -24,10 +24,8 @@ const publications = await getCollection('publications');
 
 const citations = publications.reduce((sum, p) => sum + p.data.citations, 0);
 const now = inProgress(roles, projects, education.degrees);
-const consultancy = consultancyPartners(projects);
 const years = profile.stats.find((s) => /years/i.test(s.label)) ?? { value: 10, suffix: '+' };
 const clientWork = projects.filter((p) => !isOwnWork(p.data.org)).length;
-const consultancyRole = roles.find((r) => r.data.company === '404 Solutions');
 
 type Cell = {
   id: string; label: string; caption: string; href: string; tone: 'ai' | 'bio';
@@ -45,7 +43,6 @@ const cells: Cell[] = [
   { id: 'lab', label: 'Lab', text: '▶', caption: 'try the demos', href: '/lab/', tone: 'bio', jump: true },
   { id: 'toolkit', label: 'Tools', visual: 'bubbles', caption: 'what I build with', href: '/projects/', tone: 'ai' },
   { id: 'roadmap', label: 'Roadmap', value: now.length, caption: 'in progress now', href: '/#work', tone: 'ai' },
-  { id: 'consultancy', label: '404 Solutions', value: consultancy.projects, caption: `projects · ${consultancy.partners.length} partners`, href: '/#contact', tone: 'ai' },
   { id: 'contact', label: 'Contact', text: 'Hi', caption: 'email · LinkedIn', href: '/#contact', tone: 'bio' },
 ];
 
@@ -69,7 +66,6 @@ const panelData = {
   },
   education,
   now,
-  consultancy: { ...consultancy, summary: consultancyRole?.data.summary },
   profile,
 };
 ---
@@ -90,7 +86,6 @@ const panelData = {
         <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
       </div>
-      <a class="dash-link mono" href={withBase('/#consultancy')}>Work with 404 Solutions →</a>
     </div>
 
     <div class="hive-wrap">
@@ -168,7 +163,7 @@ const panelData = {
     }
     root.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => show(null)));
 
-    // Deep links: /#experience, /#consultancy … open that cell's panel, from the
+    // Deep links: /#experience, /#toolkit … open that cell's panel, from the
     // menu, from another page, or by typing the address. No element carries
     // these ids, so the browser does not jump on its own.
     const ids = new Set(cells.map((c) => c.dataset.cell));
@@ -243,8 +238,6 @@ const panelData = {
   .dash-name { font-size: clamp(2.4rem, 5.4vw, 4.2rem); line-height: 1.02; margin: 0 0 0.9rem; }
   .dash-tagline { color: var(--text-dim); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 34rem; margin: 0 auto 1.2rem; text-align: center; }
   .dash-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
-  .dash-link { display: inline-block; margin-top: 1rem; font-size: 0.85rem; color: var(--bio); text-decoration: none; }
-  .dash-link:hover { text-decoration: underline; }
 
   /* Honeycomb: cells span two half-columns, rows overlap by a quarter hex. */
   .hive-wrap { --w: 132px; --h: calc(var(--w) * 1.1547); }

@@ -46,22 +46,6 @@ const experience = defineCollection({
   }),
 });
 
-const collaborations = defineCollection({
-  loader: file('src/data/collaborations.json'),
-  schema: z.object({
-    name: z.string(),
-    // Omitted when the engagement was direct rather than routed through an
-    // employer — nothing is asserted about the relationship by default.
-    via: z.string().optional(),
-    location: z.string().optional(),
-    kind: z.string(),
-    description: z.string(),
-    tags: z.array(z.string()).default([]),
-    // Flags copy that still needs Stefan's sign-off before going live.
-    needsReview: z.boolean().default(false),
-  }),
-});
-
 const publications = defineCollection({
   loader: file('src/data/publications.csv', {
     parser: (text) =>
@@ -98,4 +82,4 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-export const collections = { projects, experience, collaborations, publications };
+export const collections = { projects, experience, publications };

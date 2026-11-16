@@ -11,7 +11,6 @@ type Link = { label: string; href: string; page: boolean; sub?: { label: string;
 const links: Link[] = [
   { label: 'Projects', href: withBase('/projects'), page: true },
   { label: 'Research', href: withBase('/research'), page: true },
-  { label: '404 Solutions', href: withBase('/#consultancy'), page: false },
   {
     label: 'Lab', href: withBase('/lab'), page: true,
     sub: LAB_DEMOS.map((d) => ({ label: d.label, href: `${withBase('/lab/')}#${d.hash}` })),

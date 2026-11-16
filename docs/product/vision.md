@@ -3,7 +3,7 @@
 ## Why
 
 A personal portfolio and research site: one public place that shows the work (a short description per
-project), the career, the collaborations, the skills and the peer-reviewed research, with a CV to download. It replaced an earlier
+project), the career, the skills and the peer-reviewed research, with a CV to download. It replaced an earlier
 hand-written site.
 
 ## For whom

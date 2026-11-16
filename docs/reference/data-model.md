@@ -9,17 +9,15 @@ Everything the site says comes from files under `website/src/`. The collections 
 |---|---|---|
 | Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `Contact`, `research.astro` |
 | Career | `src/data/experience.json` (collection `experience`) | `hive/HivePanels` (the career timeline in the Career panel, newest first); `hive/HiveDashboard` (the role count on the Career cell, current roles under In progress, the summary of the 404 Solutions role in its panel) |
-| Collaborations | `src/data/collaborations.json` (collection `collaborations`) | `hive/HivePanels`: the 404 Solutions panel shows the name, kind, location and description of the entry whose `name` starts with a partner's name from the projects; an entry that matches no partner is not shown anywhere |
-| 404 Solutions services | `src/data/consultancy.json` (no schema) | `hive/HivePanels` reads `services` only (title, area, `deliveredWith`, description); `section`, `partners` and `links` are left from the removed 404 Solutions section and nothing reads them |
 | Architecture diagrams | `src/data/architectures.json` (no schema): the two lab diagrams, their steps, side boxes, details, tools and synthetic sample rows | `lab/ArchitectureLab`, `lab/ArchDiagram` |
 | Skills | `src/data/skills.json` | `hive/HivePanels`: the skill groups in the Tools panel |
 | Degrees, certifications, memberships | `src/data/education.json` | `hive/HiveDashboard` (degrees in progress for the Roadmap panel), `hive/HivePanels` (degrees and certifications at the end of the Career panel), `research.astro` (memberships) |
 | Publications | `src/data/publications.csv` (collection `publications`) | `hive/HiveDashboard`, `research.astro` |
-| Projects | `src/content/projects/*.md` (collection `projects`), frontmatter only | `index.astro` and `projects/index.astro`, both through `hive/ProjectHive`; `hive/HiveDashboard` (counts, featured projects, tools, 404 Solutions partners, what is in progress) |
+| Projects | `src/content/projects/*.md` (collection `projects`), frontmatter only | `index.astro` and `projects/index.astro`, both through `hive/ProjectHive`; `hive/HiveDashboard` (counts, featured projects, what is in progress) |
 | Portrait | `src/assets/portrait.jpg` | `hive/HiveDashboard`, optimised by `astro:assets` |
 | CV PDF, favicon, social image | `public/files/`, `public/images/` | copied as is into the build |
 
-`profile.json`, `consultancy.json`, `skills.json` and `education.json` have no schema; they are imported as JSON
+`profile.json`, `skills.json` and `education.json` have no schema; they are imported as JSON
 and TypeScript infers their shape. `stats` in `profile.json` holds one typed number, the years of experience;
 every other number on the home dashboard is computed from the collections (`src/lib/dashboard.ts`). `phone` and `languages` in
 `profile.json` are not read by any page or component.
@@ -55,13 +53,6 @@ home page, `ai`, `data` and `software` on `/projects/`. Where each field shows a
 `hive/HivePanels` prints a build warning while set), `summary`, `highlights`, `stack`.
 
 The Career panel lists the roles newest first by `start`; a row opens to its `summary` with the length from `start` to `end` (or to today), its `highlights` and its `stack`.
-
-### `collaborations`
-
-`name`, `via` (omitted when the engagement was direct), `location`, `kind`, `description`, `tags`,
-`needsReview` (meant to mark copy that still needs sign-off; no component reads it yet, so a flagged description
-is published as usual, see [roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)). The 404 Solutions
-panel reads `name`, `kind`, `location` and `description`; `via` and `tags` are not shown.
 
 ### `publications`
 
