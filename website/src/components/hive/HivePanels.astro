@@ -12,7 +12,7 @@ import { attribution, formatMonth, rolesNewestFirst, tenure } from '../../lib/da
 interface Props {
   data: {
     projectCount: number;
-    research: { works: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[]; byYear: { year: number; papers: { title: string; first: boolean }[] }[] };
+    research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
     education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
     now: NowItem[];
     profile: { email: string; cv: string; links: Record<string, string> };
@@ -91,16 +91,12 @@ const featured = (await getCollection('projects')).filter((p) => p.data.featured
 
   <section class="panel" id="hive-research" data-panel="research" aria-label="Research">
     <p class="panel-title">Research</p>
-    <p class="panel-sub">Every paper, by year</p>
-    <div class="pubyears" role="img" aria-label={`${data.research.works} papers by year, ${data.research.firstAuthor} as first author`}>
-      {data.research.byYear.map((y) => (
-        <div class="pubyear">
-          <div class="pubstack">{y.papers.map((p) => <span class={`pubhex ${p.first ? 'is-first' : ''}`} title={p.title}></span>)}</div>
-          <span class="pubyear-label mono">{String(y.year).slice(2)}</span>
-        </div>
-      ))}
-    </div>
-    <p class="legend-line mono"><span class="pubhex is-first is-key"></span>first author <span class="pubhex is-key"></span>co-author</p>
+    <dl class="figures">
+      <div><dt>Works</dt><dd class="mono">{data.research.works}</dd></div>
+      <div><dt>Citations</dt><dd class="mono">{data.research.citations}</dd></div>
+      <div><dt>h-index</dt><dd class="mono">{data.research.h}</dd></div>
+      <div><dt>First author</dt><dd class="mono">{data.research.firstAuthor}</dd></div>
+    </dl>
     <p class="panel-sub">Most cited</p>
     <ol class="papers">
       {data.research.top.map((p, i) => (
@@ -227,20 +223,10 @@ const featured = (await getCollection('projects')).filter((p) => p.data.featured
   .role-stack { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
   .role-stack-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
 
-  /* Every paper as a hexagon in its year's column: filled for first author. */
-  .pubyears { display: flex; align-items: flex-end; gap: 0.35rem; padding: 0.4rem 0 0.2rem; overflow-x: auto; }
-  .pubyear { flex: 1 0 1.6rem; display: grid; justify-items: center; gap: 0.35rem; }
-  .pubstack { display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; min-height: 1rem; }
-  .pubhex {
-    display: inline-block; width: 1.05rem; height: 1.2rem;
-    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    background: var(--bio); position: relative; transition: transform 0.2s var(--ease);
-  }
-  .pubhex:not(.is-first)::after { content: ''; position: absolute; inset: 2px; clip-path: inherit; background: var(--bg-raised); }
-  .pubhex.is-first { box-shadow: 0 0 8px var(--glow-bio); }
-  .pubhex:hover { transform: scale(1.25); }
-  .pubhex.is-key { width: 0.8rem; height: 0.92rem; vertical-align: middle; margin-right: 0.35rem; }
-  .pubyear-label { font-size: 0.75rem; color: var(--text-faint); }
+  .figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin: 0; }
+  .figures div { padding: 0.7rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .figures dt { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+  .figures dd { margin: 0.2rem 0 0; font-size: 1.5rem; color: var(--bio); }
 
   /* The most cited, as ranked cards. */
   .papers { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
@@ -252,11 +238,10 @@ const featured = (await getCollection('projects')).filter((p) => p.data.featured
   .paper-venue { font-size: 0.85rem; color: var(--text-dim); }
   .paper-cites { font-size: 0.75rem; white-space: nowrap; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid rgba(var(--bio-rgb), 0.5); color: var(--bio); }
   @media (max-width: 640px) { .paper { grid-template-columns: auto 1fr; } .paper-cites { grid-column: 2; justify-self: start; } }
-  @media (prefers-reduced-motion: reduce) { .pubhex { transition: none; } }
 
-  .legend-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; margin: -0.3rem 0 1rem; font-size: 0.75rem; color: var(--text-dim); }
 
   @media (max-width: 640px) {
+    .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .item-body { padding-left: 0.2rem; }
   }
 </style>

@@ -32,7 +32,7 @@ website/                      the Astro project
       lab.astro               the lab page: three demos behind tabs, each with an address (#signal, #data-platform, #ai-system)
     components/
       hive/HiveDashboard.astro home dashboard: the ECG trace across the top, portrait, name, tagline and actions, seven honeycomb cells with count-up numbers, deep links that open a panel
-      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (every paper by year, the most cited as ranked cards), skills, in progress, contact
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research (four figures, the most cited as ranked cards), skills, in progress, contact
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the lab's three tabs (Signal processing, Data platform, AI system), picked by the address too

@@ -11,7 +11,7 @@ import education from '../../data/education.json';
 import portrait from '../../assets/portrait.jpg';
 import { withBase } from '../../lib/url';
 import {
-  inProgress, isOwnWork, rolesNewestFirst, topCited,
+  hIndex, inProgress, isOwnWork, rolesNewestFirst, topCited,
 } from '../../lib/dashboard';
 import { place } from '../../lib/honeycomb';
 import EcgTrace from '../EcgTrace.astro';
@@ -51,18 +51,10 @@ const cells: Cell[] = [
 const panelData = {
   projectCount: projects.length,
   research: {
-    works: publications.length,
+    works: publications.length, citations,
+    h: hIndex(publications.map((p) => p.data.citations)),
     firstAuthor: publications.filter((p) => p.data.role === 'First author').length,
     top: topCited(publications).map((p) => ({ year: p.data.year, title: p.data.title, venue: p.data.venue, citations: p.data.citations, url: p.data.url })),
-    byYear: (() => {
-      const years = publications.map((p) => p.data.year);
-      const from = Math.min(...years), to = Math.max(...years);
-      return Array.from({ length: to - from + 1 }, (_, i) => from + i).map((year) => ({
-        year,
-        papers: publications.filter((p) => p.data.year === year)
-          .map((p) => ({ title: p.data.title, first: p.data.role === 'First author' })),
-      }));
-    })(),
   },
   education,
   now,
