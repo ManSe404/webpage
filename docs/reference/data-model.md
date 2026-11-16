@@ -40,7 +40,7 @@ every other number on the home dashboard is computed from the collections (`src/
 | `org` | string | none | The employer the work was delivered under; decides the type of work on `/projects/` (`Personal` and `Open source` are own work, `BioIRC` is research, the rest client work), the client and own counts on the Projects cell, and the 404 Solutions projects and partners |
 | `client` | string | none | The partner or end customer, where it can be named publicly; shown as "with client" |
 | `impact` | list of strings | empty | Only the first line is shown, as the project's result when there is no `Result` metric; the other lines are not shown anywhere |
-| `stack` | list of strings | empty | All in the popup; the Tools panel draws the 30 most used as circles, sized by use and coloured by the field they are used in most (no count is shown) |
+| `stack` | list of strings | empty | All in the popup |
 | `metrics` | list of `{label, value}` | empty | Read by label: `Role` fills the popup's Role & responsibilities line, `Result` the popup's Achieved result, `Stage` the In progress panel; any other label is not shown anywhere |
 | `link` | URL | none | "Visit project ↗" in the popup |
 
@@ -54,7 +54,7 @@ home page, `ai`, `data` and `software` on `/projects/`. Where each field shows a
 `role`, `company`, `start`, `end` (null while current), `current`, `dateUnconfirmed` (the career timeline in
 `hive/HivePanels` prints a build warning while set), `summary`, `highlights`, `stack`.
 
-The Years panel lists the roles newest first by `start`; a row opens to its `highlights` and `stack`.
+The Years panel lists the roles newest first by `start`; a row opens to its `summary` with the length from `start` to `end` (or to today), its `highlights` and its `stack`.
 
 ### `collaborations`
 

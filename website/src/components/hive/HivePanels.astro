@@ -8,14 +8,13 @@ import consultancy from '../../data/consultancy.json';
 import skills from '../../data/skills.json';
 import type { NowItem } from '../../lib/dashboard';
 import ProjectDetails from './ProjectDetails.astro';
-import { attribution, formatMonth, rolesNewestFirst } from '../../lib/dashboard';
+import { attribution, formatMonth, rolesNewestFirst, tenure } from '../../lib/dashboard';
 
 interface Props {
   data: {
     projectCount: number;
-    research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[] };
+    research: { works: number; citations: number; h: number; firstAuthor: number; top: { year: number; title: string; venue: string; citations: number; url?: string }[]; byYear: { year: number; papers: { title: string; first: boolean }[] }[] };
     education: { degrees: { degree: string; institution: string; period?: string }[]; certifications: { name: string; issuer: string }[]; memberships: string[] };
-    bubbles: { name: string; size: number; field: 'ai' | 'data' | 'other' }[];
     now: NowItem[];
     consultancy: { projects: number; partners: { name: string; count: number }[]; summary?: string };
     profile: { email: string; cv: string; links: Record<string, string> };
@@ -80,9 +79,10 @@ const partners = data.consultancy.partners.map((p) => ({
               <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
               <span class="item-head"><span class="item-title">{r.data.role}</span><span class="item-meta">{r.data.company} · {formatMonth(r.data.start)} — {formatMonth(r.data.end)}</span></span>
             </summary>
-            <div class="item-body">
-              <ul class="step-list">{r.data.highlights.map((h) => <li>{h}</li>)}</ul>
-              <div class="chips">{r.data.stack.map((t) => <span class="chip">{t}</span>)}</div>
+            <div class="item-body role">
+              <p class="role-summary">{r.data.summary}<span class="role-tenure mono">{tenure(r.data.start, r.data.end)}</span></p>
+              <ul class="role-points">{r.data.highlights.map((h) => <li>{h}</li>)}</ul>
+              <div class="role-stack"><span class="role-stack-label mono">Stack</span><div class="chips">{r.data.stack.map((t) => <span class="chip">{t}</span>)}</div></div>
             </div>
           </details>
         </li>
@@ -107,28 +107,34 @@ const partners = data.consultancy.partners.map((p) => ({
       <div><dt>h-index</dt><dd class="mono">{data.research.h}</dd></div>
       <div><dt>First author</dt><dd class="mono">{data.research.firstAuthor}</dd></div>
     </dl>
+    <p class="panel-sub">Every paper, by year</p>
+    <div class="pubyears" role="img" aria-label={`${data.research.works} papers by year, ${data.research.firstAuthor} as first author`}>
+      {data.research.byYear.map((y) => (
+        <div class="pubyear">
+          <div class="pubstack">{y.papers.map((p) => <span class={`pubhex ${p.first ? 'is-first' : ''}`} title={p.title}></span>)}</div>
+          <span class="pubyear-label mono">{String(y.year).slice(2)}</span>
+        </div>
+      ))}
+    </div>
+    <p class="legend-line mono"><span class="pubhex is-first is-key"></span>first author <span class="pubhex is-key"></span>co-author</p>
     <p class="panel-sub">Most cited</p>
     <ol class="papers">
-      {data.research.top.map((p) => (
-        <li>
-          <span class="mono paper-meta">{p.year} · {plural(p.citations, 'citation')}</span>
-          {p.url ? <a href={p.url} target="_blank" rel="noopener">{p.title}</a> : <span>{p.title}</span>}
-          <span class="paper-venue">{p.venue}</span>
+      {data.research.top.map((p, i) => (
+        <li class="paper">
+          <span class="paper-rank mono">{i + 1}</span>
+          <div class="paper-body">
+            {p.url ? <a class="paper-title" href={p.url} target="_blank" rel="noopener">{p.title}</a> : <span class="paper-title">{p.title}</span>}
+            <span class="paper-venue">{p.venue} · {p.year}</span>
+          </div>
+          <span class="paper-cites mono">{plural(p.citations, 'citation')}</span>
         </li>
       ))}
     </ol>
     <a class="panel-more mono" href={withBase('/research/')}>All publications →</a>
   </section>
 
-  <section class="panel" id="hive-toolkit" data-panel="toolkit" aria-label="Tools">
-    <p class="panel-title">What I build with</p>
-    <p class="legend-line mono"><span class="dot dot-ai"></span>mostly AI work <span class="dot dot-data"></span>mostly data work <span class="dot dot-other"></span>everything else</p>
-    <ul class="bubbles" aria-label="The tools used most across the projects; a larger circle means more use">
-      {data.bubbles.map((b, i) => (
-        <li class={`bubble b-${b.field}`} style={`--d:${b.size}px;--i:${i}`}><span>{b.name}</span></li>
-      ))}
-    </ul>
-    <p class="panel-sub">Skills</p>
+  <section class="panel" id="hive-toolkit" data-panel="toolkit" aria-label="Skills">
+    <p class="panel-title">Skills</p>
     <dl class="skills">
       {skills.map((g) => (<div><dt>{g.group}</dt><dd>{g.items.join(' · ')}</dd></div>))}
     </dl>
@@ -247,11 +253,6 @@ const partners = data.consultancy.partners.map((p) => ({
   .figures dt { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
   .figures dd { margin: 0.2rem 0 0; font-size: 1.5rem; color: var(--bio); }
 
-  .papers { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.7rem; }
-  .papers li { display: grid; gap: 0.15rem; }
-  .papers a, .papers span { color: var(--text); }
-  .paper-meta { font-size: 0.75rem; color: var(--bio) !important; }
-  .paper-venue { font-size: 0.85rem; color: var(--text-dim) !important; }
 
   .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
   .rows li { display: grid; gap: 0.1rem; }
@@ -262,26 +263,50 @@ const partners = data.consultancy.partners.map((p) => ({
   .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 0 1.6rem; }
   .groups .panel-sub:first-child { margin-top: 0; }
 
-  .legend-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; margin: -0.3rem 0 1rem; font-size: 0.75rem; color: var(--text-dim); }
-  .dot { display: inline-block; width: 10px; height: 10px; margin-right: 0.35rem; border-radius: 50%; vertical-align: middle; }
-  .dot-ai { background: var(--ai); } .dot-data { background: var(--bio); } .dot-other { background: var(--text-dim); }
-  /* Tools as a cloud of circles: the diameter follows use, the colour the field it is used in most. */
-  .bubbles { list-style: none; margin: 0; padding: 0.4rem 0 0.6rem; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem; }
-  .bubble {
-    width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center; padding: 0.4rem;
-    text-align: center; font-size: 0.75rem; line-height: 1.15; color: var(--text);
-    border: 1px solid var(--border-strong); background: var(--surface);
-    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-    animation: bob 6s var(--ease) infinite alternate; animation-delay: calc(var(--i) * -0.37s);
+  /* An opened role: a one-line summary with its length, the highlights hung on a
+     honey rail with small hexagon markers, then the stack. */
+  .role { display: grid; gap: 0.9rem; padding-top: 0.2rem; }
+  .role-summary { margin: 0; color: var(--text); font-style: italic; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.8rem; }
+  .role-tenure { font-style: normal; font-size: 0.75rem; padding: 0.1rem 0.55rem; border-radius: 999px; color: var(--on-accent); background: var(--bio); }
+  .role-points { list-style: none; margin: 0; padding: 0 0 0 1.4rem; display: grid; gap: 0.55rem; position: relative; }
+  .role-points::before { content: ''; position: absolute; left: 0.32rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: linear-gradient(var(--bio), rgba(var(--bio-rgb), 0.15)); }
+  .role-points li { position: relative; color: var(--text-dim); line-height: 1.55; }
+  .role-points li::before {
+    content: ''; position: absolute; left: -1.38rem; top: 0.42em; width: 0.68rem; height: 0.78rem;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--bio); box-shadow: 0 0 8px var(--glow-bio);
   }
-  .bubble span { overflow-wrap: anywhere; }
-  .b-ai { border-color: rgba(var(--ai-rgb), 0.6); background: rgba(var(--ai-rgb), 0.12); }
-  .b-data { border-color: rgba(var(--bio-rgb), 0.6); background: rgba(var(--bio-rgb), 0.12); }
-  .b-other { border-color: var(--border-strong); }
-  .bubble:hover { transform: scale(1.08); box-shadow: 0 0 18px var(--glow-bio); }
-  @keyframes bob { from { translate: 0 -3px; } to { translate: 0 3px; } }
-  @media (prefers-reduced-motion: reduce) { .bubble { animation: none; transition: none; } }
-  @media (max-width: 640px) { .bubble { width: calc(var(--d) * 0.82); height: calc(var(--d) * 0.82); } }
+  .role-stack { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
+  .role-stack-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+
+  /* Every paper as a hexagon in its year's column: filled for first author. */
+  .pubyears { display: flex; align-items: flex-end; gap: 0.35rem; padding: 0.4rem 0 0.2rem; overflow-x: auto; }
+  .pubyear { flex: 1 0 1.6rem; display: grid; justify-items: center; gap: 0.35rem; }
+  .pubstack { display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; min-height: 1rem; }
+  .pubhex {
+    display: inline-block; width: 1.05rem; height: 1.2rem;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: var(--bio); position: relative; transition: transform 0.2s var(--ease);
+  }
+  .pubhex:not(.is-first)::after { content: ''; position: absolute; inset: 2px; clip-path: inherit; background: var(--bg-raised); }
+  .pubhex.is-first { box-shadow: 0 0 8px var(--glow-bio); }
+  .pubhex:hover { transform: scale(1.25); }
+  .pubhex.is-key { width: 0.8rem; height: 0.92rem; vertical-align: middle; margin-right: 0.35rem; }
+  .pubyear-label { font-size: 0.75rem; color: var(--text-faint); }
+
+  /* The most cited, as ranked cards. */
+  .papers { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .paper { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.9rem; padding: 0.75rem 0.9rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .paper-rank { font-size: 1.6rem; line-height: 1; color: var(--bio); min-width: 1.4rem; text-align: center; }
+  .paper-body { display: grid; gap: 0.15rem; }
+  .paper-title { color: var(--text); font-weight: 600; text-decoration: none; line-height: 1.35; }
+  a.paper-title:hover { color: var(--bio); }
+  .paper-venue { font-size: 0.85rem; color: var(--text-dim); }
+  .paper-cites { font-size: 0.75rem; white-space: nowrap; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid rgba(var(--bio-rgb), 0.5); color: var(--bio); }
+  @media (max-width: 640px) { .paper { grid-template-columns: auto 1fr; } .paper-cites { grid-column: 2; justify-self: start; } }
+  @media (prefers-reduced-motion: reduce) { .pubhex { transition: none; } }
+
+  .legend-line { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; margin: -0.3rem 0 1rem; font-size: 0.75rem; color: var(--text-dim); }
 
   @media (max-width: 640px) {
     .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }

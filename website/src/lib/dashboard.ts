@@ -23,6 +23,16 @@ export function formatMonth(value: string | null): string {
   return match ? `${MONTHS[Number(match[2]) - 1]} ${match[1]}` : value;
 }
 
+/** "2025-04" to "2026-11" (or to `now` while current) -> "1 yr 8 mos"; whole months, start month included. */
+export function tenure(start: string, end: string | null, now = new Date()): string {
+  const [sy, sm] = start.split('-').map(Number);
+  const [ey, em] = end ? end.split('-').map(Number) : [now.getFullYear(), now.getMonth() + 1];
+  const months = Math.max(1, (ey - sy) * 12 + (em - sm) + 1);
+  const y = Math.floor(months / 12);
+  const m = months % 12;
+  return [y && `${y} yr${y > 1 ? 's' : ''}`, m && `${m} mo${m > 1 ? 's' : ''}`].filter(Boolean).join(' ');
+}
+
 export const isOwnWork = (org?: string) => org === 'Personal' || org === 'Open source';
 
 /** Who the work was for: own projects, the research institute, or a client or employer. */
@@ -35,47 +45,6 @@ export function hIndex(citations: number[]): number {
   let h = 0;
   while (h < sorted.length && sorted[h] >= h + 1) h++;
   return h;
-}
-
-/** How many projects use each tool, most used first. */
-export function toolUsage(projects: Project[]): { name: string; count: number }[] {
-  const counts = new Map<string, number>();
-  for (const p of projects) {
-    for (const tool of new Set(p.data.stack)) counts.set(tool, (counts.get(tool) ?? 0) + 1);
-  }
-  return [...counts]
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-}
-
-export type Field = 'ai' | 'data' | 'other';
-const AI_TOPICS = ['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision'];
-const DATA_TOPICS = ['Data Engineering', 'Machine Learning'];
-export const fieldOf = (category: string): Field =>
-  AI_TOPICS.includes(category) ? 'ai' : DATA_TOPICS.includes(category) ? 'data' : 'other';
-
-/**
- * Tools as bubbles: a size from how many projects use the tool (no number is
- * shown) and the field it is used in most, for its colour. The most used first.
- */
-export function toolBubbles(projects: Project[], limit = 30): { name: string; size: number; field: Field }[] {
-  const fields = new Map<string, Record<Field, number>>();
-  for (const p of projects) {
-    const f = fieldOf(p.data.category);
-    for (const tool of new Set(p.data.stack)) {
-      const tally = fields.get(tool) ?? { ai: 0, data: 0, other: 0 };
-      tally[f]++;
-      fields.set(tool, tally);
-    }
-  }
-  const used = toolUsage(projects).slice(0, limit);
-  const top = used[0]?.count ?? 1;
-  return used.map(({ name, count }) => {
-    const tally = fields.get(name)!;
-    const field = (Object.keys(tally) as Field[]).sort((a, b) => tally[b] - tally[a])[0];
-    // Area follows use: the diameter grows with the square root of the count.
-    return { name, size: Math.round(64 + 76 * Math.sqrt((count - 1) / Math.max(top - 1, 1))), field };
-  });
 }
 
 /** The one line that says what a project achieved: its Result metric, else its first impact line. */
