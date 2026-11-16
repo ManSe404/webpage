@@ -79,10 +79,10 @@ const panelData = {
         <a class="btn" href={withBase('/#work')}>View work <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href={withBase(profile.cv)} download>Download CV</a>
       </div>
-      <VitalsMonitor />
     </div>
 
     <div class="hive-wrap">
+      <VitalsMonitor overlay>
       <ul class="hive" aria-label="Explore by area">
         {cells.map((cell, i) => {
           const d = place(i, 4);
@@ -104,7 +104,8 @@ const panelData = {
           );
         })}
       </ul>
-      <p class="hive-hint mono" data-hive-hint hidden>Pick a cell to explore</p>
+      <p class="hive-hint mono" data-hive-hint hidden slot="hint">Pick a cell to explore</p>
+      </VitalsMonitor>
     </div>
   </div>
 
@@ -273,8 +274,12 @@ const panelData = {
   .hex.is-active::before { background: #2b2214; }
   .hex:focus-visible { outline: none; }
   .cell:has(.hex:hover), .cell:has(.hex.is-active), .cell:has(.hex:focus-visible) { filter: drop-shadow(0 0 12px var(--glow-bio)); }
+  /* A beat passing under a cell lights its edge for a moment (VitalsMonitor). */
+  .cell { transition: filter 0.45s var(--ease); }
+  .cell.is-pulse { filter: drop-shadow(0 0 10px var(--glow-bio)); }
+  .cell.is-pulse .hex { background: rgba(var(--bio-rgb), 0.75); }
 
-  .hive-hint { margin: 0.6rem 0 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
+  .hive-hint { margin: 0; text-align: center; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.06em; }
 
 
   @media (max-width: 1080px) {
