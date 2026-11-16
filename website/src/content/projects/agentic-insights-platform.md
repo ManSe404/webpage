@@ -1,7 +1,7 @@
 ---
 title: Agentic AI Platform
 category: Agentic AI
-summary: Agents for the whole meeting cycle in English and Arabic — agenda building, document chat, reports with charts, spoken summaries, minutes from speech and document translation.
+summary: Board-meeting work split across many manual jobs in two languages, now one agent platform — briefings ready sooner, minutes faster, the whole process in one place.
 featured: true
 order: 8
 org: 404 Solutions
@@ -60,6 +60,8 @@ their jobs from a message queue, and every model call is traced.
 
 ## The outcome
 
-One platform covering a meeting from the board pack to the minutes, in both languages.
+One platform covering a meeting from the board pack to the minutes, in both languages:
+briefings ready sooner, minutes faster after each meeting, and the whole process in one
+place instead of a set of manual jobs.
 Making orchestration an explicit graph rather than an implicit chain is what kept it
 workable: when a flow goes wrong, the flow itself is a structure you can look at.

@@ -21,11 +21,11 @@ stack:                                       # 6–8 where true, most telling fi
   - FastAPI
   - PostgreSQL
   - Docker
-metrics:                                     # 2–3; the first value is the tag beside the category chip
+metrics:                                     # 2–3; the first value is the tag beside the category chip; a Result only if it happened
   - label: Role
     value: Architect & builder               # category + this value ≤ 37: one line beside the chip
-  - label: Stage
-    value: In production
+  - label: Result
+    value: Review time cut by half             # measured, or what happened; never an estimate
 # link: https://example.com                  # public URL only
 ---
 

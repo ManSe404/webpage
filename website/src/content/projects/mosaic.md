@@ -2,7 +2,7 @@
 title: Mosaic — Document AI Bricks
 category: Generative AI
 featured: true
-summary: A Python library of document-AI bricks where both the pipeline and the question are plans written as data, and every brick must beat a BM25 baseline before it is kept.
+summary: Pipelines treat every document and question alike and never measure — Mosaic makes each a plan, keeps a brick only if it beats BM25, and runs document-buddy; still a prototype.
 order: 20
 org: Personal
 period: 2026 — Present

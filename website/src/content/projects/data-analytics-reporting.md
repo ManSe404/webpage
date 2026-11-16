@@ -1,11 +1,12 @@
 ---
 title: Data Analytics & Reporting
 category: Data Engineering
-summary: Finance, sales, marketing and operations reporting for a retail and hospitality group, rebuilt as a medallion lakehouse on Microsoft Fabric with one shared semantic layer.
+summary: Every new report meant another fragile dataflow — one Fabric lakehouse now feeds finance, sales, marketing and operations, with numbers people trust at half the capacity cost.
 order: 5
 org: ExpertGroup
 period: 2026 — Present
 impact:
+  - Fabric capacity cost cut by 50 % by optimizing how the platform uses it
   - Every source lands raw first, then moves through bronze, silver and gold layers
   - Reports keep their names and measures, so the switch asks nothing new of their users
   - Changes reach production through Git, pull requests and a DEV-to-PROD deployment pipeline
@@ -22,8 +23,8 @@ metrics:
     value: Team lead & delivery
   - label: Architecture
     value: Medallion · Direct Lake
-  - label: Domains
-    value: Finance · sales · marketing · ops
+  - label: Result
+    value: Capacity cost cut by half
 ---
 
 ## The problem
@@ -49,5 +50,6 @@ The team rebuilt it as a platform rather than a collection of reports:
 
 ## The outcome
 
-The new platform is in production, with the finance model moved first and the other
-reports following it across from the old workspace.
+The rebuild rescued reporting that was failing quietly. The new platform is in production
+with numbers people trust: the finance model moved first and the other reports follow it
+across from the old workspace, and optimizing the Fabric capacities cut their cost by half.

@@ -21,11 +21,11 @@ stack:                                       # 4–8, most telling first; the ho
   - FastAPI
   - Docker
   - Azure
-metrics:                                     # 2–3, shown on the case study page only
+metrics:                                     # 2–3, case study page only; a Result only if it happened
   - label: Role
     value: Lead engineer
-  - label: Stage
-    value: In production
+  - label: Result
+    value: Manual tagging cut                # measured, or what happened; never an estimate
 # link: https://example.com                  # public URL only
 ---
 

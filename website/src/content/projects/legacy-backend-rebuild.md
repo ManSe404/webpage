@@ -1,14 +1,14 @@
 ---
 title: Backend Build & System Discovery
 category: Software Engineering
-summary: System discovery on an undocumented production system, a written specification of what it does, and a new backend built to that specification.
+summary: Nobody knew exactly what an old production system did — system discovery turned that into a specification, and the backend built to it replaced the old one without incidents.
 order: 10
 org: 404 Solutions
 client: Q Agency
 impact:
-  - System discovery written down as a specification of what the system does
-  - New backend built to the specification rather than to assumptions
-  - The specification stays useful after the migration that produced it
+  - The new backend replaced the old one without incidents, delivered on time
+  - System discovery written down as a specification the client still uses
+  - Built to the specification rather than to assumptions, and easier to change than the old one
 stack:
   - Python
   - FastAPI
@@ -43,5 +43,6 @@ clients, in that order on purpose:
 
 ## The outcome
 
-The client got a backend built on a checked understanding of the system before it — and
-kept the specification, the part that stays useful long after the migration is finished.
+The new backend replaced the old one without incidents and on time, and it is easier to
+change. The client kept the specification and still uses it — the part that stays useful
+long after the migration is finished.

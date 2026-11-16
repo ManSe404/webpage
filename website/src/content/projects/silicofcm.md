@@ -1,7 +1,7 @@
 ---
 title: SILICOFCM — EU Horizon 2020
 category: Research
-summary: A computational platform for in silico clinical trials of familial cardiomyopathies — ECG and CPET analysis, statistical modelling, and patient-specific 3D heart models.
+summary: Clinical trials that cannot be run on patients, run in silico — my part ran from ECG and CPET measurement through statistics and data governance to the platform and its papers.
 order: 19
 org: BioIRC
 period: 2020 — 2022
@@ -24,6 +24,8 @@ metrics:
     value: EU Horizon 2020
   - label: Domain
     value: Computational cardiology
+  - label: Role
+    value: Measurement to publication
 ---
 
 ## The problem
@@ -37,8 +39,11 @@ trusting with a clinical question.
 ## The approach
 
 SILICOFCM is an EU Horizon 2020 platform for in silico clinical trials — running trials
-computationally, on models, where running them on people is not an option. My contribution
-covered the signal and modelling side:
+computationally, on models, where running them on people is not an option. My part ran the
+whole data path, from measurement to publication:
+
+- **Measurement and data governance**, from the ECG and CPET measurements themselves to the
+  governance of the data they produced.
 
 - **ECG analysis**, processing cardiac electrical signal data into features the platform
   could actually model against.
@@ -48,6 +53,7 @@ covered the signal and modelling side:
   the platform and the peer-reviewed research built on it.
 - **Patient-specific 3D heart modelling**, the component that makes a simulated trial
   specific to an individual instead of generic to a population.
+- **Development** of the platform components that carried this work.
 
 ## The outcome
 

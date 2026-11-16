@@ -2,7 +2,7 @@
 title: Role Skill Packs for Claude Code
 category: Agentic AI
 featured: true
-summary: Claude Code skill packs for the jobs that keep coming back — codebase maps, impact analysis, AI and data-platform reviews — each counting with scripts and ending in one page.
+summary: Ask an assistant to review a repository and you get estimates lost in a transcript — these Claude Code skills count with scripts, end in one page, and save review time at work.
 order: 21
 org: Open source
 period: 2026 — Present

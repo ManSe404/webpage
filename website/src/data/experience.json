@@ -14,7 +14,7 @@
       "Set technical direction and make delivery decisions across the AI portfolio.",
       "Built a document chatbot that talks to data — every number computed in code and traced to its source cell, never by the model — and delivered multilingual document QA.",
       "Built gradient-boosted time series models for supply chain and sales forecasting.",
-      "Lead the evaluation framework for the team's LLM chatbots and agents, and data analytics and reporting on Microsoft Fabric."
+      "Lead the evaluation framework for the team's LLM chatbots and agents, and data analytics and reporting on Microsoft Fabric, where capacity cost was cut by half."
     ],
     "stack": ["Python", "FastAPI", "LangChain", "Qdrant", "RabbitMQ", "Azure AI Foundry", "Microsoft Fabric", "Power BI", "Azure DevOps", "Docker", "XGBoost", "DeepEval"]
   },
