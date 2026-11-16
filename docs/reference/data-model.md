@@ -8,12 +8,12 @@ Everything the site says comes from files under `website/src/`. The collections 
 | What | Where | Read by |
 |---|---|---|
 | Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `Contact`, `research.astro` |
-| Career | `src/data/experience.json` (collection `experience`) | `hive/JourneyBoard` (the career board); `hive/HiveDashboard` (the role count and first year on the Years cell, current roles under In progress, the summary of the 404 Solutions role in its panel) |
+| Career | `src/data/experience.json` (collection `experience`) | `hive/HivePanels` (the career timeline in the Years panel, newest first); `hive/HiveDashboard` (the role count and first year on the Years cell, current roles under In progress, the summary of the 404 Solutions role in its panel) |
 | Collaborations | `src/data/collaborations.json` (collection `collaborations`) | `hive/HivePanels`: the 404 Solutions panel shows the name, kind, location and description of the entry whose `name` starts with a partner's name from the projects; an entry that matches no partner is not shown anywhere |
 | 404 Solutions services | `src/data/consultancy.json` (no schema) | `hive/HivePanels` reads `services` only (title, area, `deliveredWith`, description); `section`, `partners` and `links` are left from the removed 404 Solutions section and nothing reads them |
 | Architecture diagrams | `src/data/architectures.json` (no schema): the two lab diagrams, their steps, side boxes, details, tools and synthetic sample rows | `lab/ArchitectureLab`, `lab/ArchDiagram` |
 | Skills | `src/data/skills.json` | `hive/HivePanels`: the skill groups in the Tools panel |
-| Degrees, certifications, memberships | `src/data/education.json` | `hive/HiveDashboard` (degrees in progress, and the Education panel through `hive/HivePanels`), `hive/JourneyBoard` (degrees on the Education track, certifications in the strip below), `research.astro` (memberships) |
+| Degrees, certifications, memberships | `src/data/education.json` | `hive/HiveDashboard` (degrees in progress, and the Education panel through `hive/HivePanels`), `research.astro` (memberships) |
 | Publications | `src/data/publications.csv` (collection `publications`) | `hive/HiveDashboard`, `research.astro` |
 | Projects | `src/content/projects/*.md` (collection `projects`), frontmatter only | `index.astro` and `projects/index.astro`, both through `hive/ProjectHive`; `hive/HiveDashboard` (counts, featured projects, tools, 404 Solutions partners, what is in progress) |
 | Portrait | `src/assets/portrait.jpg` | `hive/HiveDashboard`, optimised by `astro:assets` |
@@ -51,14 +51,10 @@ home page, `ai`, `data` and `software` on `/projects/`. Where each field shows a
 
 ### `experience`
 
-`role`, `company`, `start`, `end` (null while current), `current`, `dateUnconfirmed` (the career board prints a
-build warning while set), `summary`, `highlights`, `stack`.
+`role`, `company`, `start`, `end` (null while current), `current`, `dateUnconfirmed` (the career timeline in
+`hive/HivePanels` prints a build warning while set), `summary`, `highlights`, `stack`.
 
-The career board puts a role on the Research & biomedicine track when `company` is one of three names listed in
-`JourneyBoard.astro` (University of Belgrade, BioIRC — Bioengineering R&D Center, Sport and Recreation Center
-Obliqus) and on AI & software otherwise; the era follows the year of `start`. A card opens the first three
-`highlights`. `summary` is shown only for the 404 Solutions role, in its panel, and `stack` is not shown by any
-component. A degree in `education.json` without a `period` is placed as 2017, shown as "Before 2018".
+The Years panel lists the roles newest first by `start`; a row opens to its `highlights` and `stack`.
 
 ### `collaborations`
 

@@ -7,9 +7,8 @@ import { withBase } from '../../lib/url';
 import consultancy from '../../data/consultancy.json';
 import skills from '../../data/skills.json';
 import type { NowItem } from '../../lib/dashboard';
-import JourneyBoard from './JourneyBoard.astro';
 import ProjectDetails from './ProjectDetails.astro';
-import { attribution } from '../../lib/dashboard';
+import { attribution, formatMonth, rolesNewestFirst } from '../../lib/dashboard';
 
 interface Props {
   data: {
@@ -33,6 +32,16 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? o
 // Partners: the counts come from the projects, the descriptions from
 // collaborations.json where a partner has one ("Provectus" ~ "Provectus Inc").
 const collaborations = (await getCollection('collaborations')).map((c) => c.data);
+
+// Career, newest first. Loud during dev and CI builds so a placeholder date
+// cannot quietly ship.
+const roles = rolesNewestFirst(await getCollection('experience'));
+for (const r of roles.filter((e) => e.data.dateUnconfirmed)) {
+  console.warn(
+    `[timeline] UNCONFIRMED DATE: "${r.data.role} @ ${r.data.company}" starts ${r.data.start} ` +
+      `- placeholder, confirm before publishing (src/data/experience.json)`,
+  );
+}
 // The Projects panel: projects with a `featured` position, in that order.
 const featured = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0));
 const partners = data.consultancy.partners.map((p) => ({
@@ -62,9 +71,24 @@ const partners = data.consultancy.partners.map((p) => ({
     <a class="panel-more mono" href={withBase('/projects/')}>All {data.projectCount} projects →</a>
   </section>
 
-  <section class="panel" id="hive-experience" data-panel="experience" aria-label="Career and education">
-    <p class="panel-title">Career and education</p>
-    <JourneyBoard />
+  <section class="panel" id="hive-experience" data-panel="experience" aria-label="Career">
+    <p class="panel-title">Career, newest first</p>
+    <ol class="items">
+      {roles.map((r, i) => (
+        <li>
+          <details class="item" name="hive-roles">
+            <summary>
+              <span class="item-no mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="item-head"><span class="item-title">{r.data.role}</span><span class="item-meta">{r.data.company} · {formatMonth(r.data.start)} — {formatMonth(r.data.end)}</span></span>
+            </summary>
+            <div class="item-body">
+              <ul class="step-list">{r.data.highlights.map((h) => <li>{h}</li>)}</ul>
+              <div class="chips">{r.data.stack.map((t) => <span class="chip">{t}</span>)}</div>
+            </div>
+          </details>
+        </li>
+      ))}
+    </ol>
     <a class="panel-more mono" href={withBase(data.profile.cv)} download>Full CV (PDF) →</a>
   </section>
 
@@ -177,7 +201,8 @@ const partners = data.consultancy.partners.map((p) => ({
 
 <style>
   .hive-panels { position: relative; margin-top: 1.4rem; padding: clamp(1.1rem, 2.5vw, 1.6rem); }
-  .hive-panels:not([hidden]) .panel + .panel { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px solid var(--border); }
+  /* Without JavaScript the panels stack: a divider between two visible ones. */
+  .panel:not([hidden]) ~ .panel:not([hidden]) { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px solid var(--border); }
   .panel[hidden], .hive-panels[hidden] { display: none; }
   .panel-close {
     position: absolute; top: 0.8rem; right: 0.8rem; min-height: 32px; padding: 0 0.7rem;

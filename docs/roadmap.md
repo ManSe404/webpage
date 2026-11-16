@@ -44,10 +44,10 @@ typed in as well.
 
 `needsReview` in `website/src/data/collaborations.json` is in the schema, but no component reads it: a partner
 description marked for review is published in the 404 Solutions panel like any other, and the build does not
-say so. `dateUnconfirmed` on the career board, by contrast, prints a warning on every build.
+say so. `dateUnconfirmed` on a role, by contrast, prints a warning on every build.
 
 - **Fix:** warn in `components/hive/HivePanels.astro`, which reads the partner descriptions, the way
-  `components/hive/JourneyBoard.astro` warns about dates, or leave flagged descriptions out of the build, or
+  the same file warns about dates, or leave flagged descriptions out of the build, or
   drop the field.
 - **Open:** which of the three.
 
@@ -110,8 +110,8 @@ Rework how projects look on the home page and on `/projects`. The project Markdo
   and client, and the outside link): one on the home page, Chosen work (eight projects with a `home` rank), and one big honeycomb
   on `/projects/` with field and type-of-work filters (`components/hive/ProjectHive.astro`, `pages/projects/index.astro`).
   The popup is a project's whole description: the case-study pages and the Markdown body of every project file
-  are removed, and so are the list, the big card and the Selected work section. Career and education are one
-  board in the dashboard's Years panel (`components/hive/JourneyBoard.astro`).
+  are removed, and so are the list, the big card and the Selected work section. The career is a timeline,
+  newest first, in the dashboard's Years panel (`components/hive/HivePanels.astro`).
 - **Open:** a measured `Result` metric for each project: two have one today and none of the six featured, so
   the rest show their first impact line as the result.
 - **Open:** what to do with the frontmatter nothing shows any more: `impact` lines after the first, and

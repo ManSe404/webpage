@@ -66,7 +66,7 @@ the pages and components that need them.
   page passes its own), canonical URL, Open Graph and Twitter card tags, a schema.org `Person` in JSON-LD, the
   fonts, navigation, footer and the scroll-reveal script.
 - `src/components/hive/`: `HiveDashboard` (the dashboard and its cells), `HivePanels` (the panel each cell
-  opens), `JourneyBoard` (the career board in the Years panel) and `ProjectHive` (a honeycomb of projects with
+  opens, the career timeline among them), `ProjectDetails` (one project's five-line description) and `ProjectHive` (a honeycomb of projects with
   a popup per project, used by the home page and `/projects/`).
 - `src/components/`: `Section`, `Contact`, `Nav`, `Footer`, and two canvas animations, `EcgTrace` and
   `NodeField`. See the [codebase map](../reference/codebase.md).
@@ -77,7 +77,7 @@ the pages and components that need them.
 The only JavaScript is small inline scripts: the ECG canvas and the node field, scroll reveals, the dashboard's
 cells, panels, deep links and count-up numbers, the project honeycombs' popups and their re-packing after a
 filter (the `phive:relayout` event), the navigation toggle and sticky state, and the field and type-of-work filters on
-`/projects/`. The rows inside the panels and the cards of the career board open with native `<details>`, without
+`/projects/`. The rows inside the panels open with native `<details>`, without
 a script. Without JavaScript the dashboard's numbers are still in the HTML and each cell links to a page; the
 panels stay hidden; every project popup shows as a list under its honeycomb, and each project cell links to its
 entry. The canvases stop drawing when off screen or when the tab is hidden.
@@ -104,8 +104,8 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 ## Crosscutting
 
-- **Build-time checks.** Schema errors in any collection fail the build. The career board
-  (`components/hive/JourneyBoard.astro`) prints a warning for every role marked `dateUnconfirmed` in
+- **Build-time checks.** Schema errors in any collection fail the build. The career timeline
+  (`components/hive/HivePanels.astro`) prints a warning for every role marked `dateUnconfirmed` in
   `experience.json`, so a placeholder date is visible in every build log. `collaborations.json` has a
   `needsReview` flag for copy that still needs sign-off, but no component reads it: a flagged partner description
   is published without a warning ([roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).

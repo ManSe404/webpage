@@ -11,8 +11,8 @@ Before a commit, run what CI runs on every pull request:
 cd website && npm run check && npm run build
 ```
 
-Watch the build output for `[timeline] UNCONFIRMED DATE` warnings: the career board
-(`website/src/components/hive/JourneyBoard.astro`) prints one for every role in `experience.json` whose start
+Watch the build output for `[timeline] UNCONFIRMED DATE` warnings: the career timeline
+(`website/src/components/hive/HivePanels.astro`) prints one for every role in `experience.json` whose start
 date is still a placeholder.
 
 ## Add a project

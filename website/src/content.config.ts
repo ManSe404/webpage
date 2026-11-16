@@ -37,7 +37,7 @@ const experience = defineCollection({
     start: z.string(),
     end: z.string().nullable(),
     current: z.boolean().default(false),
-    // Set when a date is a placeholder awaiting confirmation. hive/JourneyBoard.astro
+    // Set when a date is a placeholder awaiting confirmation. hive/HivePanels.astro
     // warns on every build while any entry still has this set.
     dateUnconfirmed: z.boolean().default(false),
     summary: z.string(),

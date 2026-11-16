@@ -31,8 +31,7 @@ website/                      the Astro project
       research.astro          publications and the numbers derived from them
     components/
       hive/HiveDashboard.astro home dashboard: name, actions, eight honeycomb cells with count-up numbers, deep links that open a panel, the ECG trace
-      hive/HivePanels.astro   the panel each cell opens: featured projects, the career board, research, education, tools and skills, in progress, 404 Solutions services and partners, contact
-      hive/JourneyBoard.astro career and education board (three tracks across three eras) in the Years panel; warns about unconfirmed dates
+      hive/HivePanels.astro   the panel each cell opens: featured projects, the career timeline (newest first), research, education, tools and skills, in progress, 404 Solutions services and partners, contact
       hive/ProjectHive.astro  a honeycomb of projects with a popup per project; used by the home page and /projects/
       hive/ProjectDetails.astro one project's five-line description (summary, result, role, stack, company, link); the popups and the Projects panel rows
       lab/Lab.astro           the home page lab: two tabs, Signal processing and Architecture
@@ -48,7 +47,7 @@ website/                      the Astro project
       honeycomb.ts            honeycomb placement (cell position, row tracks, columns), shared by the dashboard and the project honeycombs, server and browser
       signal.ts               pure functions behind the signal lab: generation, filtering, peak detection, scoring, plot paths
       url.ts                  withBase(): prefixes paths with the configured base
-      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, tool use, what is in progress, partners, a project's result and attribution); also used by research.astro, ProjectHive, JourneyBoard and projects/index.astro
+      dashboard.ts            reduces the collections to the dashboard's numbers and panels (h-index, tool use, what is in progress, partners, a project's result and attribution); also used by research.astro, HivePanels, ProjectHive, ProjectDetails and projects/index.astro
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation
