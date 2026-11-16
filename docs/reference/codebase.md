@@ -1,15 +1,19 @@
 # Codebase map
 
 ```text
+README.md                     the profile, the featured projects, how the repository is laid out
+.gitignore                    keeps agent and editor tooling, secrets, build output and local environment files out
 .github/workflows/
   deploy-website.yml          checks and builds every pull request; deploys to Pages on a push to main or a manual run
 files/
   cv/stefan-seman-cv.html     source of the CV, rendered to PDF with WeasyPrint
   CV Stefan Seman.pdf         the rendered CV
-  stefan_context.txt          plain-text summary of the site data, for reuse elsewhere
+  stefan_context.txt          plain-text summary of the site data, for reuse elsewhere; kept by hand
 website/                      the Astro project
+  .gitignore                  node_modules, dist and .astro
   astro.config.mjs            site, base (/webpage), trailing slash, directory build format
-  package.json                scripts dev, build, preview, check; astro as the only dependency
+  package.json                scripts dev, build, preview, check; astro as the only runtime dependency
+  package-lock.json           the lockfile CI installs from with npm ci
   tsconfig.json               Astro's strict TypeScript settings
   README.md                   commands, where content lives, how to add a project or a publication
   public/
@@ -43,6 +47,14 @@ website/                      the Astro project
       csv.ts                  small RFC 4180 CSV parser for publications.csv
     styles/global.css         shared styles and design tokens
 docs/                         this documentation
+  README.md                   the index and reading order
+  product/                    vision.md, features/README.md (the feature catalogue)
+  roadmap.md                  fixes and planned work
+  architecture/overview.md    how the site is built
+  diagrams/                   context, container, build and deploy (Mermaid)
+  adr/                        the decisions and why
+  reference/                  this map and the content model
+  guides/                     setup and development
 ```
 
 Generated and not committed: `website/node_modules/`, `website/dist/`, `website/.astro/`.

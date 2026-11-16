@@ -2,7 +2,9 @@
 
 A static site built with [Astro](https://astro.build/) from the `website/` folder. All content is read from files
 at build time; the output is plain HTML and CSS with a few small inline scripts, published to GitHub Pages. The
-pipeline is drawn in [build-and-deploy](../diagrams/build-and-deploy.md).
+[context](../diagrams/context.md) and [container](../diagrams/container.md) diagrams show who uses it and what
+it is made of; the pipeline is drawn in [build-and-deploy](../diagrams/build-and-deploy.md). What the site
+offers is listed in the [feature catalogue](../product/features/README.md).
 
 ## Context
 
@@ -15,18 +17,23 @@ pipeline is drawn in [build-and-deploy](../diagrams/build-and-deploy.md).
 
 ## Goals
 
-- Content changes without touching a component: case studies are Markdown files, records are JSON and CSV.
-- Numbers on the research page are computed from the publication list, so they cannot drift from it.
+- Content changes without touching a component: case studies are Markdown files, records are JSON and CSV
+  ([ADR 0001](../adr/0001-content-as-data-files.md)).
+- Numbers on the research page are computed from the publication list, so they cannot drift from it. The hero
+  stats on the home page are not: they are typed into `profile.json` ([roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list)).
 - A typo in content fails the build instead of rendering an empty page: every collection has a Zod schema.
 - Works without JavaScript; animations respect `prefers-reduced-motion`.
 
 ## Constraints
 
-- Every internal link and asset path must carry the `base` prefix. `withBase()` in `src/lib/url.ts` adds it, and
-  `BASE_URL` is `/webpage/` in this configuration.
+- Every internal link and asset path must carry the `base` prefix. `withBase()` in `src/lib/url.ts` adds it.
+  With `trailingSlash: 'ignore'` Astro keeps `base` as written, so `BASE_URL` is `/webpage`; `withBase()`
+  strips a trailing slash first, so it works either way.
 - No UI framework and no client-side router: Astro components only, with `astro` as the single runtime
   dependency.
-- Moving to another repository name or a custom domain means changing `site` and `base` in `astro.config.mjs`.
+- Moving to another repository name or a custom domain means changing `site` and `base` in `astro.config.mjs`,
+  and the links between case studies inside `src/content/projects/*.md`, which are written with the `/webpage/`
+  prefix because Markdown cannot call `withBase()`.
 
 ## Building blocks
 
@@ -80,7 +87,7 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 | Manual run (`workflow_dispatch`) | The same as a push to `main`. |
 
 - `build` is a required check on `main`, which is why every pull request runs it: a pull request that skipped it
-  could not be merged.
+  could not be merged ([ADR 0002](../adr/0002-every-pull-request-runs-the-required-build.md)).
 - The build job runs on Node 24, with the npm cache keyed on `website/package-lock.json`, in `website/`.
 - The workflow's default permission is `contents: read`; only the deploy job gets `pages: write`,
   `id-token: write` and `actions: read`.
@@ -92,7 +99,8 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 - **Build-time checks.** Schema errors in any collection fail the build. `Timeline.astro` prints a warning for
   every role marked `dateUnconfirmed` in `experience.json`, so a placeholder date is visible in every build log.
-  `collaborations.json` has a `needsReview` flag for copy that still needs sign-off.
+  `collaborations.json` has a `needsReview` flag for copy that still needs sign-off, but no component reads it:
+  a flagged card is published without a warning ([roadmap F3](../roadmap.md#f3-make-the-review-flag-do-something)).
 - **Accessibility.** A skip link to the main content, `aria-hidden` on decorative canvases with a text
   alternative for the ECG trace, and reduced motion honoured by every animation.
 - **What is public.** Everything in the repository is published or readable on GitHub. `.gitignore` keeps agent
@@ -111,4 +119,7 @@ The hand-written site this replaced is not in the working tree; it is kept at th
 ## Open
 
 - WeasyPrint is not declared anywhere in the repository; which version renders the CV is not recorded.
-- There are no tests: CI type-checks and builds, nothing more.
+- There are no tests: CI type-checks and builds, nothing more. The only logic worth a test is the CSV parser in
+  `src/lib/csv.ts` and the counting in `src/pages/research.astro`.
+- `body` has `overflow-x: hidden` in `global.css`, so content wider than the screen is cut off instead of
+  scrolling, which hides layout mistakes on narrow screens ([roadmap F1](../roadmap.md#f1-featured-cards-cut-off-on-phones)).

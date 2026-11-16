@@ -1,4 +1,4 @@
-# stefanseman.dev — portfolio (Astro rebuild)
+# Portfolio website (Astro)
 
 Dark, AI/bioengineering-themed portfolio. Content is data-driven: markdown case
 studies, JSON records, and a CSV of publications all feed the pages at build time
@@ -21,9 +21,9 @@ change what the site says.
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Name, bio, links, hero stats | `src/data/profile.json` | Drives hero, footer, contact, JSON-LD |
+| Name, bio, links, hero stats | `src/data/profile.json` | Drives hero, footer, contact, JSON-LD; the hero stats are typed in, not computed |
 | Career timeline | `src/data/experience.json` | Sorted newest-first automatically |
-| Collaborations | `src/data/collaborations.json` | `needsReview: true` marks unconfirmed copy |
+| Collaborations | `src/data/collaborations.json` | `needsReview: true` is meant to mark unconfirmed copy; nothing reads it yet, so the card is still published |
 | Skills | `src/data/skills.json` | Grouped chips in the Stack section |
 | Education, certs, memberships | `src/data/education.json` | |
 | Publications | `src/data/publications.csv` | Also generates the "output by year" bars |

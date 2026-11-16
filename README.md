@@ -88,6 +88,9 @@ files/      CV (PDF + its HTML source in files/cv/) and reference material
 docs/       how the site is built and maintained — start at docs/README.md
 ```
 
+What the site offers, feature by feature: [docs/product/features/README.md](docs/product/features/README.md).
+What comes next: [docs/roadmap.md](docs/roadmap.md).
+
 Content is data-driven: markdown case studies in `website/src/content/projects/`,
 plus JSON and CSV in `website/src/data/`. The research page derives its counts —
 publications, citations, h-index — from `publications.csv`, so the numbers can
@@ -96,8 +99,8 @@ never drift from the list underneath them.
 The CV is generated rather than hand-edited: `files/cv/stefan-seman-cv.html`
 is the source, rendered to PDF with [WeasyPrint](https://weasyprint.org/).
 
-Pull requests are type-checked and built by GitHub Actions; pushing to `main`
-runs the same checks and deploys the site to GitHub Pages.
+Pull requests are type-checked and built by GitHub Actions; a merge into `main`
+that changes `website/` runs the same checks and deploys the site to GitHub Pages.
 
 The hand-written site this replaced is not in the working tree; it is preserved
 at the [`v1-legacy`](https://github.com/ManSe404/webpage/tree/v1-legacy) tag.

@@ -26,7 +26,9 @@ sets the position; `featured: true` gives it a large card on the home page.
 Append a row to `website/src/data/publications.csv` with the columns
 `year,title,venue,type,topic,role,citations,url`. Wrap any field that contains a comma in double quotes. Set
 `role` to `First author` for the highlight chip. Refresh the `citations` column now and then; the research page
-recomputes every number from the file.
+recomputes every number from the file. The hero stats in `website/src/data/profile.json` and the counts in the
+root `README.md` are typed in, so update them by hand until
+[roadmap F2](../roadmap.md#f2-hero-numbers-from-the-publication-list) is done.
 
 ## The CV
 
@@ -54,5 +56,7 @@ changing them.
 ## Documents
 
 A change updates the documents it makes wrong in the same commit: the [architecture](../architecture/overview.md),
-the [diagram](../diagrams/build-and-deploy.md) when the workflow changes, and the pages under
-[reference](../reference/).
+the [diagrams](../diagrams/) when the workflow or the parts change, the
+[feature catalogue](../product/features/README.md) when a feature is added or changes status, and the pages
+under [reference](../reference/). A new decision gets an ADR in [adr](../adr/); an accepted ADR is not edited,
+a new one supersedes it.
