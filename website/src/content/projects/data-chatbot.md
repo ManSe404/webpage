@@ -3,6 +3,7 @@ title: Document Chatbot That Talks to Data
 category: Generative AI
 summary: A chatbot over market research workbooks and decks that gets the numbers right — code computes every figure, the model plans and explains, and each number traces to its cell.
 order: 1
+home: 2
 org: ExpertGroup
 period: "2026"
 impact:

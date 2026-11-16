@@ -11,6 +11,9 @@ const projects = defineCollection({
     // Featured projects are the list in the dashboard's Projects panel.
     featured: z.boolean().default(false),
     order: z.number().default(99),
+    // Position in the home page's Chosen work honeycomb (1 = first cell); projects
+    // without it are not on the home page. Set by hand, strongest first.
+    home: z.number().int().positive().optional(),
     period: z.string().optional(),
     // org = the employer the work was delivered under.
     // client = the partner or end customer, where it can be named publicly.

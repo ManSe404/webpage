@@ -10,7 +10,8 @@ title: Name of the System — What It Does      # the cell shows the part before
 category: Generative AI                      # AI field: Generative/Agentic/Conversational AI, Computer Vision; the home page shows the first five by order
 summary: One sentence with the problem solved and the value it brought, then what was built — the popup's Project description.   # 150–200 on the earlier big card
 featured: false                              # set true for the project this template is for: it is then listed in the Projects panel
-order: 1                                     # sorts every place; the home page shows the first five AI and first three data projects
+order: 1                                     # sorts every place but the home page
+# home: 1                                    # only for the eight on the home page: their position, strongest first
 org: ExpertGroup                             # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/
 # client: Partner                            # only where the partner or customer can be named publicly
 period: "2026 — Present"                     # quoted, so a bare year stays text; "— Present" with a Stage metric lists it as in progress

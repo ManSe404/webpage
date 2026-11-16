@@ -3,6 +3,7 @@ title: Data Analytics & Reporting
 category: Data Engineering
 summary: Every new report meant another fragile dataflow — one Fabric lakehouse now feeds finance, sales, marketing and operations, with numbers people trust at half the capacity cost.
 order: 5
+home: 3
 org: ExpertGroup
 period: 2026 — Present
 impact:

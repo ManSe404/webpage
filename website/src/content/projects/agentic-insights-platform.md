@@ -4,6 +4,7 @@ category: Agentic AI
 summary: Board-meeting work split across many manual jobs in two languages, now one agent platform — briefings ready sooner, minutes faster, the whole process in one place.
 featured: true
 order: 8
+home: 1
 org: 404 Solutions
 client: WiserTech
 period: 2024 — Present

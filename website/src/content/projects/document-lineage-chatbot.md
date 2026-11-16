@@ -4,6 +4,7 @@ category: Generative AI
 featured: true
 summary: A high-precision multilingual chatbot over a living document set — every answer traceable to its source passage, with the index updated in real time as documents change.
 order: 7
+home: 4
 org: 404 Solutions
 client: ExpertGroup
 period: 2025 — Present

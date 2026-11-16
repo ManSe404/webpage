@@ -27,15 +27,15 @@ folder.
 
 | Place | Which projects | What it shows |
 |---|---|---|
-| Home page, Chosen work | the first five by `order` with category Generative AI, Agentic AI, Conversational AI or Computer Vision and the first three with Data Engineering or Machine Learning, together by `order` | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
+| Home page, Chosen work | the projects with a `home` rank, in that order (eight, strongest first, client work only) | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
 | `/projects/` | every project in one honeycomb, clustered by field (AI, Data & analytics, then Software & research for every other category) and by `order` inside each | the same cell and popup; the field filter (from `category`) and the type-of-work filter (from `org`) hide cells |
 | The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client · period"); "Visit project ↗" when `link` is set |
 | Home dashboard, Projects panel | every `featured: true` project, by `order` | a numbered row with the title and "org · with client · category"; opened: the result as in the popup, the summary, the first four `stack` items then +N, and "Visit project ↗" when `link` is set |
 | Home dashboard, Roadmap panel | projects whose `period` runs to the present and that have a `Stage` metric | the title and the `Stage` value, under Building |
 
-`order` sorts every place. `featured` decides only the Projects panel; it does not put a project in Chosen work on the
-home page, which follows `category` and `order` alone. A project in any other category, or past the fifth AI or
-third data project, reaches the home page only when it is featured.
+`order` sorts every place but the home page, where `home` sets the order. `featured` decides only the Projects
+panel; it does not put a project in Chosen work on the home page, which shows exactly the projects with a `home`
+rank.
 
 Without JavaScript every popup shows as a list under its honeycomb, and each cell links to its entry.
 
@@ -89,7 +89,7 @@ gone, people using it. What was built and with which tools come after, as the wa
 - **`period`** goes in quotes (`"2026"`, `"2025 — Present"`): an unquoted bare year is read as a number and fails
   the schema.
 - **`order`** groups projects by employer, the current one first and personal projects last. Inserting a
-  project means renumbering the ones after it. On the home page only the first five AI and the first three data projects show.
+  project means renumbering the ones after it. The home page's Chosen work shows only the projects with a `home` rank (1 is the first cell), in that order: strongest first, client work only, eight of them; give the new project a rank there only if it should replace one.
 - **`org`** is the employer the work was delivered under; it also decides the type of work on `/projects/`
   (`Personal` and `Open source` are own work, `BioIRC` is research, everything else client work).
   **`client`** is the partner or end customer, and only where it can be named publicly.

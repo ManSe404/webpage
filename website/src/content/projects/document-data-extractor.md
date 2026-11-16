@@ -3,6 +3,7 @@ title: Document Processing Platform
 category: Data Engineering
 summary: Documents in every shape and structure, normalized by ETL and ML classification into analytics — less manual tagging, and self-serve reports on resource use for management.
 order: 16
+home: 6
 org: Valcon Netherlands
 period: 2022 — 2023
 impact:

@@ -10,15 +10,10 @@ import { withBase } from '../lib/url';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 
-// One honeycomb of chosen work: the first five AI projects and the first
-// three data projects by order, AI in ember and data in honey. /projects/
+// Chosen work: the projects with a `home` rank, in that order (strongest
+// first, client work only, set by hand in each project file). /projects/
 // shows all of them.
-const AI_TOPICS = new Set(['Generative AI', 'Agentic AI', 'Conversational AI', 'Computer Vision']);
-const DATA_TOPICS = new Set(['Data Engineering', 'Machine Learning']);
-const chosen = [
-  ...projects.filter((p) => AI_TOPICS.has(p.data.category)).slice(0, 5),
-  ...projects.filter((p) => DATA_TOPICS.has(p.data.category)).slice(0, 3),
-].sort((a, b) => a.data.order - b.data.order);
+const chosen = projects.filter((p) => p.data.home).sort((a, b) => (a.data.home ?? 0) - (b.data.home ?? 0));
 ---
 
 <Base>

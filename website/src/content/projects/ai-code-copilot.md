@@ -3,6 +3,7 @@ title: Slingshot — Enterprise AI Assistant
 category: Generative AI
 summary: Answers on code, the roadmap and hard tasks were spread across repositories, Jira and Confluence — one enterprise assistant reaches them all, in daily use and speeding onboarding.
 order: 13
+home: 5
 org: Publicis Sapient
 period: 2023 — 2024
 impact:

@@ -3,6 +3,7 @@ title: Marketing Content Manager
 category: Agentic AI
 summary: Writers spent their time finding sources and moving drafts between tools — research agents now feed drafting and publish straight out, so more pieces get out in less time.
 order: 9
+home: 7
 org: 404 Solutions
 client: Q Agency
 impact:

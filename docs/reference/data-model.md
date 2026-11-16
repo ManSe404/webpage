@@ -34,7 +34,8 @@ every other number on the home dashboard is computed from the collections (`src/
 | `category` | string | required | Shown on the cell and in the popup; decides the field: the home page's Chosen work takes AI projects (Generative AI, Agentic AI, Conversational AI, Computer Vision) and data projects (Data Engineering, Machine Learning), and any other category is not on the home page; `/projects/` has one honeycomb for each of the two and puts every other category under Software & research; a category matching "AI" or "Vision" colours the cell as AI |
 | `summary` | string | required | One sentence: the popup's Project description and the summary in the featured panel |
 | `featured` | boolean | `false` | Listed in the Projects panel of the home dashboard; it does not put a project in a honeycomb |
-| `order` | number | `99` | Sort position everywhere; Chosen work on the home page takes the first five AI and the first three data projects by `order` |
+| `order` | number | `99` | Sort position everywhere except the home page |
+| `home` | positive integer | none | Position in the home page's Chosen work honeycomb, 1 first; a project without it is not on the home page. Set by hand: strongest first, client work only |
 | `period` | string | none | Closes the popup's Company / client line; a period that runs to the present, with a `Stage` metric, lists the project under In progress |
 | `org` | string | none | The employer the work was delivered under; decides the type of work on `/projects/` (`Personal` and `Open source` are own work, `BioIRC` is research, the rest client work), the client and own counts on the Projects cell, and the 404 Solutions projects and partners |
 | `client` | string | none | The partner or end customer, where it can be named publicly; shown as "with client" |
