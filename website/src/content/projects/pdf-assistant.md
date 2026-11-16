@@ -2,7 +2,7 @@
 title: PDF Assistant — Chat with One PDF
 category: Generative AI
 summary: Upload a PDF and ask; every answer cites the page it came from, and a click opens it. Underneath, a small experiment — each conversation draws a model, a retrieval depth and a memory size, and thumbs-up votes shift the draw. Frozen as a public demo.
-order: 22
+order: 25
 org: Personal
 period: 2024 — 2026
 link: https://github.com/ManSe404/pdf_assistant

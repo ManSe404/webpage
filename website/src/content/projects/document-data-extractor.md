@@ -2,7 +2,7 @@
 title: Document Data Extractor Service
 category: Software Engineering
 summary: Extraction and classification services built from scratch — deep learning over unstructured text, delivered to production by a team of six I led and mentored.
-order: 14
+order: 17
 org: Valcon Netherlands
 period: 2022 — 2023
 impact:

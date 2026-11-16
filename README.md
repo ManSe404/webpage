@@ -49,7 +49,7 @@ Welcome to my personal portfolio website repository! I lead an AI and Data pract
 | 🧩 **Mosaic — Document AI Bricks** | Composable document-AI bricks where pipelines and questions are plans written as data, each brick measured against a BM25 baseline |
 | 🧰 **Claude Role Skills** | Nine Claude Code skill packs, 43 skills, that count with scripts and end in a shareable page — MIT |
 
-👉 [See all 25 projects →](https://manse404.github.io/webpage/projects)
+👉 [See all 28 projects →](https://manse404.github.io/webpage/projects)
 
 ---
 

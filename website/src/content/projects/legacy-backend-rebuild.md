@@ -2,7 +2,7 @@
 title: System Discovery & Backend Rebuild
 category: Software Engineering
 summary: Recovered what an undocumented production system actually did, specified it, and rebuilt the backend against that specification — delivered for an enterprise client through Q Agency.
-order: 7
+order: 10
 org: 404 Solutions
 client: Q Agency
 impact:

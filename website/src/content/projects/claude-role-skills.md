@@ -3,7 +3,7 @@ title: Claude Role Skills
 category: Agentic AI
 featured: true
 summary: Nine Claude Code skill packs, 43 skills, each doing one job that keeps coming back — codebase maps, impact analysis, AI pattern selection, data-platform review — counting with its own scripts instead of estimating, and ending in one self-contained page you can send to anyone.
-order: 20
+order: 23
 org: Open source
 period: 2026 — Present
 link: https://github.com/ManSe404/claude-role-skills

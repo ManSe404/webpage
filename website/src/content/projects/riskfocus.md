@@ -2,7 +2,7 @@
 title: RiskFocus — Risk Summariser
 category: Generative AI
 summary: Multi-document risk extraction that surfaces the connections between documents — where they reinforce, qualify, or contradict each other — with traceable lineage back to every source.
-order: 9
+order: 12
 org: 404 Solutions
 client: Provectus
 period: 2024 — Present

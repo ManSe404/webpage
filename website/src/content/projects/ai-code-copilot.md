@@ -2,7 +2,7 @@
 title: Slingshot — AI Code Copilot
 category: Generative AI
 summary: An enterprise AI copilot taken from proof of concept through MVP to delivered product — grounded in internal code and documentation, with retrieval respecting existing access boundaries.
-order: 11
+order: 14
 org: Publicis Sapient
 period: 2023 — 2024
 impact:

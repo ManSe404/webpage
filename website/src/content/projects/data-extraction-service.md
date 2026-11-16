@@ -2,7 +2,7 @@
 title: Data Extraction Service
 category: Data Engineering
 summary: An Azure extraction and transformation platform orchestrating the whole path — raw ingestion, classification, embedding generation, and self-service Power BI reporting business users could run themselves.
-order: 17
+order: 20
 org: Optimal Systems GmbH
 period: 2021 — 2022
 impact:

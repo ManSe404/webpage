@@ -2,7 +2,7 @@
 title: RAG Document Chatbot
 category: Generative AI
 summary: An enterprise RAG chatbot built end to end — optimized ingestion feeding retrieval over the document estate, evaluated for accuracy and consistency rather than fluency.
-order: 12
+order: 15
 org: Publicis Sapient
 period: 2023 — 2024
 impact:

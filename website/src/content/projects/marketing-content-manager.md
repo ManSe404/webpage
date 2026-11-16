@@ -2,7 +2,7 @@
 title: Marketing Content Manager
 category: Agentic AI
 summary: A content platform built end to end — web search and deep-research agents feeding long-form generation and blog drafting, then publishing straight out to connected channels.
-order: 6
+order: 9
 org: 404 Solutions
 client: Q Agency
 impact:

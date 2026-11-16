@@ -3,7 +3,7 @@ title: AI-Powered Document Summarizer
 category: Generative AI
 summary: Document summarization and point-of-interest extraction across large multi-document sets, built on an agentic graph RAG architecture that holds context together where chunking normally breaks it.
 featured: true
-order: 8
+order: 11
 org: 404 Solutions
 client: Provectus
 period: 2024 — Present

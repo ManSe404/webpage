@@ -2,7 +2,7 @@
 title: Large-Scale Document ETL Pipelines
 category: Cloud / AWS
 summary: Serverless ingestion and transformation pipelines moving documents at scale through load, parse, transform, and delivery — the substrate the summarization and risk systems run on.
-order: 10
+order: 13
 org: 404 Solutions
 client: Provectus
 period: 2024 — Present

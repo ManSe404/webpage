@@ -2,7 +2,7 @@
 title: Car Watch — Used-Car Price Watch
 category: Machine Learning
 summary: A personal tool that collects used-car ads from a Serbian marketplace into a local SQLite database — through a Chrome extension reading the pages you open yourself, never a scraper — and flags ads priced below what similar cars cost, with an out-of-fold gradient-boosting fair-price model.
-order: 25
+order: 28
 org: Personal
 period: 2023 — 2026
 link: https://github.com/ManSe404/car_watcher

@@ -2,7 +2,7 @@
 title: Mission Control
 category: Agentic AI
 summary: A local dashboard for long Claude Code runs — every step, subagent, error and compaction, live, across all sessions on the machine — and missions, where "done" is decided by checks that run on every commit outside the session.
-order: 23
+order: 26
 org: Personal
 period: 2026 — Present
 impact:

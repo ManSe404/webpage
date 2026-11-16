@@ -3,7 +3,7 @@ title: Mosaic — Document AI Bricks
 category: Generative AI
 featured: true
 summary: A Python library of composable document-AI bricks — parsers, outlines, chunkers, indexes, retrievers, answerers — where the pipeline and the question are both plans written as data, and every brick has an eval number to beat.
-order: 19
+order: 22
 org: Personal
 period: 2026 — Present
 impact:
