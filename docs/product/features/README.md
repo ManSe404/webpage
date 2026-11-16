@@ -28,7 +28,7 @@ unless they start with another top-level folder.
 | Plain-text profile | Reuse a text summary of the site data elsewhere | shipped, kept by hand | `files/stefan_context.txt` | [codebase](../../reference/codebase.md) |
 | Section rail | Jump between home-page sections from a rail at the side | planned; open whether it still fits a home page of two sections | | [roadmap 1](../../roadmap.md#1-section-rail-on-the-home-page) |
 | Mobile design | Use a layout made for phones | planned | | [roadmap 2](../../roadmap.md#2-a-mobile-design-of-its-own) |
-| Project templates | Start a new project from a template: `lead-card.md` for a featured project, `project-card.md` for the rest | partial: the two templates no longer stand for different cards; no length is measured for the places a project shows today, and nothing checks lengths | `docs/guides/templates/` | [writing a project](../../guides/writing-a-project.md) |
+| Project templates | Start a new project from a template: `lead-card.md` for a project in the Projects panel, `project-card.md` for the rest | partial: the two templates no longer stand for different cards; no length is measured for the places a project shows today, and nothing checks lengths | `docs/guides/templates/` | [writing a project](../../guides/writing-a-project.md) |
 | Project redesign | Read redesigned projects | partial: the honeycombs with their popups, the projects page and the career board are redesigned; most projects have no measured `Result` metric and show their first impact line instead; the CV has not followed | `components/hive/ProjectHive.astro`, `pages/projects/index.astro`, `components/hive/JourneyBoard.astro` | [roadmap 3](../../roadmap.md#3-projects-redesigned-the-cv-follows) |
 
 ## For visitors

@@ -39,7 +39,7 @@ Drop a new `.md` file into `src/content/projects/`:
 title: Thing I Built
 category: Generative AI      # picks the field on the home page and the honeycomb on /projects
 summary: One sentence for the popup.
-featured: false              # true -> listed in the dashboard's Projects panel
+# featured: 1                # position in the dashboard's Projects panel; omit for most projects
 order: 12                    # controls sort position
 impact:
   - What changed as a result # the first line stands in when there is no Result metric

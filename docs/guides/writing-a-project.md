@@ -10,7 +10,7 @@ and how to write it.
 
 | Template | Use it when | File |
 |---|---|---|
-| Lead card | the project has `featured: true`: it is listed in the Projects panel of the home dashboard | [templates/lead-card.md](templates/lead-card.md) |
+| Lead card | the project has a `featured` position: it is listed in the Projects panel of the home dashboard | [templates/lead-card.md](templates/lead-card.md) |
 | Project card | every other project | [templates/project-card.md](templates/project-card.md) |
 
 The names come from the cards the home page used to have: a big card for featured projects and a smaller one for
@@ -30,7 +30,7 @@ folder.
 | Home page, Chosen work | the projects with a `home` rank, in that order (eight, strongest first, client work only) | a honeycomb cell with the title up to " — " and the category, coloured by field; choosing it opens the popup (below) |
 | `/projects/` | every project in one honeycomb, clustered by field (AI, Data & analytics, then Software & research for every other category) and by `order` inside each | the same cell and popup; the field filter (from `category`) and the type-of-work filter (from `org`) hide cells |
 | The popup | every project with a cell | category and full title; Project description (`summary`); Achieved result (the `Result` metric value, else the first `impact` line, left out with neither); Role & responsibilities (the `Role` metric value, left out without one); Tech stack (every `stack` item); Company / client ("org · with client · period"); "Visit project ↗" when `link` is set |
-| Home dashboard, Projects panel | every `featured: true` project, by `order` | a numbered row with the title and "org · with client · category"; opened: the result as in the popup, the summary, the first four `stack` items then +N, and "Visit project ↗" when `link` is set |
+| Home dashboard, Projects panel | the projects with a `featured` position, in that order (six) | a numbered row with the title and "org · with client · category"; opened: the result as in the popup, the summary, the first four `stack` items then +N, and "Visit project ↗" when `link` is set |
 | Home dashboard, Roadmap panel | projects whose `period` runs to the present and that have a `Stage` metric | the title and the `Stage` value, under Building |
 
 `order` sorts every place but the home page, where `home` sets the order. `featured` decides only the Projects

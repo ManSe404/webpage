@@ -1,7 +1,6 @@
 ---
 title: Crowd Analytics & Movement Prediction
 category: Computer Vision
-featured: true
 summary: Crowd movement prediction for a large-scale public event — forecasting where density is about to build so visitors can be routed around congestion instead of into it.
 order: 6
 org: 404 Solutions

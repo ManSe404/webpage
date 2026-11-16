@@ -1,7 +1,6 @@
 ---
 title: Mosaic — Document AI Bricks
 category: Generative AI
-featured: true
 summary: Pipelines treat every document and question alike and never measure — Mosaic makes each a plan, keeps a brick only if it beats BM25, and runs document-buddy; still a prototype.
 order: 20
 org: Personal

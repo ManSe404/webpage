@@ -1,9 +1,9 @@
 ---
 title: Role Skill Packs for Claude Code
 category: Agentic AI
-featured: true
 summary: Ask an assistant to review a repository and you get estimates lost in a transcript — these Claude Code skills count with scripts, end in one page, and save review time at work.
 order: 21
+featured: 6
 org: Open source
 period: 2026 — Present
 link: https://github.com/ManSe404/claude-role-skills

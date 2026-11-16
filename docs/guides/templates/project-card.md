@@ -1,5 +1,5 @@
 ---
-# PROJECT CARD: every project that is not featured. The name is left from the small card the home page used
+# PROJECT CARD: every project that is not in the dashboard's Projects panel. The name is left from the small card the home page used
 # to have; every project now shows the same fields: a honeycomb cell and its popup (on the home page when it
 # is among the chosen work, always on /projects/). The frontmatter is the whole project: there is no
 # body and no project page. docs/guides/writing-a-project.md says where each field shows.
@@ -8,7 +8,7 @@
 title: Name of the System — What It Does      # the cell shows the part before " — "; ≤ 29 on the earlier small card
 category: Data Engineering                   # data field: Data Engineering, Machine Learning; the home page shows the first three by order
 summary: One sentence with the problem solved and the value it brought, then what was built — the popup's Project description.   # 130–180 on the earlier small card
-featured: false                              # true lists it in the Projects panel of the home dashboard: use lead-card.md
+# featured: 1                                # only for the six in the dashboard's Projects panel: their position (use lead-card.md)
 order: 10                                    # sorts every place; projects are grouped by employer, personal ones last
 org: 404 Solutions                           # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/
 # client: Partner                            # only where the partner or customer can be named publicly

@@ -18,7 +18,7 @@ date is still a placeholder.
 ## Add a project
 
 Copy one of the two templates into `website/src/content/projects/<id>.md`: the lead card for a
-`featured: true` project, the project card for the rest (they no longer stand for different cards).
+project with a `featured` position, the project card for the rest (they no longer stand for different cards).
 [Writing a project](writing-a-project.md) says where each field shows. The frontmatter follows the `projects`
 schema in `website/src/content.config.ts` (fields in the [content model](../reference/data-model.md#projects))
 and is the whole project: the file has no body and the site has no page per project. The honeycomb cell and its

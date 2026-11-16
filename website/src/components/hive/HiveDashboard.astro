@@ -51,7 +51,7 @@ const cells: Cell[] = [
 // Honeycomb placement (lib/honeycomb.ts): four per row on wide screens, two on phones.
 
 const panelData = {
-  featured: projects.filter((p) => p.data.featured).map((p) => ({
+  featured: projects.filter((p) => p.data.featured).sort((a, b) => (a.data.featured ?? 0) - (b.data.featured ?? 0)).map((p) => ({
     id: p.id, title: p.data.title, category: p.data.category, org: attribution(p),
     summary: p.data.summary, result: projectResult(p), stack: p.data.stack, link: p.data.link,
   })),

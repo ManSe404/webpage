@@ -1,5 +1,5 @@
 ---
-# LEAD CARD: for a project with `featured: true`, which the home dashboard lists in its Projects panel. The
+# LEAD CARD: for a project with a `featured` position, which the home dashboard lists in its Projects panel. The
 # name is left from the big card the home page used to have; every project now shows the same fields: a
 # honeycomb cell and its popup (on the home page when it is among the chosen work, always on /projects/),
 # plus the Projects panel when featured. The frontmatter is the whole project: there is no body
@@ -9,7 +9,7 @@
 title: Name of the System — What It Does      # the cell shows the part before " — "; ≤ 38 on the earlier big card
 category: Generative AI                      # AI field: Generative/Agentic/Conversational AI, Computer Vision; the home page shows the first five by order
 summary: One sentence with the problem solved and the value it brought, then what was built — the popup's Project description.   # 150–200 on the earlier big card
-featured: false                              # set true for the project this template is for: it is then listed in the Projects panel
+featured: 1                                  # position in the dashboard's Projects panel (the Projects cell), 1 first; six in all
 order: 1                                     # sorts every place but the home page
 # home: 1                                    # only for the eight on the home page: their position, strongest first
 org: ExpertGroup                             # the employer; "org · with client · period" in the popup; also decides the type of work on /projects/

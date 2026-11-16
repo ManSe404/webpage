@@ -3,6 +3,7 @@ title: Supply Chain & Sales Forecasting
 category: Machine Learning
 summary: Gradient-boosted demand forecasts for wholesale distribution, per product group on the monthly planning cycle — built so planners trust the number enough to order against it.
 order: 4
+featured: 5
 home: 8
 org: ExpertGroup
 period: 2025 — Present
