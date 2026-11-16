@@ -7,9 +7,9 @@ order: 20
 org: Personal
 period: 2026 — Present
 impact:
-  - One pipeline per document, not one for all — a Cyrillic scan and an article-numbered law get different plans
-  - A question is a plan too, so the retrieval strategy is chosen per question instead of hard-coded
-  - Every brick measured against a BM25 baseline on the same 34 questions before it is kept
+  - Ahead of BM25 on law structure questions — 3 of 4 against 1
+  - Each document and each question gets its own plan
+  - The library under document-buddy, still a prototype
   - Serbian treated as the normal case — the eval has Serbian lookup, structure and catalog questions
 stack:
   - Python

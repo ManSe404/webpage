@@ -5,11 +5,12 @@ featured: true
 summary: A high-precision multilingual chatbot over a living document set — every answer traceable to its source passage, with the index updated in real time as documents change.
 order: 7
 org: 404 Solutions
+client: ExpertGroup
 period: 2025 — Present
 impact:
   - Every answer traceable back to the exact source passage behind it
-  - Document edits reflected in retrieval immediately, with no reindex cycle
-  - Precision favoured over coverage — the system declines rather than guesses
+  - Document edits reach retrieval at once, with no reindex cycle
+  - Declines rather than guesses — precision over coverage
   - Consistent answers across languages from one shared source of truth
 stack:
   - Python

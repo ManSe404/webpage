@@ -8,9 +8,10 @@ org: Open source
 period: 2026 — Present
 link: https://github.com/ManSe404/claude-role-skills
 impact:
-  - Numbers come from scripts with fixed output, so two runs of a skill give the same counts
-  - Every skill ends in a fixed-section HTML page, not a transcript — readable, shareable, comparable with the last run
-  - A hook guard enforces each skill's "Never" list — changes and network access ask first, personal data is stripped from output
+  - In daily use at work, saving review time
+  - Scripts count, so two runs give the same numbers
+  - Every skill ends in one HTML page you can send to anyone
+  - A hook guard enforces each skill's Never list — changes and network access ask first, personal data is stripped
   - Tested against twelve fictional projects with planted bugs, flaws and conflicts
 stack:
   - Claude Code

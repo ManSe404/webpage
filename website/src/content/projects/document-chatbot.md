@@ -8,7 +8,7 @@ period: 2023 — 2024
 impact:
   - Answers grounded in the document estate rather than in model recall
   - Consistency treated as a target — the same question answered the same way twice
-  - Repetitive internal support load reduced rather than redirected
+  - Answers people trust, faster than asking a colleague
 stack:
   - Python
   - Azure OpenAI
@@ -50,5 +50,5 @@ actually decided:
 
 ## The outcome
 
-Faster access to answers people could actually rely on, and a reduction in the repetitive
-support load that had been quietly absorbing internal teams' time.
+Faster access to answers people could actually rely on, given the same way every time the
+same question is asked.

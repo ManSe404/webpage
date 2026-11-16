@@ -115,10 +115,9 @@ the three case study sections, with the character limits measured on the real ca
 [Writing a project](guides/writing-a-project.md) explains which card shows which field and what breaks past
 each limit.
 
-- **Open:** every title and summary fits its card except three titles in the home page row, which take three
-  lines there: Document Chatbot That Talks to Data, Multilingual Document QA Chatbot and Supply Chain & Sales
-  Forecasting. Still over: the first three impact lines of most featured projects (three lines or more on a
-  big card) and the partner lines "404 Solutions · with Provectus" and "· with WiserTech", one character over.
+- **Open:** every project fits its card, with two exceptions kept by choice: three titles in the home page row
+  take three lines there (Document Chatbot That Talks to Data, Multilingual Document QA Chatbot, Supply Chain &
+  Sales Forecasting), and the partner lines "404 Solutions · with …" wrap on the small cards.
   They are brought in line as part of item 3, and the limits change if item 3 changes the cards.
 - **Open:** nothing checks the limits. A build warning, in the style of the `[timeline] UNCONFIRMED DATE`
   warning, would name each field over its limit.
