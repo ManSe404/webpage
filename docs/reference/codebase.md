@@ -18,7 +18,7 @@ website/                      the Astro project
   README.md                   commands, where content lives, how to add a project or a publication
   public/
     files/                    the CV PDF the site links
-    images/                   favicon and the Open Graph image
+    images/                   site icon (favicon.svg; favicon.png and apple-touch-icon.png are renders of it) and the Open Graph image
   src/
     content.config.ts         the four content collections and their schemas
     content/projects/         one Markdown file per project, frontmatter only
