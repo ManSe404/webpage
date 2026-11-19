@@ -19,10 +19,11 @@ Read in this order:
 | 10 | [reference/codebase.md](reference/codebase.md) | Where each part lives in the code | current | 2026-11-16 |
 | 11 | [guides/development.md](guides/development.md) | The dev loop, adding a project or a publication, the CV | current | 2026-11-16 |
 | 12 | [guides/writing-a-project.md](guides/writing-a-project.md) | The two project templates, where each field of a project shows, and what is known about lengths | current | 2026-11-16 |
-| 13 | [adr/0001-content-as-data-files.md](adr/0001-content-as-data-files.md) | Why content is Markdown, JSON and CSV read at build time | accepted | 2026-11-16 |
-| 14 | [adr/0002-every-pull-request-runs-the-required-build.md](adr/0002-every-pull-request-runs-the-required-build.md) | Why every pull request builds the site, even a docs-only one | accepted | 2026-11-16 |
-| 15 | [adr/0003-projects-as-short-cards-without-pages.md](adr/0003-projects-as-short-cards-without-pages.md) | Why a project is a short card with a popup and has no page of its own | accepted | 2026-11-16 |
-| 16 | [adr/0004-project-popups-show-no-dates.md](adr/0004-project-popups-show-no-dates.md) | Why the popup's Company / client line has no period | accepted | 2026-11-16 |
+| 13 | [design/visuals/README.md](design/visuals/README.md) | The link-preview card shown when the site is shared, its source and how to rebuild it | current | 2026-11-19 |
+| 14 | [adr/0001-content-as-data-files.md](adr/0001-content-as-data-files.md) | Why content is Markdown, JSON and CSV read at build time | accepted | 2026-11-16 |
+| 15 | [adr/0002-every-pull-request-runs-the-required-build.md](adr/0002-every-pull-request-runs-the-required-build.md) | Why every pull request builds the site, even a docs-only one | accepted | 2026-11-16 |
+| 16 | [adr/0003-projects-as-short-cards-without-pages.md](adr/0003-projects-as-short-cards-without-pages.md) | Why a project is a short card with a popup and has no page of its own | accepted | 2026-11-16 |
+| 17 | [adr/0004-project-popups-show-no-dates.md](adr/0004-project-popups-show-no-dates.md) | Why the popup's Company / client line has no period | accepted | 2026-11-16 |
 
 `website/README.md` is the short guide next to the code: commands and where content lives.
 
