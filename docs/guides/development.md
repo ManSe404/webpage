@@ -36,14 +36,22 @@ typed in, so update them by hand.
 ## The CV
 
 `files/cv/stefan-seman-cv.html` is the source and mirrors the site data, so a change in `website/src/data/` or in
-a project file usually needs the same change there. The comment at the top of the file gives the commands, run from
-the repository root:
+a project file usually needs the same change there.
+
+The PDF is not committed. CI renders it on every build with `files/cv/render.sh`, which fills the phone number
+into the `{{CV_PHONE}}` and `{{CV_PHONE_TEL}}` placeholders from the `CV_PHONE` repository secret
+([ADR 0005](../adr/0005-cv-rendered-in-ci-with-the-phone-from-a-secret.md)). To see the CV locally, or to have the
+dev server serve it, run from the repository root:
 
 ```bash
-weasyprint files/cv/stefan-seman-cv.html files/cv/out.pdf
-cp files/cv/out.pdf "files/CV Stefan Seman.pdf"
-cp files/cv/out.pdf website/public/files/stefan-seman-cv.pdf
+cp files/cv/.env.example files/cv/.env   # once; put the real number in it, the file is not committed
+bash files/cv/render.sh                  # writes website/public/files/stefan-seman-cv.pdf (ignored)
+bash files/cv/render.sh out.pdf          # or anywhere else
 ```
+
+The script needs WeasyPrint 69.0 (the version CI pins). The fonts come from `files/cv/fonts/`, so the result is the
+same on any machine. Never write the number into a tracked file; to change it, update the secret
+(`gh secret set CV_PHONE`) and your local `.env`.
 
 The research figures in the CV come from Google Scholar, not from a hand-kept count; check the profile before
 changing them.

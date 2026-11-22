@@ -49,6 +49,10 @@ dist/
 .cache/
 .vite/
 *.tsbuildinfo
+# The CV PDF is rendered by files/cv/render.sh (in CI on every build) because
+# it carries the phone number, which stays out of the repository.
+website/public/files/stefan-seman-cv.pdf
+files/cv/*.pdf
 
 # --- Local environment -------------------------------------------------------
 .python-version

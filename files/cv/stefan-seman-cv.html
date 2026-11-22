@@ -2,10 +2,12 @@
   Source of truth for the CV PDF. Content mirrors website/src/data (profile,
   experience, skills, publications) and website/src/content/projects.
 
-  Regenerate after editing:
-    weasyprint files/cv/stefan-seman-cv.html files/cv/out.pdf
-    cp files/cv/out.pdf "files/CV Stefan Seman.pdf"
-    cp files/cv/out.pdf website/public/files/stefan-seman-cv.pdf
+  The PDF is not committed: files/cv/render.sh fills in the phone number from
+  CV_PHONE and renders it with WeasyPrint. CI does this on every build with the
+  CV_PHONE repository secret, so the number appears only in the published PDF.
+  Locally: copy files/cv/.env.example to files/cv/.env, then run
+    bash files/cv/render.sh
+  ({{CV_PHONE}} and {{CV_PHONE_TEL}} below are filled in by that script.)
 
   Research figures come from Google Scholar, not from a hand-kept count —
   re-check the profile before changing them.
@@ -19,6 +21,13 @@
 <meta name="description" content="Head of AI, ML Engineer and PhD Researcher — LLM/RAG architectures, agentic applications, enterprise document intelligence, cloud-native data platforms.">
 <meta name="keywords" content="AI, Machine Learning, LLM, RAG, Generative AI, Document Intelligence, Azure, AWS, Python, Head of AI">
 <style>
+  /* The fonts ship with the CV (fonts/, SIL OFL 1.1) so every machine renders it the same. */
+  @font-face { font-family: "Fira Sans"; font-weight: 400; src: url("fonts/FiraSans-Regular.otf") format("opentype"); }
+  @font-face { font-family: "Fira Sans"; font-weight: 500; src: url("fonts/FiraSans-Medium.otf") format("opentype"); }
+  @font-face { font-family: "Fira Sans"; font-weight: 600; src: url("fonts/FiraSans-SemiBold.otf") format("opentype"); }
+  @font-face { font-family: "Fira Sans"; font-weight: 700; src: url("fonts/FiraSans-Bold.otf") format("opentype"); }
+  @font-face { font-family: "Fira Mono"; font-weight: 400; src: url("fonts/FiraMono-Regular.otf") format("opentype"); }
+  @font-face { font-family: "Fira Mono"; font-weight: 500; src: url("fonts/FiraMono-Medium.otf") format("opentype"); }
   @page {
     size: A4;
     margin: 13mm 14mm 12mm 14mm;
@@ -348,7 +357,7 @@
   <div class="contact">
     <span><b>Belgrade, Serbia</b></span>
     <span><a href="mailto:stefan.seman404@gmail.com">stefan.seman404@gmail.com</a></span>
-    <span><a href="tel:+38162262131">+381 62 262 131</a></span>
+    <span><a href="tel:{{CV_PHONE_TEL}}">{{CV_PHONE}}</a></span>
     <span><a href="https://manse404.github.io/webpage/">manse404.github.io/webpage</a></span>
     <span><a href="https://www.linkedin.com/in/sseman/">linkedin.com/in/sseman</a></span>
     <span><a href="https://github.com/ManSe404">github.com/ManSe404</a></span>

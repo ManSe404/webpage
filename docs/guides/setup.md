@@ -3,7 +3,8 @@
 ## Prerequisites
 
 - Node and npm. CI builds on Node 24; `website/README.md` asks for Node 22 or newer locally.
-- Optional, for the CV only: [WeasyPrint](https://weasyprint.org/).
+- Optional, for the CV only: [WeasyPrint](https://weasyprint.org/) 69.0 and `files/cv/.env` with `CV_PHONE` (see
+  [development](development.md#the-cv)).
 
 No settings or secrets: the site has no environment variables. `site` and `base` in `website/astro.config.mjs`
 are the only deployment settings.

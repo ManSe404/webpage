@@ -10,7 +10,6 @@ Headline: Head of AI | ML Engineer | PhD Researcher
 Location: Belgrade, Serbia
 Website: https://manse404.github.io/webpage/
 Email: stefan.seman404@gmail.com
-Phone: +381 62 262 131
 LinkedIn: https://www.linkedin.com/in/sseman/
 GitHub: https://github.com/ManSe404
 Google Scholar: https://scholar.google.com/citations?user=HlXUn7wAAAAJ&hl=en

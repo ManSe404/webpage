@@ -4,6 +4,10 @@
 # typo, a broken import or a type error fails on the PR instead of on main.
 # Push to main: the same checks, then the build is deployed to Pages.
 #
+# The CV PDF is rendered here from files/cv/ with the CV_PHONE secret and is
+# never committed, so the phone number exists only in the published site
+# (docs/adr/0005-cv-rendered-in-ci-with-the-phone-from-a-secret.md).
+#
 # This is the only workflow that publishes the site. The previous root-level
 # static.yml (which uploaded the whole repo verbatim) was removed when the v1
 # site was archived — see the v1-legacy tag.
@@ -18,6 +22,7 @@ on:
     branches: ["main"]
     paths:
       - "website/**"
+      - "files/cv/**"
       - ".github/workflows/deploy-website.yml"
 
   workflow_dispatch:
@@ -52,6 +57,37 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # WeasyPrint at the version the CV was laid out with. The Fira fonts come
+      # from files/cv/fonts/; DejaVu Sans draws the ▸ markers, as on the laptop.
+      - name: Install the CV renderer
+        working-directory: .
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0 fonts-dejavu-core poppler-utils
+          python3 -m venv "$RUNNER_TEMP/cv"
+          "$RUNNER_TEMP/cv/bin/pip" install -q weasyprint==69.0
+          echo "$RUNNER_TEMP/cv/bin" >> "$GITHUB_PATH"
+
+      - name: Render the CV
+        working-directory: .
+        env:
+          # Pull requests from forks and Dependabot get no secrets, so they
+          # render with a placeholder; a push to main fails without the secret.
+          CV_PHONE: ${{ secrets.CV_PHONE || (github.event_name == 'pull_request' && '+000 00 000 0000' || '') }}
+        run: bash files/cv/render.sh
+
+      - name: Check the CV fonts
+        working-directory: .
+        run: |
+          fonts=$(pdffonts website/public/files/stefan-seman-cv.pdf | tail -n +3 | awk '{print $1}' | sed 's/^[A-Z]*+//')
+          echo "$fonts"
+          test -n "$fonts"
+          if grep -vqE '^(Fira-(Sans|Mono)|DejaVu-Sans)' <<<"$fonts"; then
+            echo "::error::the CV fell back to a font other than Fira (DejaVu Sans only for the ▸ markers)"
+            exit 1
+          fi
 
       - name: Type-check
         run: npm run check
