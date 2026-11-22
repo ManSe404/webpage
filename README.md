@@ -84,7 +84,7 @@ I'm always open to discussing new opportunities, collaborations, and innovative 
 
 ```
 website/    Astro source for the live site — see website/README.md
-files/      CV (PDF + its HTML source in files/cv/) and reference material
+files/      CV source (files/cv/, rendered to PDF in CI) and reference material
 docs/       how the site is built and maintained — start at docs/README.md
 ```
 
@@ -97,10 +97,12 @@ publications, citations, h-index — from `publications.csv`, so the numbers can
 never drift from the list underneath them.
 
 The CV is generated rather than hand-edited: `files/cv/stefan-seman-cv.html`
-is the source, rendered to PDF with [WeasyPrint](https://weasyprint.org/).
+is the source, rendered to PDF with [WeasyPrint](https://weasyprint.org/) on every
+build. The phone number is not in the repository: CI fills it in from the
+`CV_PHONE` secret, so it appears only in the published CV.
 
 Pull requests are type-checked and built by GitHub Actions; a merge into `main`
-that changes `website/` runs the same checks and deploys the site to GitHub Pages.
+that changes `website/` or `files/cv/` runs the same checks and deploys the site to GitHub Pages.
 
 The hand-written site this replaced is not in the working tree; it is preserved
 at the [`v1-legacy`](https://github.com/ManSe404/webpage/tree/v1-legacy) tag.

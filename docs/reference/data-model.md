@@ -7,7 +7,7 @@ Everything the site says comes from files under `website/src/`. The collections 
 
 | What | Where | Read by |
 |---|---|---|
-| Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `research.astro`, `contact.astro` (not `phone`) |
+| Name, headline, tagline, contact, links, years of experience, CV path | `src/data/profile.json` | `Base.astro`, `hive/HiveDashboard` (and its panels), `Nav`, `Footer`, `research.astro`, `contact.astro` |
 | Career | `src/data/experience.json` (collection `experience`) | `hive/HivePanels` (the career timeline in the Career panel, newest first); `hive/HiveDashboard` (the role count on the Career cell, current roles under In progress, the summary of the 404 Solutions role in its panel) |
 | Architecture diagrams | `src/data/architectures.json` (no schema): the two lab diagrams, their steps, side boxes, details, tools and synthetic sample rows | `lab/ArchitectureLab`, `lab/ArchDiagram` |
 | Skills | `src/data/skills.json` | `hive/HivePanels`: the skill groups in the Tools panel |
@@ -15,12 +15,13 @@ Everything the site says comes from files under `website/src/`. The collections 
 | Publications | `src/data/publications.csv` (collection `publications`) | `hive/HiveDashboard`, `research.astro` |
 | Projects | `src/content/projects/*.md` (collection `projects`), frontmatter only | `index.astro` and `projects/index.astro`, both through `hive/ProjectHive`; `hive/HiveDashboard` (counts, featured projects, what is in progress) |
 | Portrait | `src/assets/portrait.jpg` | `hive/HiveDashboard`, optimised by `astro:assets` |
-| CV PDF, favicon, social image | `public/files/`, `public/images/` | copied as is into the build |
+| CV PDF, favicon, social image | `public/files/` (the CV, rendered there by the build), `public/images/` | copied as is into the build |
 
 `profile.json`, `skills.json` and `education.json` have no schema; they are imported as JSON
 and TypeScript infers their shape. `stats` in `profile.json` holds one typed number, the years of experience;
-every other number on the home dashboard is computed from the collections (`src/lib/dashboard.ts`). `phone` and `languages` in
-`profile.json` are not read by any page or component.
+every other number on the home dashboard is computed from the collections (`src/lib/dashboard.ts`). `languages` in
+`profile.json` is not read by any page or component. There is no phone number in `profile.json`: it is only in the
+published CV ([ADR 0005](../adr/0005-cv-rendered-in-ci-with-the-phone-from-a-secret.md)).
 
 ## Collections
 

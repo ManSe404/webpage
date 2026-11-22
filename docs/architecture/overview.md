@@ -91,8 +91,8 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 | Event | What runs |
 |---|---|
-| Every pull request, whatever it touches | The build job: `npm ci`, `npm run check` (astro check), `npm run build`. Nothing is uploaded or deployed. |
-| Push to `main` touching `website/` or the workflow | The same checks and build, then `website/dist` is uploaded as the Pages artifact and the deploy job publishes it to the `github-pages` environment. |
+| Every pull request, whatever it touches | The build job: `npm ci`, render the CV (WeasyPrint, `CV_PHONE` secret, a placeholder number when the pull request gets no secrets) and check its fonts, `npm run check` (astro check), `npm run build`. Nothing is uploaded or deployed. |
+| Push to `main` touching `website/`, `files/cv/` or the workflow | The same checks and build, then `website/dist` is uploaded as the Pages artifact and the deploy job publishes it to the `github-pages` environment. |
 | Manual run (`workflow_dispatch`) | The same as a push to `main`. |
 
 - `build` is a required check on `main`, which is why every pull request runs it: a pull request that skipped it
@@ -116,9 +116,11 @@ There is no runtime beyond the browser. The flow that matters is check, build an
 
 ## The CV
 
-`files/cv/stefan-seman-cv.html` is the source of the CV; it mirrors the site data. It is rendered to PDF with
-WeasyPrint, and the PDF is copied to `files/` and to `website/public/files/`, where `profile.json` links it. The
-commands are in [development](../guides/development.md#the-cv).
+`files/cv/stefan-seman-cv.html` is the source of the CV; it mirrors the site data. The build job renders it to
+`website/public/files/stefan-seman-cv.pdf`, where `profile.json` links it, with `files/cv/render.sh` and WeasyPrint,
+filling in the phone number from the `CV_PHONE` secret; the PDF is never committed, so the number is only in the
+published CV ([ADR 0005](../adr/0005-cv-rendered-in-ci-with-the-phone-from-a-secret.md)). The fonts ship in
+`files/cv/fonts/`. Rendering it locally is in [development](../guides/development.md#the-cv).
 
 ## Earlier version
 

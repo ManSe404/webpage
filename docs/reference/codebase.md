@@ -6,8 +6,10 @@ README.md                     the profile, the featured projects, how the reposi
 .github/workflows/
   deploy-website.yml          checks and builds every pull request; deploys to Pages on a push to main or a manual run
 files/
-  cv/stefan-seman-cv.html     source of the CV, rendered to PDF with WeasyPrint
-  CV Stefan Seman.pdf         the rendered CV
+  cv/stefan-seman-cv.html     source of the CV; the phone number is a placeholder
+  cv/render.sh                renders the CV with WeasyPrint, phone number from CV_PHONE (CI secret or cv/.env)
+  cv/.env.example             the one setting render.sh reads
+  cv/fonts/                   Fira Sans and Fira Mono files the CV loads, with their OFL licence
   stefan_context.txt          plain-text summary of the site data, for reuse elsewhere; kept by hand
 website/                      the Astro project
   .gitignore                  node_modules, dist and .astro
@@ -17,7 +19,7 @@ website/                      the Astro project
   tsconfig.json               Astro's strict TypeScript settings
   README.md                   commands, where content lives, how to add a project or a publication
   public/
-    files/                    the CV PDF the site links
+    files/                    the CV PDF the site links, rendered there by files/cv/render.sh (not committed)
     images/                   site icon (favicon.svg; favicon.png and apple-touch-icon.png are renders of it) and the link-preview card share-card.jpg (a render of docs/design/visuals/share-card.html)
   src/
     content.config.ts         the four content collections and their schemas
